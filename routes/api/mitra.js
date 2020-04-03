@@ -10,6 +10,11 @@ router.post('/mitra', (req,res) => {
         nama_pemilik : data.nama_pemilik,
         email : data.email,
         no_hp : data.no_hp,
+        harga : {
+            print : data.harga.print,
+            scan : data.harga.scan,
+            fotocopy : data.harga.fotocopy,
+        },
         alamat_toko : data.alamat_toko,
     });
 
@@ -17,16 +22,20 @@ router.post('/mitra', (req,res) => {
         .then(mitra => res.json(mitra))
         .catch(err => console.log(err));
     
-    return res.status(200).json(newMitra);
+    return res.status(200).json({status : true,
+                                 message : 'Success added mitra',
+                                 mitra : newMitra});
 });
 
 router.get('/mitra', (req,res) =>{
     Mitra.find()
         .exec()
         .then(mitra => {
-            console.log(mitra);
-            res.status(200).json(mitra);
-        })
+            console.log(mitra.length);
+            res.status(200).json({status : true,
+                                  message : 'Success get mitra',
+                                  mitra : mitra});
+                                })
         .catch(err => {
             console.log(err);
             res.status(500).json({

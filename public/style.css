@@ -1,5 +1,7 @@
-html {
-    font-size: 11px;
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 table {
@@ -26,9 +28,6 @@ img {
     height: auto; 
 }
 
-button {
-    margin: 4px;
-}
 
 #code-block {
     background-color: #eee;
@@ -68,3 +67,8 @@ button {
 .hidden {
     display: none;
 }
+
+#map {
+    height: 50%;
+    width: 50%;
+  }

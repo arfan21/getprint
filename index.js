@@ -5,7 +5,6 @@ const myLiffId = process.env.MY_LIFF_ID;
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const db = require('./keys').mongoURI;
-//const Mitra = require("./models/Mitra");
 const mitra = require("./routes/api/mitra");
 
 mongoose

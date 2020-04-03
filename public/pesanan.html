@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -12,7 +13,53 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
     <title>GetPrint || Konfirmasi Pesanan</title>
 </head>
-<body>
+<body ng-app="pesanan" ng-controller="myapp">
+    <form>
+        <div class="form-group" >
+            <label>Nama Pemesan</label>
+            <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
+        </div>
+        <div class="form-group" >
+            <label>Nama Toko</label>
+            <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
+        </div>
+        <div class="form-group" >
+            <label>No HP pemesan</label>
+            <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
+        </div>
+        <div class="form-group" >
+            <label>Alamat Pemesan</label>
+            <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
+        </div>
+        <div class="form-group" >
+            <label>Jenis Pesanan</label>
+            <div style="display: inline;">
+                <span>Print</span>
+                <input type="radio" class="form-control" ng-model="data.namatoko" name="namatoko">
+                <span>Fotocopy</span>
+                <input type="radio" class="form-control" ng-model="data.namatoko" name="namatoko">
+                <span>Scan</span>
+                <input type="radio" class="form-control" ng-model="data.namatoko" name="namatoko">
+            </div>
+            
+        </div>
+        <div class="form-group" >
+            <label>Alamat Pemesan</label>
+            <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
+        </div>
+        <div class="form-group" style="height: 500px;">
+            <button ng-click="getlokasi()" id="lokasi" class="btn btn-primary">Klik 2x, Untuk mendapatkan lokasi</button>
+            <input type="text" ng-model="lati" value="{{lati}}" style="display: none;">
+            <input type="text" ng-model="long" value="{{long}}" style="display: none;">
+            <p>{{lati}},{{long}}</p>
+            <div id="map"></div>
+        </div>
+    </form>
+    
     
 </body>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoCPnKE4LwdDEAtqlqnYOrEKH7P4Ig-rE&callback=initMap">
+</script>
+<script src="pesanan.js"></script>
 </html>

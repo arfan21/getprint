@@ -30,10 +30,6 @@ const PesananSchema = new schema({
         type : String,
         required : true
     },
-    posisi : {
-        type : pointSchema,
-        required : true,
-    },
     jenis_pesanan : {
         type : [String],
         required : true
@@ -42,10 +38,14 @@ const PesananSchema = new schema({
         type : Boolean,
         required : true
     },
+    posisi : {
+        type : pointSchema,
+        required : true,
+    },
     added : {
         type : Date,
         default : Date.now
     }
-})
+});
 
 module.exports = Pesanan = mongoose.model("pesanan", PesananSchema);

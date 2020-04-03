@@ -1,27 +1,22 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Geolocation</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 50%;
-        width: 50%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map"></div>
-    <script>
+var app = angular.module('pesanan',[]);
+
+app.controller('myapp', ['$scope','$http', ($scope,$http) => {
+
+    $scope.getlokasi = () => {
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition((posisi) => {
+                $scope.posisi = posisi.coords;
+                $scope.lati = $scope.posisi.latitude;
+                $scope.long = $scope.posisi.longitude;
+                console.log($scope.posisi)
+            });
+            
+        };
+
+    };
+}]);
+
+
       // Note: This example requires that you consent to location sharing when
       // prompted by your browser. If you see the error "The Geolocation service
       // failed.", it means you probably did not give permission for the browser to
@@ -70,19 +65,3 @@
                               'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
       }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoCPnKE4LwdDEAtqlqnYOrEKH7P4Ig-rE&callback=initMap">
-    </script>
-  </body>
-</html>
-<!-- <div class="mapouter">
-    <div class="gmap_canvas">
-      <iframe width="350" height="350" id="gmap_canvas" src="https://maps.google.com/maps?ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
-      <a href="https://www.embedgooglemap.net/blog/nordvpn-coupon-code/">embedgooglemap.net</a>
-    </div>
-    <style>
-      .mapouter{position:relative;text-align:right;height:350px;width:350px;}
-      .gmap_canvas {overflow:hidden;background:none!important;height:350px;width:350px;}
-    </style>
-</div> -->

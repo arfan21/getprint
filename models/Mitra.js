@@ -18,6 +18,11 @@ const MitraSchema = new schema({
         type : String,
         required : true
     },
+    harga : {
+        print : {type : String},
+        scan : {type : String},
+        fotocopy : {type : String},
+    },
     alamat_toko:{
         type : String,
         required : true

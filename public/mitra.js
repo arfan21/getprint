@@ -8,7 +8,7 @@ appang.controller("menjadimitraCtrl",['$scope','$http','$window', function($scop
         console.log($scope.data)
         $http({
             method : "POST",
-            url : "/mitra",
+            url : "/api/mitra",
             data : $scope.data,
         }).then(function successCallback(response){
             console.log(response);
