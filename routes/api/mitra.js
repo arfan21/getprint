@@ -28,7 +28,12 @@ router.post('/mitra', (req,res) => {
 });
 
 router.get('/mitra', (req,res) =>{
-    Mitra.find()
+    console.log(req.query.sort)
+    let sorting = req.query.sort
+
+    if(sorting == 'date'){
+        Mitra.find()
+        .sort({added : 'desc'})
         .exec()
         .then(mitra => {
             console.log(mitra.length);
@@ -42,6 +47,23 @@ router.get('/mitra', (req,res) =>{
                 error : err
             })
         });
+    }else{
+        Mitra.find()
+        .exec()
+        .then(mitra => {
+            console.log(mitra.length);
+            res.status(200).json({status : true,
+                                  message : 'Success get mitra',
+                                  mitra : mitra});
+                                })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error : err
+            })
+        });
+    }
+    
 });
 
 router.get('/mitra/:id', (req,res) => {
