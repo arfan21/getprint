@@ -4,7 +4,7 @@ const Mitra = require("../../models/Mitra");
 
 router.post('/mitra', (req,res) => {
     let data = req.body;
-    console.log(data);
+
     const newMitra = new Mitra({
         nama_toko : data.nama_toko,
         nama_pemilik : data.nama_pemilik,
@@ -19,7 +19,7 @@ router.post('/mitra', (req,res) => {
     });
 
     newMitra.save()
-        .then(mitra => res.json(mitra))
+        .then(mitra => console.log(mitra))
         .catch(err => console.log(err));
     
     return res.status(200).json({status : true,
@@ -28,7 +28,7 @@ router.post('/mitra', (req,res) => {
 });
 
 router.get('/mitra', (req,res) =>{
-    console.log(req.query.sort)
+    //console.log(req.query.sort)
     let sorting = req.query.sort
 
     if(sorting == 'date'){
@@ -36,7 +36,7 @@ router.get('/mitra', (req,res) =>{
         .sort({added : 'desc'})
         .exec()
         .then(mitra => {
-            console.log(mitra.length);
+
             res.status(200).json({status : true,
                                   message : 'Success get mitra',
                                   mitra : mitra});
@@ -51,7 +51,7 @@ router.get('/mitra', (req,res) =>{
         Mitra.find()
         .exec()
         .then(mitra => {
-            console.log(mitra.length);
+
             res.status(200).json({status : true,
                                   message : 'Success get mitra',
                                   mitra : mitra});

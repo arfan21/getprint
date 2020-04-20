@@ -14,38 +14,63 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
     <title>GetPrint || Menjadi Mitra</title>
 </head>
-<body ng-app = "menjadimitra">
-    <form ng-controller="menjadimitraCtrl" ng-submit="submitform()">
+<body >
+    <form ng-app = "menjadimitra" ng-controller="menjadimitraCtrl" ng-submit="submitform()" name="formMitra">
         <div class="form-group" >
             <label>Nama Toko</label>
-            <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
+            <input type="text" class="form-control" ng-model="data.nama_toko" name="nama_toko" required>
+            <span style="color: red;"  ng-show="formMitra.nama_toko.$dirty && formMitra.nama_toko.$invalid || formMitra.nama_toko.$touched">
+                <span ng-show="formMitra.nama_toko.$error.required" >Nama Toko harus diisi</span>
+            </span>
         </div>
         <div class="form-group">
             <label>Nama Pemilik Toko</label>
-            <input type="text" class="form-control" ng-model="data.namapemilik" name="namapemilik">
+            <input type="text" class="form-control" ng-model="data.nama_pemilik" name="nama_pemilik" required>
+            <span style="color: red;"  ng-show="formMitra.nama_pemilik.$dirty && formMitra.nama_pemilik.$invalid || formMitra.nama_pemilik.$touched">
+                <span ng-show="formMitra.nama_pemilik.$error.required" >Nama Pemilik harus diisi</span>
+            </span>
+            
         </div>
         <div class="form-group">
             <label>Email</label>
-            <input type="text" class="form-control" ng-model="data.email" name="email">
+            <input type="text" class="form-control" ng-model="data.email" name="email" required>
+            <span style="color: red;" ng-show="formMitra.email.$dirty && formMitra.email.$invalid || formMitra.email.$touched">
+                <span ng-show="formMitra.email.$error.required" >Email harus diisi</span>
+            </span>
         </div>
         <div class="form-group">
             <label>Nomor Handphone</label>
-            <input type="text" class="form-control" ng-model="data.no_hp" name="no_hp">
+            <input type="text" class="form-control" ng-model="data.no_hp" name="no_hp" required>
+            <span style="color: red;" ng-show="formMitra.no_hp.$dirty && formMitra.no_hp.$invalid || formMitra.no_hp.$touched">
+                <span ng-show="formMitra.no_hp.$error.required" >No Hp harus diisi</span>
+            </span>
         </div>
         <div class="form-group">
             <label>Harga</label>
             <label>Print</label>
-            <input type="text" class="form-control" ng-model="data.print" name="print">
+            <input type="text" class="form-control" ng-model="data.harga.print" name="print" required>
+            <span style="color: red;" ng-show="formMitra.print.$dirty && formMitra.print.$invalid || formMitra.print.$touched">
+                <span ng-show="formMitra.print.$error.required" >Harga Print harus diisi(jika tidak ada tulis 0)</span>
+            </span>
             <label>Scan</label>
-            <input type="text" class="form-control" ng-model="data.namapemilik" name="namapemilik">
+            <input type="text" class="form-control" ng-model="data.harga.scan" name="scan" required>
+            <span style="color: red;" ng-show="formMitra.scan.$dirty && formMitra.scan.$invalid || formMitra.scan.$touched">
+                <span ng-show="formMitra.scan.$error.required" >Harga scan harus diisi(jika tidak ada tulis 0)</span>
+            </span>
             <label>Fotocopy</label>
-            <input type="text" class="form-control" ng-model="data.namapemilik" name="namapemilik">
+            <input type="text" class="form-control" ng-model="data.harga.fotocopy" name="fotocopy" required>
+            <span style="color: red;" ng-show="formMitra.fotocopy.$dirty && formMitra.fotocopy.$invalid || formMitra.fotocopy.$touched">
+                <span ng-show="formMitra.fotocopy.$error.required" >Harga fotocopy harus diisi(jika tidak ada tulis 0)</span>
+            </span>
         </div>
         <div class="form-group">
-            <label>Alamat Toko</label>
-            <input type="text" class="form-control" ng-model="data.alamat_toko" name="alamat_toko">
+            <label>Alamat Toko</label required>
+            <input type="text" class="form-control" ng-model="data.alamat_toko" name="alamat_toko" required>
+            <span style="color: red;" ng-show="formMitra.alamat_toko.$dirty && formMitra.alamat_toko.$invalid || formMitra.alamat_toko.$touched">
+                <span ng-show="formMitra.alamat_toko.$error.required" >Alamat harus diisi</span>
+            </span>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="formMitra.$invalid">Submit</button>
     </form>
     <script src="js/mitra.js"></script>
 </body>

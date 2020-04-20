@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="shortcut icon" href="assets/Logo.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,44 +14,51 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
     <title>GetPrint || Konfirmasi Pesanan</title>
 </head>
-<body ng-app="pesanan" ng-controller="myapp">
-    <form ng-submit = "sumbitform()">
+<body>
+    <form ng-app="pesanan" ng-controller="myappCtrl" ng-submit="submitMyform()" name="formPesanan">
         <div class="form-group" >
             <label>Nama Pemesan</label>
-            <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
-        </div>
-        <div class="form-group" >
-            <label>Nama Toko</label>
-            <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
+            <input type="text" class="form-control" ng-model="data.nama" name="nama" required>
+            <span style="color: red;"  ng-show="formPesanan.nama.$dirty && formPesanan.nama.$invalid || formPesanan.nama.$touched">
+                <span ng-show="formPesanan.nama.$error.required" >Nama Toko harus diisi</span>
+            </span>
         </div>
         <div class="form-group" >
             <label>No HP pemesan</label>
-            <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
+            <input type="text" class="form-control" ng-model="data.nohp_pemesan" name="nohp_pemesan" required>
+            <span style="color: red;"  ng-show="formPesanan.nohp_pemesan.$dirty && formPesanan.nohp_pemesan.$invalid || formPesanan.nohp_pemesan.$touched">
+                <span ng-show="formPesanan.nohp_pemesan.$error.required" >Nama Toko harus diisi</span>
+            </span>
         </div>
         <div class="form-group" >
-            <label>Alamat Pemesan</label>
-            <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
-        </div>
-        <div class="form-group" >
-            <label>Jenis Pesanan</label>
-            <div style="display: inline;">
-                <span>Print</span>
-                <input type="radio" class="form-control" ng-model="data.namatoko" name="namatoko">
-                <span>Fotocopy</span>
-                <input type="radio" class="form-control" ng-model="data.namatoko" name="namatoko">
-                <span>Scan</span>
-                <input type="radio" class="form-control" ng-model="data.namatoko" name="namatoko">
-            </div>
+            <fieldset>
+                <label>Jenis Pesanan</label><br>
+            
+                <input type="radio" ng-model="data.print" id="print" name="print"  value="print">
+                <label for="Print">Print</label>
+                <input type="radio" ng-model="data.fotocopy" id="fotocopy" name="fotocopy"  value="fotocopy">
+                <label for="fotocopy">Fotocopy</label>
+                <input type="radio" ng-model="data.scan" id="scan" name="scan"  value="scan">
+                <label for="scan">Scan</label>
+              </fieldset>
             
         </div>
         <div class="form-group" >
             <label>Alamat Pemesan</label>
-            <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
+            <input type="text" class="form-control" ng-model="data.alamat_pemesan" name="alamat_pemesan" required>
+            <span style="color: red;"  ng-show="formPesanan.alamat_pemesan.$dirty && formPesanan.alamat_pemesan.$invalid || formPesanan.alamat_pemesan.$touched">
+                <span ng-show="formPesanan.alamat_pemesan.$error.required" >Nama Toko harus diisi</span>
+            </span>
         </div>
+        <!-- <div class="form-group" >
+            <label>Upload File</label>
+            <input type="file" class="form-control" ng-model="data.myfile" name="myfile">
+        </div> -->
+        <button type="submit" class="btn btn-primary" ng-disabled="formPesanan.$invalid">Submit</button>
     </form>
     
     
 </body>
 
-<script src="pesanan.js"></script>
+<script src="js/pesanan.js"></script>
 </html>
