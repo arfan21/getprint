@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="shortcut icon" href="assets/Logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -18,18 +19,16 @@
 
 <body ng-app="myApp">
     <div id="page-index" class="container-fluid" ng-controller="appCtrl">
-
         <div id="header-container-title" class="row">
-            <h1>Hi, <span class="font-weight-bold">[namauser]</span></h1>
-            <p class="text-muted">Deliver to [location]</p>
+            <h1>Hi, <span class="font-weight-bold" id="displayNameField">asd</span></h1><br>
         </div>
 
         <div class="container">
             <div id="header-container-image" class="row">
                 <div class="col-8">
-                    <p>[rating]</p>
+                    <p>4.5</p>
                     <p>Top of the week</p>
-                    <h1>[namamitra] Photocopy</h1>
+                    <h1>{{data[0].nama_toko}}</h1>
                     <button>Button</button>
                 </div>
                 <div class="col-4">
@@ -51,16 +50,18 @@
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <div class="col-md-4" ng-repeat="d in data">
+                        <div class="col-md-4" ng-repeat="d in databydate">
                             <div class="card container">
                                 <div class="row">
-                                    <div id="card-image" class="col-xs-4">
-                                        <img src="assets/placeholder-mitra.png" alt="foto toko">
-                                    </div>
-                                    <div id="card-text" class="col-xs-8">
-                                        <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
-                                        <p class="card-text text-muted"> {{d.alamat_toko}} </p>
-                                    </div>
+                                    <a href="/detail.html?id={{d._id}}">
+                                        <div id="card-image" class="col-xs-4">
+                                            <img src="assets/placeholder-mitra.png" alt="foto toko">
+                                        </div>
+                                        <div id="card-text" class="col-xs-8">
+                                            <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
+                                            <p class="card-text text-muted"> {{d.alamat_toko}} </p>
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -69,13 +70,15 @@
                         <div class="col-md-4" ng-repeat="d in data">
                             <div class="card container">
                                 <div class="row">
-                                    <div id="card-image" class="col-xs-4">
-                                        <img src="assets/placeholder-mitra.png" alt="foto toko">
-                                    </div>
-                                    <div id="card-text" class="col-xs-8">
-                                        <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
-                                        <p class="card-text text-muted"> {{d.alamat_toko}} </p>
-                                    </div>
+                                    <a href="/detail.html?id={{d._id}}">
+                                        <div id="card-image" class="col-xs-4">
+                                            <img src="assets/placeholder-mitra.png" alt="foto toko">
+                                        </div>
+                                        <div id="card-text" class="col-xs-8">
+                                            <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
+                                            <p class="card-text text-muted"> {{d.alamat_toko}} </p>
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -84,13 +87,15 @@
                         <div class="col-md-4" ng-repeat="d in data">
                             <div class="card container">
                                 <div class="row">
-                                    <div id="card-image" class="col-xs-4">
-                                        <img src="assets/placeholder-mitra.png" alt="foto toko">
-                                    </div>
-                                    <div id="card-text" class="col-xs-8">
-                                        <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
-                                        <p class="card-text text-muted"> {{d.alamat_toko}} </p>
-                                    </div>
+                                    <a href="/detail.html?id={{d._id}}">
+                                        <div id="card-image" class="col-xs-4">
+                                            <img src="assets/placeholder-mitra.png" alt="foto toko">
+                                        </div>
+                                        <div id="card-text" class="col-xs-8">
+                                            <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
+                                            <p class="card-text text-muted"> {{d.alamat_toko}} </p>
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -99,8 +104,9 @@
             </div>
         </div>
     </div>
-
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <!-- <script src="liff-starter.js"></script> -->
 </body>
-<script src="index.js"></script>
+<script src="js/index.js"></script>
 
 </html>

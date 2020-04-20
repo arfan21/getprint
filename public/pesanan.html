@@ -14,7 +14,7 @@
     <title>GetPrint || Konfirmasi Pesanan</title>
 </head>
 <body ng-app="pesanan" ng-controller="myapp">
-    <form>
+    <form ng-submit = "sumbitform()">
         <div class="form-group" >
             <label>Nama Pemesan</label>
             <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
@@ -47,19 +47,10 @@
             <label>Alamat Pemesan</label>
             <input type="text" class="form-control" ng-model="data.namatoko" name="namatoko">
         </div>
-        <div class="form-group" style="height: 500px;">
-            <button ng-click="getlokasi()" id="lokasi" class="btn btn-primary">Klik 2x, Untuk mendapatkan lokasi</button>
-            <input type="text" ng-model="lati" value="{{lati}}" style="display: none;">
-            <input type="text" ng-model="long" value="{{long}}" style="display: none;">
-            <p>{{lati}},{{long}}</p>
-            <div id="map"></div>
-        </div>
     </form>
     
     
 </body>
-<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoCPnKE4LwdDEAtqlqnYOrEKH7P4Ig-rE&callback=initMap">
-</script>
+
 <script src="pesanan.js"></script>
 </html>

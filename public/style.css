@@ -29,6 +29,9 @@ table, th, td {
     height: auto; 
 } */
 
+.row a {
+    text-decoration: none;
+}
 
 #code-block {
     background-color: #eee;
@@ -80,7 +83,7 @@ table, th, td {
     border-radius: 25px;
 }
 
-#page-index {
+body {
     background-color: #f5f6f8;
 }
 
@@ -129,4 +132,133 @@ table, th, td {
     background-color: #0029FF;
     margin: 0 auto;
     color: white;
+}
+
+.header-detail-box{
+    position: absolute;
+    width: 411px;
+    height: 57px;
+    left: 0px;
+    top: -15px;
+    background: #0029FF;
+    border-radius: 15px;
+}
+
+.header-detail{
+    position: relative;
+    top: 20px;
+    left: 50px;
+}
+
+.header-detail-box .header-detail a{
+    text-decoration: none;
+    color: white;
+}
+
+.img-detail{
+    position: absolute;
+    
+    left: 14px;
+    top: 80px;
+}
+
+.img-detail img{
+    width: 383px;
+    height: 177px;
+    border-radius: 10px;
+}
+
+.body-detail{
+    position: absolute;
+    width: 411px;
+    height: 560px;
+    left: 0px;
+    top: 263px;
+
+    background: #FFFFFF;
+    border-radius: 30px;
+}
+
+.body-detail .nama-toko {
+    position: absolute;
+    width: 264px;
+    height: 31px;
+    left: 40px;
+}
+
+.body-detail .nama-toko p {
+    font-family: Assistant;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 31px;
+    color: #0029FF;
+}
+
+.body-detail .alamat-toko{
+    position: absolute;
+    left: 40px;
+    top: 30px;
+}
+
+.body-detail .alamat-toko p {
+    font-family: Assistant;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 18px;
+
+    /* Warna 1 */
+
+    color: #0029FF;
+}
+
+.info-detail{
+    position: absolute;
+    width: 67px;
+    height: 24px;
+    left: 40px;
+    top: 320px;
+}
+.info-detail h3{
+    color: #3E34AC;
+}
+
+.info-detail .info-group{
+    width: 291px;
+    height: 60px;
+    background: #FFFFFF;
+    box-shadow: 0px 15px 30px rgba(6, 18, 121, 0.1);
+    border-radius: 10px;
+    margin-top:20px ;
+    margin-bottom:20px ;
+}
+
+.pesan{
+    position: absolute;
+    width: 290px;
+    height: 50px;
+    left: 56px;
+    top: 745px;
+
+    /* Main_Color */
+
+    background: #0029FF;
+    box-shadow: 0px 15px 30px rgba(9, 21, 125, 0.15);
+    border-radius: 10px;
+}
+
+.pesan #input a {
+    color: white;
+    text-decoration: none;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+}
+
+#input{
+    margin-top: 10px;
+    margin-left: 80px;
 }

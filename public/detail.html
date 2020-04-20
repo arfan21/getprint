@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="shortcut icon" href="assets/Logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <title>GetPrint</title>
+</head>
+<body ng-app="detailmitra"  ng-controller="appCtrl">
+    <div class="header-detail-box">
+        <div class="header-detail">
+            <a href="/">GetPrint</a>
+        </div>
+    </div>
+
+    <div class="img-detail">
+        <img src="assets/placeholder-mitra.png" alt="foto toko">
+    </div>
+
+    <div class="body-detail">
+        <div class="nama-toko">
+            <p>{{data.nama_toko}}</p>
+        </div>
+        <div class="alamat-toko">
+            <p>{{data.alamat_toko}}</p>
+        </div>
+    </div>
+
+    <div class="info-detail">
+        <h3>Melayani</h3>
+        <div class="info-group">
+            <h4>Print</h4>
+            <p>Rp.{{data.harga.print}} / Lembar</p>
+        </div>
+        <div class="info-group">
+            <h4>Scan</h4>
+            <p>Rp.{{data.harga.scan}} / Lembar</p>
+        </div>
+        <div class="info-group">
+            <h4>Fotocopy</h4>
+            <p>Rp.{{data.harga.fotocopy}} / Lembar</p>
+        </div>
+    </div>
+    <div class="pesan">
+        <div id="input">
+            <a href="pesanan.html?id={{data._id}}">Pesan Sekarang</a>
+        </div>
+        
+    </div>
+</body>
+<script src="js/detail.js"></script>
+</html>
