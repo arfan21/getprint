@@ -20,7 +20,7 @@
 <body ng-app="myApp">
     <div id="page-index" class="container-fluid" ng-controller="appCtrl">
         <div id="header-container-title" class="row">
-            <h1>Hi, <span class="font-weight-bold" id="displayNameField">asd</span></h1><br>
+            <h1>Hi, <span class="font-weight-bold" id="displayNameField"></span></h1><br>
         </div>
 
         <div class="container">
@@ -53,7 +53,7 @@
                         <div class="col-md-4" ng-repeat="d in databydate">
                             <div class="card container">
                                 <div class="row">
-                                    <a href="/detail.html?id={{d._id}}">
+                                    <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
                                             <img src="assets/placeholder-mitra.png" alt="foto toko">
                                         </div>
@@ -70,7 +70,7 @@
                         <div class="col-md-4" ng-repeat="d in data">
                             <div class="card container">
                                 <div class="row">
-                                    <a href="/detail.html?id={{d._id}}">
+                                    <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
                                             <img src="assets/placeholder-mitra.png" alt="foto toko">
                                         </div>
@@ -87,7 +87,7 @@
                         <div class="col-md-4" ng-repeat="d in data">
                             <div class="card container">
                                 <div class="row">
-                                    <a href="/detail.html?id={{d._id}}">
+                                    <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
                                             <img src="assets/placeholder-mitra.png" alt="foto toko">
                                         </div>

@@ -1,22 +1,25 @@
-// function getUrlParameter(name) {
-//     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-//     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-//     var results = regex.exec(location.search);
-//     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-// };
-// var id = getUrlParameter('id');
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};
+var id = getUrlParameter('id');
+var uidline = getUrlParameter('useridline');
 
 var apppesan = angular.module('pesanan',[]);
 apppesan.controller("myappCtrl",['$scope','$http','$window', function($scope,$http,$window){
-    $scope.data = {}
-            
+	$scope.data = {};
+	$scope.data.id_toko = id;
+	$scope.data.userid_line = uidline;
+	console.log($scope.data);       
     $scope.submitMyform = function(){
         $http({
             method : "POST",
             url : "/api/pesanan",
             data : $scope.data,
         }).then(function successCallback(response){
-            console.log(response);
+            console.log(response.data.pesanan);
             $window.alert(response.data.message);
 			$window.open("https://api.whatsapp.com/send?phone=6289635639022&text=**GETPRINT**%0ANama%20Pemesan%20%09%3A%20"+$scope.data.nama+"%2C%0ANo%20HP%20%09%09%3A%20"+$scope.data.nohp_pemesan+"%2C%0AAlamat%20Pemesanan%3A%20alamat%2C%0A**Jenis%20Pesanan**%0A"+"-"+$scope.data.print+"%0A"+"-"+$scope.data.fotocopy+"%0A"+"-"+$scope.data.scan,  '_blank');
 			$window.location.href = "/";

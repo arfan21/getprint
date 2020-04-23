@@ -1,19 +1,15 @@
 const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
-const pointSchema = new mongoose.Schema({
-    type: {
-      type: String,
-      enum: ['Point'],
-      required: true
-    },
-    coordinates: {
-      type: [Number],
-      required: true
-    }
-});
-
 const PesananSchema = new schema({
+    userid_line : {
+        type : String,
+        required : true,
+    },
+    id_toko : {
+        type : String,
+        required : true,
+    },
     nama_pemesan : {
         type : String,
         required : true

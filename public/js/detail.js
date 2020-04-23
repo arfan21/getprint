@@ -5,6 +5,10 @@ function getUrlParameter(name) {
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 };
 var id = getUrlParameter('id');
+var uidline = getUrlParameter('useridline');
+
+var link = document.getElementById('link').href;
+document.getElementById('link').href = link + "&useridline="+uidline;
 
 var app = angular.module('detailmitra', []);
 app.controller("appCtrl", ['$scope','$http','$window', function($scope,$http,$window){
