@@ -11,18 +11,31 @@ var apppesan = angular.module('pesanan',[]);
 apppesan.controller("myappCtrl",['$scope','$http','$window', function($scope,$http,$window){
 	$scope.data = {};
 	$scope.data.id_toko = id;
-	$scope.data.userid_line = uidline;
-	console.log($scope.data);       
+	$scope.data.userid_line = uidline;	
+	     
     $scope.submitMyform = function(){
-        $http({
+		let jenispesanan = [];
+		let pesanan = document.getElementsByClassName('jenispesanan');
+		
+		for(i = 0; i < pesanan.length; i++){
+			
+			if(pesanan[i].checked){
+				
+				jenispesanan.push(pesanan[i].value)
+			}	
+		}
+
+		$scope.data.jenispesanan = jenispesanan;
+
+        $http({	
             method : "POST",
             url : "/api/pesanan",
             data : $scope.data,
         }).then(function successCallback(response){
-            console.log(response.data.pesanan);
+			let data = response.data.pesanan;
+
             $window.alert(response.data.message);
-			$window.open("https://api.whatsapp.com/send?phone=6289635639022&text=**GETPRINT**%0ANama%20Pemesan%20%09%3A%20"+$scope.data.nama+"%2C%0ANo%20HP%20%09%09%3A%20"+$scope.data.nohp_pemesan+"%2C%0AAlamat%20Pemesanan%3A%20alamat%2C%0A**Jenis%20Pesanan**%0A"+"-"+$scope.data.print+"%0A"+"-"+$scope.data.fotocopy+"%0A"+"-"+$scope.data.scan,  '_blank');
-			$window.location.href = "/";
+			$window.location.href = "/upload.html?id=" + data._id;
         })
     }
 }]);

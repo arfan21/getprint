@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="shortcut icon" href="assets/Logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
+    <title>GetPrint || Upload </title>
+</head>
+<body>
+    <form ng-app="upload" ng-controller="myapp" name="formupload" enctype="multipart/form-data" action="/api/uploadfile" method="POST">
+        <h1>Upload File</h1>
+        <p style="color: red ;">MAX 5 FILE !</p>
+        <div class="form-group" ng-repeat="form in forms" >
+            <label>{{form.name}}</label>
+            <input type="file" class="form-control" ng-model="data.myfile" name="myfile">
+        </div>
+        <div class="form-group" style="display: none;">
+            <input type="text" class="form-control" ng-model="data.id" name="pesananid" value="{{data.id}}">
+        </div>
+        <div class="form-group">
+            <input type="button" value="+" ng-click="addform()" class="btn btn-primary" style="text-decoration: none; color: white;">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</body>
+<script>
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    };
+
+    var id = getUrlParameter('id');
+
+    var app = angular.module('upload', []);
+
+    app.controller("myapp",['$scope', function($scope){
+        $scope.data = {}
+        $scope.data.id = id;
+        $scope.forms = [{name : "file 1"}]
+        $scope.addform = function(){
+            if($scope.forms.length <= 4){
+                $scope.forms.push({name: "file " + ($scope.forms.length + 1)});
+            }
+        };
+    }]);
+</script>
+</html>

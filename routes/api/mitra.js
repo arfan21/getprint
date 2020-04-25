@@ -34,33 +34,38 @@ router.get('/mitra', (req,res) =>{
     if(sorting == 'date'){
         Mitra.find()
         .sort({added : 'desc'})
-        .exec()
-        .then(mitra => {
-
-            res.status(200).json({status : true,
-                                  message : 'Success get mitra',
-                                  mitra : mitra});
-                                })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error : err
-            })
+        .exec((err,data) => {
+            if(err){
+                res.status(400).json({status : false,
+                    message : 'failed get mitra',
+                    error : err});
+            }else if(data.length == 0){
+                res.status(400).json({status : false,
+                    message : 'failed get mitra',
+                    error : 'mitra not found'});
+            }else{
+                res.status(200).json({status : true,
+                    message : 'Success get mitra',
+                    mitra : data});
+            }
         });
+        
     }else{
         Mitra.find()
-        .exec()
-        .then(mitra => {
-
-            res.status(200).json({status : true,
-                                  message : 'Success get mitra',
-                                  mitra : mitra});
-                                })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error : err
-            })
+        .exec((err,data) => {
+            if(err){
+                res.status(400).json({status : false,
+                    message : 'failed get mitra',
+                    error : err});
+            }else if(data.length == 0){
+                res.status(400).json({status : false,
+                    message : 'failed get mitra',
+                    error : 'mitra not found'});
+            }else{
+                res.status(200).json({status : true,
+                    message : 'Success get mitra',
+                    mitra : data});
+            }
         });
     }
     
@@ -69,17 +74,21 @@ router.get('/mitra', (req,res) =>{
 router.get('/mitra/:id', (req,res) => {
     const id = req.params.id;
     Mitra.findById(id)
-        .exec()
-        .then(mitra => {
-            console.log(mitra);
-            res.status(200).json(mitra);
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error : err
-            });
-        });
+    .exec((err,data) => {
+        if(err){
+            res.status(400).json({status : false,
+                message : 'failed get mitra',
+                error : err});
+        }else if(data.length == 0){
+            res.status(400).json({status : false,
+                message : 'failed get mitra',
+                error : 'mitra not found'});
+        }else{
+            res.status(200).json({status : true,
+                message : 'Success get mitra',
+                mitra : data});
+        }
+    });
 });
 
 module.exports = router;

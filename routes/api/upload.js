@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const multer = require('multer');
 const path   = require('path');
+const Upload = require("../../models/Upload");
+const mongoose = require('mongoose');
+const request = require("request");
 
 const storage = multer.diskStorage({
     destination :  path.join(__dirname + './../../public/file4print'),
@@ -12,22 +15,48 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage : storage
-});
+}).array('myfile',5);
 
-router.post("/uploadfile", (req,res) => {
-    upload.single('myfile')(req, res, function (error) {
-        if (error) {
-          console.log(`upload.single error: ${error}`);
-          return res.sendStatus(500);
+function joinarray2(e){
+    e = e.join("%0A-")
+}
+
+router.post("/uploadfile",upload, (req,res) => {
+    let newfile = []
+    for(i = 0; i < req.files.length;i++){
+        newfile.push(
+            {
+                filename :  req.files[i].filename,
+                link : '/file4print/' + req.files[i].filename,
+            }
+        )
+    }
+    
+    const newUpload = new Upload({
+        id_pesanan : req.body.pesananid ,
+        file : newfile,
+    })
+
+    newUpload.save()
+        .then(upload => console.log(upload))
+        .catch(err => console.log(err));
+
+    request({
+        url : "http://localhost:5000/api/pesanan/byid/" + req.body.pesananid,
+        json : true,
+    }, (err, response, body) => {
+        var data = body.pesanan
+        var link
+        var linkconv = []
+        for(i = 0; i < newUpload.file.length; i++){
+            link = "https://getprint.herokuapp.com" + newUpload.file[i].link
+            linkconv.push(encodeURI(link)) 
         }
-        res.status(200).json({status : true,    
-                                  message : 'Success upload file',
-                                  file : `uploads/${req.file.filename}`});
+
+        res.redirect("https://api.whatsapp.com/send?phone=6289635639022&text=**GETPRINT**%0ANama%20Pemesan%20%09%3A%20"+data[0].nama_pemesan+"%2C%0ANo%20HP%20%09%09%3A%20"+data[0].nohp_pemesan+"%2C%0AAlamat%20Pemesanan%3A%20"+data[0].alamat_pemesan+"%2C%0A**Jenis%20Pesanan**%0A"+"-"+data[0].jenis_pesanan.join('%250A')+"%250A**Link%2520File**%250A"+linkconv.join('%250A'))
     })
      
-})
+})  
 
 module.exports = router;
-
-
 

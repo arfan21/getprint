@@ -7,7 +7,7 @@ const PesananSchema = new schema({
         required : true,
     },
     id_toko : {
-        type : String,
+        type : mongoose.Schema.ObjectId,
         required : true,
     },
     nama_pemesan : {
