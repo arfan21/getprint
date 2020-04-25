@@ -16,7 +16,7 @@ app.controller("appCtrl", ['$scope','$http','$window', function($scope,$http,$wi
         method : "GET",
         url: "/api/mitra/" + id,
     }).then(function successCallback(response){
-        $scope.data = response.data
+        $scope.data = response.data.mitra
         console.log(response.data);
     });
 }]);
