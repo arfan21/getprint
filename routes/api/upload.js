@@ -42,7 +42,7 @@ router.post("/uploadfile",upload, (req,res) => {
         .catch(err => console.log(err));
 
     request({
-        url : "http://localhost:5000/api/pesanan/byid/" + req.body.pesananid,
+        url : "https://getprint.herokuapp.com/api/pesanan/byid/" + req.body.pesananid,
         json : true,
     }, (err, response, body) => {
         var data = body.pesanan
@@ -53,7 +53,7 @@ router.post("/uploadfile",upload, (req,res) => {
             linkconv.push(encodeURI(link)) 
         }
 
-        res.redirect("https://api.whatsapp.com/send?phone=6289635639022&text=**GETPRINT**%0ANama%20Pemesan%20%09%3A%20"+data[0].nama_pemesan+"%2C%0ANo%20HP%20%09%09%3A%20"+data[0].nohp_pemesan+"%2C%0AAlamat%20Pemesanan%3A%20"+data[0].alamat_pemesan+"%2C%0A**Jenis%20Pesanan**%0A"+"-"+data[0].jenis_pesanan.join('%250A')+"%250A**Link%2520File**%250A"+linkconv.join('%250A'))
+        res.redirect("https://api.whatsapp.com/send?phone=6289635639022&text=**GETPRINT**%0ANama%20Pemesan%20%09%3A%20"+data[0].nama_pemesan+"%2C%0ANo%20HP%20%09%09%3A%20"+data[0].nohp_pemesan+"%2C%0AAlamat%20Pemesanan%3A%20"+data[0].alamat_pemesan+"%2C%0A**Jenis%20Pesanan**%0A"+"-"+data[0].jenis_pesanan.join("%0A-")+"%2C%0A**Link%20File**%0A"+linkconv.join('%0A'))
     })
      
 })  
