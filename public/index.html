@@ -25,12 +25,13 @@
 
         <div class="container">
             <div id="header-container-image" class="row">
-                <div class="col-8">
-                    <p>4.5</p>
-                    <p>Top of the week</p>
-                    <h1>{{data[0].nama_toko}}</h1>
-                    <button>Button</button>
-                </div>
+                <a class="link" href="/detail.html?id={{data[0]._id}}" style="color: white;">
+                    <div class="col-8">
+                        <p>4.5</p>
+                        <p>Top of the week</p>
+                        <h1>{{data[0].nama_toko}}</h1>
+                    </div>
+                </a>
                 <div class="col-4">
                     <img src="assets/banner-printer.png" alt="...">
                 </div>
@@ -55,7 +56,7 @@
                                 <div class="row">
                                     <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
-                                            <img src="assets/placeholder-mitra.png" alt="foto toko">
+                                            <img src="{{d.foto[0].link}}" alt="foto toko" style="width: 110px; height: 90px;">
                                         </div>
                                         <div id="card-text" class="col-xs-8">
                                             <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
@@ -72,7 +73,7 @@
                                 <div class="row">
                                     <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
-                                            <img src="assets/placeholder-mitra.png" alt="foto toko">
+                                            <img src="{{d.foto[0].link}}" alt="foto toko" style="width: 110px; height: 90px;">
                                         </div>
                                         <div id="card-text" class="col-xs-8">
                                             <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
@@ -89,7 +90,7 @@
                                 <div class="row">
                                     <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
-                                            <img src="assets/placeholder-mitra.png" alt="foto toko">
+                                            <img src="{{d.foto[0].link}}" alt="foto toko" style="width: 110px; height: 90px;">
                                         </div>
                                         <div id="card-text" class="col-xs-8">
                                             <h5 class="font-weight-bold">{{d.nama_toko}}</h5>

@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const Mitra = require("../../models/Mitra");
+const mongoose = require('mongoose');
 
 router.post('/mitra', (req,res) => {
     let data = req.body;
 
     const newMitra = new Mitra({
+        id_foto : data.id_foto,
         nama_toko : data.nama_toko,
         nama_pemilik : data.nama_pemilik,
         email : data.email,
@@ -28,13 +30,14 @@ router.post('/mitra', (req,res) => {
 });
 
 router.get('/mitra', (req,res) =>{
-    //console.log(req.query.sort)
+
     let sorting = req.query.sort
 
     if(sorting == 'date'){
-        Mitra.find()
-        .sort({added : 'desc'})
-        .exec((err,data) => {
+        Mitra.aggregate([
+            {$sort : {added : 1}},
+            {$lookup : {from: 'mitrafotos', localField: 'id_foto', foreignField: '_id' , as: 'foto',}},
+        ]).exec((err,data) => {
             if(err){
                 res.status(400).json({status : false,
                     message : 'failed get mitra',
@@ -51,8 +54,9 @@ router.get('/mitra', (req,res) =>{
         });
         
     }else{
-        Mitra.find()
-        .exec((err,data) => {
+        Mitra.aggregate([
+            {$lookup : {from: 'mitrafotos', localField: 'id_foto', foreignField: '_id' , as: 'foto',}},
+        ]).exec((err,data) => {
             if(err){
                 res.status(400).json({status : false,
                     message : 'failed get mitra',
@@ -73,8 +77,11 @@ router.get('/mitra', (req,res) =>{
 
 router.get('/mitra/:id', (req,res) => {
     const id = req.params.id;
-    Mitra.findById(id)
-    .exec((err,data) => {
+
+    Mitra.aggregate([
+        {$match : {'_id' : mongoose.Types.ObjectId(id)}},
+        {$lookup : {from: 'mitrafotos', localField: 'id_foto', foreignField: '_id' , as: 'foto',}},
+    ]).exec((err,data) => {
         if(err){
             res.status(400).json({status : false,
                 message : 'failed get mitra',
@@ -89,6 +96,7 @@ router.get('/mitra/:id', (req,res) => {
                 mitra : data});
         }
     });
+
 });
 
 module.exports = router;

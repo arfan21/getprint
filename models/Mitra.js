@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
 const MitraSchema = new schema({
+    id_foto: {
+        type : mongoose.Schema.ObjectId,
+        required : true,
+    },
     nama_toko:{
         type : String,
         required : true
@@ -28,8 +32,8 @@ const MitraSchema = new schema({
         required : true
     },
     added:{
-        type : Date,
-        default : Date.now
+        type : String,
+        default : new Date().toString()
     }
 });
 
