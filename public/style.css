@@ -313,3 +313,56 @@ body {
             height:100%;
             background-color:white;
         }
+
+/* add mitra */
+
+.getprint-round-navbar {
+    background: #0029FF;
+    padding: 3px;
+    color: white;
+    -webkit-border-bottom-right-radius: 10px;
+    -webkit-border-bottom-left-radius: 10px;
+    -moz-border-radius-bottomright: 10px;
+    -moz-border-radius-bottomleft: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.getprint-gray-bg {
+    background-color: #f5f6f8;
+}
+
+.getprint-white-container {
+    border-radius: 25px;
+    background-color: white;
+}
+
+.getprint-blue-title {
+    color: #0029FF;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.getprint-white-container .container {
+    padding-top: 15px;
+}
+
+.getprint-white-container button {
+    margin-bottom: 1rem;
+}
+
+#upload-foto {
+    margin-top: 50px;
+    padding-top: 10px;
+    padding-bottom: ;
+}
+
+.stretch-bottom-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.stretch-bottom-content {
+    flex: 1;
+}

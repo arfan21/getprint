@@ -14,18 +14,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
     <title>GetPrint || add mitra </title>
 </head>
-<body>
-    <form class="form" id="uploadForm">
-        <h1>Upload Foto Mitra</h1>
-        
-        <div class="form-group" >
-            <input type="file" class="form-control" name="mitraFoto" accept="image/*" id="inputFile">
+<body class="getprint-gray-bg stretch-bottom-body">
+    <div class="container-fluid getprint-round-navbar" style="background-color: blue">
+        <h4>Upload Foto Mitra</h4>
+    </div>
+    <div id="upload-foto" class="container getprint-white-container stretch-bottom-content">
+        <form class="form" id="uploadForm">
+            <div class="form-group" >
+                <input type="file" class="form-control" name="mitraFoto" accept="image/*" id="inputFile">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary" id="bttn">Submit</button>
+            </div>
+        </form>
+        <div class="progress" style="margin-top: 20px; " id="progress">
+            <div class="progress-bar" role="progressbar" " aria-valuemin="0" aria-valuemax="100">0%</div>
         </div>
-        
-        <button type="submit" class="btn btn-primary" id="bttn">Submit</button>
-    </form>
-    <div class="progress" style="margin-top: 20px; " id="progress">
-        <div class="progress-bar" role="progressbar" " aria-valuemin="0" aria-valuemax="100">0%</div>
     </div>
 </body>
 <script>
