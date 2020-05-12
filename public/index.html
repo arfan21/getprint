@@ -20,7 +20,7 @@
 <body ng-app="myApp">
     <div id="page-index" class="container-fluid" ng-controller="appCtrl">
         <div id="header-container-title" class="row">
-            <h1>Hi, <span class="font-weight-bold" id="displayNameField"></span></h1><br>
+           
         </div>
 
         <div class="container">
@@ -56,7 +56,7 @@
                                 <div class="row">
                                     <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
-                                            <img src="{{d.foto[0].link}}" alt="foto toko" style="width: 110px; height: 90px;">
+                                            <img src="{{d.link_foto}}" alt="foto toko" style="width: 110px; height: 90px;">
                                         </div>
                                         <div id="card-text" class="col-xs-8">
                                             <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
@@ -73,7 +73,7 @@
                                 <div class="row">
                                     <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
-                                            <img src="{{d.foto[0].link}}" alt="foto toko" style="width: 110px; height: 90px;">
+                                            <img src="{{d.link_foto}}" alt="foto toko" style="width: 110px; height: 90px;">
                                         </div>
                                         <div id="card-text" class="col-xs-8">
                                             <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
@@ -90,7 +90,7 @@
                                 <div class="row">
                                     <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
-                                            <img src="{{d.foto[0].link}}" alt="foto toko" style="width: 110px; height: 90px;">
+                                            <img src="{{d.link_foto}}" alt="foto toko" style="width: 110px; height: 90px;">
                                         </div>
                                         <div id="card-text" class="col-xs-8">
                                             <h5 class="font-weight-bold">{{d.nama_toko}}</h5>

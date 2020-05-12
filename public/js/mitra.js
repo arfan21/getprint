@@ -5,13 +5,13 @@ function getUrlParameter(name) {
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 };
 
-var idfoto = getUrlParameter('idfoto');
+var linkfoto = getUrlParameter('linkfoto');
 
 var appang = angular.module('menjadimitra',[]);
 
 appang.controller("menjadimitraCtrl",['$scope','$http','$window', function($scope,$http,$window){
     $scope.data = {}
-    $scope.data.id_foto = idfoto;
+    $scope.data.linkfoto = linkfoto;
 
     $scope.submitform = function(){
         $http({

@@ -86,7 +86,7 @@
                 let data = response["data"];
                 let link = response["link"];
 
-                window.location = "https://api.whatsapp.com/send?phone=6289635639022&text=**GETPRINT**%0ANama%20Pemesan%20%09%3A%20"+data[0].nama_pemesan+"%2C%0ANo%20HP%20%09%09%3A%20"+data[0].nohp_pemesan+"%2C%0AAlamat%20Pemesanan%3A%20"+data[0].alamat_pemesan+"%2C%0A**Jenis%20Pesanan**%0A"+"-"+data[0].jenis_pesanan.join("%0A-")+"%2C%0A**Link%20File**%0A"+link.join('%0A');
+                window.location = "https://api.whatsapp.com/send?phone="+data[0].toko[0].no_hp+"&text=**GETPRINT**%0ANama%20Pemesan%20%09%3A%20"+data[0].nama_pemesan+"%2C%0ANo%20HP%20%09%09%3A%20"+data[0].nohp_pemesan+"%2C%0AAlamat%20Pemesanan%3A%20"+data[0].alamat_pemesan+"%2C%0A**Jenis%20Pesanan**%0A"+"-"+data[0].jenis_pesanan.join("%0A-")+"%2C%0A**Link%20File**%0A"+link.join('%0A');
             }
         }
 

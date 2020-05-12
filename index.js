@@ -8,7 +8,6 @@ const db = require('./keys').mongoURI;
 const mitra = require("./routes/api/mitra");
 const upload = require("./routes/api/upload");
 const pesanan = require("./routes/api/pesanan");
-const uploadfotomitra = require("./routes/api/fotomitra");
 
 mongoose
     .connect(db,{ useNewUrlParser: true, useUnifiedTopology: true })
@@ -23,7 +22,6 @@ app.use(express.static('public'));
 app.use('/api/', mitra);
 app.use('/api/', upload);
 app.use('/api/', pesanan);
-app.use('/api/', uploadfotomitra);
 
 app.get('/send-id', function(req, res) {
     res.json({id: myLiffId});
