@@ -28,8 +28,8 @@ const PesananSchema = new schema({
     },
 
     added : {
-        type : String,
-        default : new Date().toString()
+        type : Date,
+        default : Date.now
     }
 });
 

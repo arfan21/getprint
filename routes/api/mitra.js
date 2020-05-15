@@ -7,7 +7,7 @@ router.post('/mitra', (req,res) => {
     let data = req.body;
 
     const newMitra = new Mitra({
-        id_foto : data.id_foto,
+        link_foto : data.linkfoto,
         nama_toko : data.nama_toko,
         nama_pemilik : data.nama_pemilik,
         email : data.email,
@@ -35,8 +35,7 @@ router.get('/mitra', (req,res) =>{
 
     if(sorting == 'date'){
         Mitra.aggregate([
-            {$sort : {added : 1}},
-            {$lookup : {from: 'mitrafotos', localField: 'id_foto', foreignField: '_id' , as: 'foto',}},
+            {$sort : {added : -1}},
         ]).exec((err,data) => {
             if(err){
                 res.status(400).json({status : false,
@@ -54,9 +53,7 @@ router.get('/mitra', (req,res) =>{
         });
         
     }else{
-        Mitra.aggregate([
-            {$lookup : {from: 'mitrafotos', localField: 'id_foto', foreignField: '_id' , as: 'foto',}},
-        ]).exec((err,data) => {
+        Mitra.find().exec((err,data) => {
             if(err){
                 res.status(400).json({status : false,
                     message : 'failed get mitra',
@@ -80,7 +77,6 @@ router.get('/mitra/:id', (req,res) => {
 
     Mitra.aggregate([
         {$match : {'_id' : mongoose.Types.ObjectId(id)}},
-        {$lookup : {from: 'mitrafotos', localField: 'id_foto', foreignField: '_id' , as: 'foto',}},
     ]).exec((err,data) => {
         if(err){
             res.status(400).json({status : false,

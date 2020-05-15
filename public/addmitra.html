@@ -38,13 +38,16 @@
     const progress_bar = document.getElementsByClassName("progress-bar")[0];
 
     uploadForm.addEventListener("submit", uploadFile);
-
+ 
     function uploadFile(e) {
         e.preventDefault();
+        
+        var data = new FormData(uploadForm)
+        data.append("image", e.target[0].files[0]);
 
         const xhr = new XMLHttpRequest();
 
-        xhr.open("post", "/api/uploadfotomitra");
+        xhr.open("POST", "https://api.imgur.com/3/image");
         xhr.upload.addEventListener("progress" , e => {
             
             const percent = e.lengthComputable ? (e.loaded/e.total) * 100 : 0;
@@ -56,15 +59,15 @@
 
         xhr.onreadystatechange = function() {
             if (xhr.readyState == XMLHttpRequest.DONE) {
-                let potomitra = xhr.responseText 
-                let response = JSON.parse(potomitra)
-                
-                window.location = '/mitra.html?idfoto=' + response["fotomitra"]._id;
+    
+                let res = JSON.parse(xhr.responseText)
+
+                window.location = '/mitra.html?linkfoto=' + res["data"].link;
             }
         }
 
-        xhr.setRequestHeader("enctype", "multipart/form-data");
-        xhr.send(new FormData(uploadForm));
+        xhr.setRequestHeader("Authorization", "Client-ID f4a9a61acd375d4");
+        xhr.send(data);
         
     }
 </script>
