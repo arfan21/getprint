@@ -26,7 +26,10 @@ const PesananSchema = new schema({
         type : String,
         required : true
     },
-
+    link_file : {
+        type : String,
+        required : true,
+    },
     added : {
         type : Date,
         default : Date.now

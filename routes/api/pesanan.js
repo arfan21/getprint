@@ -13,6 +13,7 @@ router.post('/pesanan', (req,res) => {
         nohp_pemesan : data.nohp_pemesan,
         jenis_pesanan : data.jenispesanan,
         alamat_pemesan : data.alamat_pemesan,
+        link_file : data.link_file,
     })
 
     newPesanan.save()

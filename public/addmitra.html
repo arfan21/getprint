@@ -27,19 +27,27 @@
                 <button type="submit" class="btn btn-primary" id="bttn">Next</button>
             </div>
         </form>
-        <div class="progress" style="margin-top: 20px; " id="progress">
-            <div class="progress-bar" role="progressbar" " aria-valuemin="0" aria-valuemax="100">0%</div>
+        <div id="progress-layout">
+
         </div>
     </div>
 </body>
 <script>
     const uploadForm = document.getElementById("uploadForm");
     const inputFIle = document.getElementById("inputFile");
-    const progress_bar = document.getElementsByClassName("progress-bar")[0];
+    
 
     uploadForm.addEventListener("submit", uploadFile);
  
     function uploadFile(e) {
+        $('#progress-layout').html(`   
+            <div class="progress" style="margin-top: 20px; " id="progress">
+                <div class="progress-bar" role="progressbar" " aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+        `)
+
+        const progress_bar = document.getElementsByClassName("progress-bar")[0];
+        
         e.preventDefault();
         
         var data = new FormData(uploadForm)

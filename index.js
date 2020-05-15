@@ -6,7 +6,6 @@ const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const db = require('./keys').mongoURI;
 const mitra = require("./routes/api/mitra");
-const upload = require("./routes/api/upload");
 const pesanan = require("./routes/api/pesanan");
 
 mongoose
@@ -20,7 +19,6 @@ app.use(bodyparser.json());
 //route api
 app.use(express.static('public'));
 app.use('/api/', mitra);
-app.use('/api/', upload);
 app.use('/api/', pesanan);
 
 app.get('/send-id', function(req, res) {

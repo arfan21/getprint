@@ -15,84 +15,17 @@
     <title>GetPrint || Upload </title>
 </head>
 <body>
-    <form ng-app="upload" ng-controller="myapp" id="uploadForm" name="formupload" >
+    <form id="uploadForm" name="formupload" >
         <h1>Upload File</h1>
-        <p style="color: red ;">MAX 5 FILE !</p>
-        <div class="form-group" ng-repeat="form in forms" >
-            <label>{{form.name}}</label>
+        <div class="form-group" >
+            <label>Upload File</label>
             <input type="file" class="form-control" ng-model="data.myfile" name="myfile">
         </div>
-        <div class="form-group" style="display: none;">
-            <input type="text" class="form-control" ng-model="data.id" name="pesananid" value="{{data.id}}">
-        </div>
-        <div class="form-group">
-            <input type="button" value="+" ng-click="addform()" class="btn btn-primary" style="text-decoration: none; color: white;">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Next</button>
     </form>
-    <div class="progress" style="margin-top: 20px; " id="progress">
-        <div class="progress-bar" role="progressbar" " aria-valuemin="0" aria-valuemax="100">0%</div>
+    <div id="progress-layout">
+
     </div>
 </body>
-<script>
-    function getUrlParameter(name) {
-        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-        var results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-    };
-
-    var id = getUrlParameter('id');
-
-    var app = angular.module('upload', []);
-
-    app.controller("myapp",['$scope', function($scope){
-        $scope.data = {}
-        $scope.data.id = id;
-        $scope.forms = [{name : "file 1"}]
-        $scope.addform = function(){
-            if($scope.forms.length <= 4){
-                $scope.forms.push({name: "file " + ($scope.forms.length + 1)});
-            }
-        };
-    }]);
-</script>
-<script>
-    const uploadForm = document.getElementById("uploadForm");
-    const inputFIle = document.getElementById("inputFile");
-    const progress_bar = document.getElementsByClassName("progress-bar")[0];
-
-    uploadForm.addEventListener("submit", uploadFile);
-
-    function uploadFile(e) {
-        e.preventDefault();
-
-        const xhr = new XMLHttpRequest();
-
-        xhr.open("post", "/api/uploadfile");
-        xhr.upload.addEventListener("progress" , e => {
-            
-            const percent = e.lengthComputable ? (e.loaded/e.total) * 100 : 0;
-
-            progress_bar.style.width = percent.toFixed(2) + "%";
-            progress_bar.textContent = percent.toFixed(2) + "%";
-            
-        })
-
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == XMLHttpRequest.DONE) {
-                let responseText = xhr.responseText; 
-                let response = JSON.parse(responseText);
-                let data = response["data"];
-                let link = response["link"];
-
-                window.location = "https://api.whatsapp.com/send?phone="+data[0].toko[0].no_hp+"&text=**GETPRINT**%0ANama%20Pemesan%20%09%3A%20"+data[0].nama_pemesan+"%2C%0ANo%20HP%20%09%09%3A%20"+data[0].nohp_pemesan+"%2C%0AAlamat%20Pemesanan%3A%20"+data[0].alamat_pemesan+"%2C%0A**Jenis%20Pesanan**%0A"+"-"+data[0].jenis_pesanan.join("%0A-")+"%2C%0A**Link%20File**%0A"+link.join('%0A');
-            }
-        }
-
-        xhr.setRequestHeader("enctype", "multipart/form-data");
-        xhr.send(new FormData(uploadForm));
-        
-    }
-</script>
+<script src="js/upload.js"></script>
 </html>

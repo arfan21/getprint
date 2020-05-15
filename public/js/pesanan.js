@@ -6,12 +6,14 @@ function getUrlParameter(name) {
 };
 var id = getUrlParameter('id');
 var uidline = getUrlParameter('useridline');
+var linkfile = getUrlParameter('linkfile')
 
 var apppesan = angular.module('pesanan',[]);
 apppesan.controller("myappCtrl",['$scope','$http','$window', function($scope,$http,$window){
 	$scope.data = {};
 	$scope.data.id_toko = id;
 	$scope.data.userid_line = uidline;	
+	$scope.data.link_file = linkfile;	
 	     
     $scope.submitMyform = function(){
 		let jenispesanan = [];
@@ -33,12 +35,23 @@ apppesan.controller("myappCtrl",['$scope','$http','$window', function($scope,$ht
             data : $scope.data,
         }).then(function successCallback(response){
 			let data = response.data.pesanan;
+			$window.alert(response.data.message);
+			
+			$http({
+				method : "GET",
+				url : "/api/pesanan/byid/"+ data._id,
+			}).then(function successCallback(response){
+				let data = response.data.pesanan;
+				console.log(data);
+				$window.location.href = "https://api.whatsapp.com/send?phone="+data[0].toko[0].no_hp+"&text=**GETPRINT**%0ANama%20Pemesan%20%09%3A%20"+data[0].nama_pemesan+"%2C%0ANo%20HP%20%09%09%3A%20"+data[0].nohp_pemesan+"%2C%0AAlamat%20Pemesanan%3A%20"+data[0].alamat_pemesan+"%2C%0A**Jenis%20Pesanan**%0A"+"-"+data[0].jenis_pesanan.join("%0A-")+"%2C%0A**Link%20File**%0A"+data[0].link_file;
+			})
 
-            $window.alert(response.data.message);
-			$window.location.href = "/upload.html?id=" + data._id;
+			
         })
     }
 }]);
+
+
 
 Array.prototype.forEach.call(document.querySelectorAll('[type=radio]'), function(radio) {
 	radio.addEventListener('click', function(){
@@ -59,3 +72,8 @@ Array.prototype.forEach.call(document.querySelectorAll('[type=radio]'), function
 		}
 	}, false)
 })
+
+window.addEventListener('beforeunload', function (e) { 
+	e.preventDefault(); 
+	e.returnValue = ''; 
+}); 
