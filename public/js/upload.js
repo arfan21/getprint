@@ -47,13 +47,14 @@ function uploadFile(e) {
             const xhr2 = new XMLHttpRequest();
             xhr2.open("POST", "https://api.dropboxapi.com/2/sharing/create_shared_link");
             xhr2.setRequestHeader("Content-Type", "application/json");
-            xhr2.setRequestHeader("Authorization", "Bearer ROeWeTjqfBAAAAAAAAAAM2cfcbFky7NdmnWYyFGU6czWNlpjELgvA-f2lsAanal6");
+            xhr2.setRequestHeader("Authorization", "Bearer <token>");
             
 
             xhr2.onreadystatechange = function() {
                 if (xhr2.readyState == XMLHttpRequest.DONE) {
                     console.log(xhr2.responseText)
                     let res = JSON.parse(xhr2.responseText)
+
                     window.location = '/pesanan.html?id=' + id +"&useridline="+ uidline  +'&linkfile='+ res["url"];
                 }
             }
@@ -65,14 +66,9 @@ function uploadFile(e) {
         }
     }
     
-    xhr.setRequestHeader("Authorization", "Bearer ROeWeTjqfBAAAAAAAAAAM2cfcbFky7NdmnWYyFGU6czWNlpjELgvA-f2lsAanal6");
+    xhr.setRequestHeader("Authorization", "Bearer <token>");
     xhr.setRequestHeader("Dropbox-API-Arg", "{\"path\": \"/getprint/"+e.target[0].files[0].name+"\",\"mode\": \"add\",\"autorename\": true,\"mute\": false,\"strict_conflict\": false}");
     xhr.setRequestHeader("Content-Type", "application/octet-stream");
     xhr.send(data);
     
 }
-
-window.addEventListener('beforeunload', function (e) { 
-    e.preventDefault(); 
-    e.returnValue = ''; 
-}); 

@@ -72,8 +72,3 @@ Array.prototype.forEach.call(document.querySelectorAll('[type=radio]'), function
 		}
 	}, false)
 })
-
-window.addEventListener('beforeunload', function (e) { 
-	e.preventDefault(); 
-	e.returnValue = ''; 
-}); 
