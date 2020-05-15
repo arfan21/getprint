@@ -320,10 +320,6 @@ body {
     background: #0029FF;
     padding: 3px;
     color: white;
-    -webkit-border-bottom-right-radius: 10px;
-    -webkit-border-bottom-left-radius: 10px;
-    -moz-border-radius-bottomright: 10px;
-    -moz-border-radius-bottomleft: 10px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
 }
@@ -333,7 +329,8 @@ body {
 }
 
 .getprint-white-container {
-    border-radius: 25px;
+    border-top-right-radius: 25px;
+    border-top-left-radius: 25px;
     background-color: white;
 }
 
@@ -355,7 +352,6 @@ body {
 #upload-foto {
     margin-top: 50px;
     padding-top: 10px;
-    padding-bottom: ;
 }
 
 .stretch-bottom-body {
@@ -365,4 +361,19 @@ body {
 
 .stretch-bottom-content {
     flex: 1;
+}
+
+.fa-form-position {
+    float: right;
+    margin-right: 10px;
+    margin-top: -26px;
+    position: relative;
+    z-index: 2;
+    color: #838383;
+}
+
+.form-group .getprint-form-gray { /* specific to override default bootstrap values */
+    background-color: #F4F4F4;
+    color: white;
+    box-shadow: 0px 15px 30px rgba(7, 5, 90, 0.1);
 }
