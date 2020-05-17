@@ -9,7 +9,7 @@ const mitra = require("./routes/api/mitra");
 const pesanan = require("./routes/api/pesanan");
 
 mongoose
-    .connect(db,{ useNewUrlParser: true, useUnifiedTopology: true })
+    .connect(db,{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify : false })
     .then(() => console.log("mongoDB Connected"))
     .catch((err) => console.log(err));
 
@@ -20,6 +20,7 @@ app.use(bodyparser.json());
 app.use(express.static('public'));
 app.use('/api/', mitra);
 app.use('/api/', pesanan);
+
 
 app.get('/send-id', function(req, res) {
     res.json({id: myLiffId});

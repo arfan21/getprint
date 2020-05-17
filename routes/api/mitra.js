@@ -95,4 +95,13 @@ router.get('/mitra/:id', (req,res) => {
 
 });
 
+router.put('/mitra/:id', (req,res) => {
+    const id = req.params.id;
+    Mitra.findByIdAndUpdate(id, req.body, (err, data) => {
+        res.status(200).json({status : true,
+            message : 'Success update mitra',
+            mitra : req.body});
+    })
+})
+
 module.exports = router;

@@ -374,6 +374,5 @@ body {
 
 .form-group .getprint-form-gray { /* specific to override default bootstrap values */
     background-color: #F4F4F4;
-    color: white;
     box-shadow: 0px 15px 30px rgba(7, 5, 90, 0.1);
 }

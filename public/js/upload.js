@@ -47,7 +47,7 @@ function uploadFile(e) {
             const xhr2 = new XMLHttpRequest();
             xhr2.open("POST", "https://api.dropboxapi.com/2/sharing/create_shared_link");
             xhr2.setRequestHeader("Content-Type", "application/json");
-            xhr2.setRequestHeader("Authorization", "Bearer <token>");
+            xhr2.setRequestHeader("Authorization", "Bearer ROeWeTjqfBAAAAAAAAAAOYwHy2klMADhjU6sTCA_4NxLtOw46GAr0VGGNVcYa8kr");
             
 
             xhr2.onreadystatechange = function() {
@@ -66,7 +66,7 @@ function uploadFile(e) {
         }
     }
     
-    xhr.setRequestHeader("Authorization", "Bearer <token>");
+    xhr.setRequestHeader("Authorization", "Bearer ROeWeTjqfBAAAAAAAAAAOYwHy2klMADhjU6sTCA_4NxLtOw46GAr0VGGNVcYa8kr");
     xhr.setRequestHeader("Dropbox-API-Arg", "{\"path\": \"/getprint/"+e.target[0].files[0].name+"\",\"mode\": \"add\",\"autorename\": true,\"mute\": false,\"strict_conflict\": false}");
     xhr.setRequestHeader("Content-Type", "application/octet-stream");
     xhr.send(data);

@@ -20,14 +20,14 @@
             <label>Nama Pemesan</label>
             <input type="text" class="form-control" ng-model="data.nama" name="nama" required>
             <span style="color: red;"  ng-show="formPesanan.nama.$dirty && formPesanan.nama.$invalid || formPesanan.nama.$touched">
-                <span ng-show="formPesanan.nama.$error.required" >Nama Toko harus diisi</span>
+                <span ng-show="formPesanan.nama.$error.required" >Nama Pemesan harus diisi</span>
             </span>
         </div>
         <div class="form-group" >
             <label>No HP pemesan</label>
             <input type="text" class="form-control" ng-model="data.nohp_pemesan" name="nohp_pemesan" required>
             <span style="color: red;"  ng-show="formPesanan.nohp_pemesan.$dirty && formPesanan.nohp_pemesan.$invalid || formPesanan.nohp_pemesan.$touched">
-                <span ng-show="formPesanan.nohp_pemesan.$error.required" >Nama Toko harus diisi</span>
+                <span ng-show="formPesanan.nohp_pemesan.$error.required" >No HP pemesan harus diisi</span>
             </span>
         </div>
         <div class="form-group" >
@@ -47,7 +47,7 @@
             <label>Alamat Pemesan</label>
             <input type="text" class="form-control" ng-model="data.alamat_pemesan" name="alamat_pemesan" required>
             <span style="color: red;"  ng-show="formPesanan.alamat_pemesan.$dirty && formPesanan.alamat_pemesan.$invalid || formPesanan.alamat_pemesan.$touched">
-                <span ng-show="formPesanan.alamat_pemesan.$error.required" >Nama Toko harus diisi</span>
+                <span ng-show="formPesanan.alamat_pemesan.$error.required" >Alamat Pemesan harus diisi</span>
             </span>
         </div>
         
