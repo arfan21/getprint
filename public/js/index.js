@@ -5,18 +5,15 @@ app.controller("appCtrl", ['$scope','$http','$window', function($scope,$http,$wi
         url: "/api/mitra",
     }).then(function successCallback(response){
         $scope.data = response.data.mitra
-        console.log(response.data.mitra[0].nama_toko);
     });
     $http({
         method: "GET",
         url : "/api/mitra?sort=date",
     }).then(function successCallback(response){
         $scope.databydate = response.data.mitra
-        console.log(response.data.message);
     });
 }]);
 
-$('body').append('<div style="" id="loadingDiv"><div class="loader">Loading...</div></div>');
 $(window).on('load', function(){
   setTimeout(removeLoader, 2000); //wait for page load PLUS two seconds.
 });
@@ -46,8 +43,7 @@ window.onload = function() {
                 initializeLiffOrDie(myLiffId);
             })
             .catch(function(error) {
-                document.getElementById("liffAppContent").classList.add('hidden');
-                document.getElementById("nodeLiffIdErrorMessage").classList.remove('hidden');
+                console.log("LIFF GAGAL / Belum login line")
             });
     } else {
         myLiffId = defaultLiffId;
@@ -61,8 +57,7 @@ window.onload = function() {
 */
 function initializeLiffOrDie(myLiffId) {
     if (!myLiffId) {
-        document.getElementById("liffAppContent").classList.add('hidden');
-        document.getElementById("liffIdErrorMessage").classList.remove('hidden');
+        console.log("LIFF GAGAL / Belum login line")
     } else {
         initializeLiff(myLiffId);
     }
@@ -82,8 +77,7 @@ function initializeLiff(myLiffId) {
             initializeApp();
         })
         .catch((err) => {
-            document.getElementById("liffAppContent").classList.add('hidden');
-            document.getElementById("liffInitErrorMessage").classList.remove('hidden');
+            console.log("LIFF GAGAL / Belum login line")
         });
 }
 

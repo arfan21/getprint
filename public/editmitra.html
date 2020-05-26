@@ -15,15 +15,21 @@
     
     <title>GetPrint</title>
 </head>
-<body class="getprint-gray-bg stretch-bottom-body">
+<body class="getprint-gray-bg stretch-bottom-body" ng-app = "menjadimitra" ng-controller="menjadimitraCtrl">
     <div class="container-fluid getprint-round-navbar" style="background-color: blue">
         <h4>Form Mitra Baru</h4>
     </div>
     <div class="container">
         <p class="getprint-blue-title">Data Mitra</p>
+        <div style="width: 170px;height: 170px;background-color: white;border-radius: 25px;">
+            <img src="{{data.link_foto}}" style="width: 150px; height: 150px;margin: 10px;border-radius: 25px;"><br> 
+        </div>
+        
+        <a style="text-decoration:none;color: white;" class="getprint-blue-title btn btn-primary" href="editfoto.html?id={{data._id}}&useridline=U806e7bec3288e9572243e079aa7b6b16">Ubah foto mitra</a>
+        
     </div>
     <div class=" container getprint-white-container stretch-bottom-content pt-2">
-        <form ng-app = "menjadimitra" ng-controller="menjadimitraCtrl" ng-submit="submitform()" name="formMitra">
+        <form  ng-submit="submitform()" name="formMitra">
             <div class="form-group" style="display: none;">
                 <input type="text" class="form-control getprint-form-gray" ng-model="data.id_foto" name="pesananid" value="{{data.id_foto}}">
             </div>

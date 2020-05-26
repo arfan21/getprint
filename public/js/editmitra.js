@@ -6,25 +6,36 @@ function getUrlParameter(name) {
 };
 
 var id = getUrlParameter('id');
+var linkfoto = getUrlParameter('linkfoto');
+
 
 var appang = angular.module('menjadimitra',[]);
 
 appang.controller("menjadimitraCtrl",['$scope','$http','$window', function($scope,$http,$window){
     $scope.data = {}
+    
+    
+    
     $http({
         method : "GET",
         url: "/api/mitra/" + id,
     }).then(function successCallback(response){
         $scope.data = response.data.mitra[0]
+        $scope.data.link_foto = linkfoto;
         console.log(response.data.mitra[0]);
     });
+
+    
+
     $scope.submitform = function(){
+
+        $scope.data.link_foto = linkfoto;
+
         $http({
             method : "PUT",
             url: "/api/mitra/" + id,
             data : $scope.data,
         }).then(function successCallback(response){
-            console.log(response.data);
             $window.alert(response.data.message);
             $window.location.href = '/detail.html?id='+id+'&useridline=U806e7bec3288e9572243e079aa7b6b16';
         });

@@ -21,7 +21,7 @@ app.controller("appCtrl", ['$scope','$http','$window', function($scope,$http,$wi
 
         if(uidline == "U806e7bec3288e9572243e079aa7b6b16"){
             $('#header-detail').append(`
-                <a href="/editmitra.html?id=`+$scope.data._id+`&useridline=U806e7bec3288e9572243e079aa7b6b16" style="text-decoration:none;margin-left:20%">Edit Mitra</a>
+                <a href="/editmitra.html?id=`+$scope.data._id+`&useridline=U806e7bec3288e9572243e079aa7b6b16&linkfoto=`+$scope.data.link_foto+`" style="text-decoration:none;margin-left:20%">Edit Mitra</a>
             `)
         }
     });
