@@ -15,46 +15,61 @@
 
     <title>GetPrint</title>
 </head>
-<body ng-app="detailmitra"  ng-controller="appCtrl">
-    <div class="header-detail-box">
+<body class="getprint-gray-bg stretch-bottom-body" ng-app="detailmitra" ng-controller="appCtrl">
+    <!-- <div class="header-detail-box">
         <div class="header-detail" id="header-detail">
             <a href="/">GetPrint</a>
         </div>
+    </div> -->
+    <div class="container-fluid getprint-round-navbar">
+        <h4>GetPrint</h4>
     </div>
+    <div id="detail-white-container" class="container getprint-white-container stretch-bottom-content pt-2">
+        <img id="detail-img"  src="{{data.link_foto}}" alt="foto toko">
+        <div id="detail-nama-toko">
+            <h4>{{data.nama_toko}}</h4>
+        </div>
+        <div id="detail-alamat-toko">
+            <p>
+                <span class="fa fa-map-marker"></span>
+                {{data.alamat_toko}}
+            </p>
+        </div>
 
-    <div class="img-detail">
-        <img src="{{data.link_foto}}" alt="foto toko">
-    </div>
-
-    <div class="body-detail">
-        <div class="nama-toko">
-            <p>{{data.nama_toko}}</p>
+        <div id="info-detail" class="container">
+            <h4>Melayani</h4>
+            <div class="info-group row">
+                <div class="col-3">
+                    <img src="assets/icon-print.png" alt="..." class="img-fluid w-100">
+                </div>
+                <div class="col-9">
+                    <h4>Print</h4>
+                    <p>Rp.{{data.harga.print}} / Lembar</p>
+                </div>
+            </div>
+            <div class="info-group row">
+                <div class="col-3">
+                    <img src="assets/icon-scan.png" alt="..." class="img-fluid w-100">
+                </div>
+                <div class="col-9">
+                    <h4>Scan</h4>
+                    <p>Rp.{{data.harga.scan}} / Lembar</p>
+                </div>
+            </div>
+            <div class="info-group row">
+                <div class="col-3">
+                    <img src="assets/icon-photocopy.png" alt="..." class="img-fluid w-100">
+                </div>
+                <div class="col-9">
+                    <h4>Fotocopy</h4>
+                    <p>Rp.{{data.harga.fotocopy}} / Lembar</p>
+                </div>
+            </div>
         </div>
-        <div class="alamat-toko">
-            <p>{{data.alamat_toko}}</p>
-        </div>
-    </div>
-
-    <div class="info-detail">
-        <h3>Melayani</h3>
-        <div class="info-group">
-            <h4>Print</h4>
-            <p>Rp.{{data.harga.print}} / Lembar</p>
-        </div>
-        <div class="info-group">
-            <h4>Scan</h4>
-            <p>Rp.{{data.harga.scan}} / Lembar</p>
-        </div>
-        <div class="info-group">
-            <h4>Fotocopy</h4>
-            <p>Rp.{{data.harga.fotocopy}} / Lembar</p>
-        </div>
-    </div>
-    <div class="pesan">
-        <div id="input">
+        <div class="pesan" id="input">
             <a id="link" href="upload.html?id={{data._id}}">Pesan Sekarang</a>
+            <span class="fa fa-angle-right"></span>
         </div>
-        
     </div>
 </body>
 <script src="js/detail.js"></script>
