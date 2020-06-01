@@ -124,6 +124,10 @@ body {
     padding-right: 20px;
 }
 
+#button-container button{
+    text-decoration: none;
+}
+
 #header-container {
     display: block;
 }
@@ -442,4 +446,18 @@ body {
 
 .pesan span {
     font-size: 30px;
+}
+
+.detail-admin-menu{
+    display:flex;
+    justify-content:flex-end; 
+    width:100%;
+
+}
+
+.detail-admin-menu a {
+    text-decoration:none;
+    color:white;
+    margin: 10px;
+    cursor: pointer;
 }

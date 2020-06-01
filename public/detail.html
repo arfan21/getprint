@@ -16,13 +16,8 @@
     <title>GetPrint</title>
 </head>
 <body class="getprint-gray-bg stretch-bottom-body" ng-app="detailmitra" ng-controller="appCtrl">
-    <!-- <div class="header-detail-box">
-        <div class="header-detail" id="header-detail">
-            <a href="/">GetPrint</a>
-        </div>
-    </div> -->
-    <div class="container-fluid getprint-round-navbar">
-        <h4>GetPrint</h4>
+    <div class="container-fluid getprint-round-navbar" style="display: flex;">
+        <a href="/" style="text-decoration: none; color:white;"><h4>GetPrint</h4></a>
     </div>
     <div id="detail-white-container" class="container getprint-white-container stretch-bottom-content pt-2">
         <img id="detail-img"  src="{{data.link_foto}}" alt="foto toko">
@@ -66,11 +61,30 @@
                 </div>
             </div>
         </div>
-        <div class="pesan" id="input">
-            <a id="link" href="upload.html?id={{data._id}}">Pesan Sekarang</a>
-            <span class="fa fa-angle-right"></span>
-        </div>
+        <a id="link" href="upload.html?id={{data._id}}" style="color: white;text-decoration: none;">
+            <div class="pesan" id="input">
+                Pesan Sekarang
+                <span class="fa fa-angle-right"></span>
+            </div>
+        </a>
     </div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Apakah anda yakin untuk menghapus?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <a class="btn btn-secondary" data-dismiss="modal" id="batalBtn" style="color: white;">Batal</a>
+          <a class="btn btn-primary" ng-click="deleteFunc()" id="deleteBtn" style="color: white;">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 <script src="js/detail.js"></script>
 </html>

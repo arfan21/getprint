@@ -8,6 +8,7 @@ router.post('/mitra', (req,res) => {
 
     const newMitra = new Mitra({
         link_foto : data.linkfoto,
+        deleteHash_foto : data.deleteHash,
         nama_toko : data.nama_toko,
         nama_pemilik : data.nama_pemilik,
         email : data.email,
@@ -98,9 +99,30 @@ router.get('/mitra/:id', (req,res) => {
 router.put('/mitra/:id', (req,res) => {
     const id = req.params.id;
     Mitra.findByIdAndUpdate(id, req.body, (err, data) => {
+        if(err){
+            res.status(400).json({status : false,
+                message : 'Failed update mitra',
+                error : err});
+            return;
+        }
         res.status(200).json({status : true,
             message : 'Success update mitra',
             mitra : req.body});
+    })
+})
+
+router.delete('/mitra/:id', (req,res) => {
+    const id = req.params.id;
+    Mitra.findByIdAndDelete(id, (err) => {
+        if(err){
+            res.status(400).json({status : false,
+                message : 'Failed delete mitra',
+                error : err});
+            return;
+        }
+        console.log('Success delete mitra');
+        res.status(200).json({status : true,
+            message : 'Success delete mitra'});
     })
 })
 

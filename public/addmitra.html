@@ -70,7 +70,7 @@
     
                 let res = JSON.parse(xhr.responseText)
 
-                window.location = '/mitra.html?linkfoto=' + res["data"].link;
+                window.location = '/mitra.html?linkfoto=' + res["data"].link +'&deletehash='+ res["data"].deletehash;
             }
         }
 

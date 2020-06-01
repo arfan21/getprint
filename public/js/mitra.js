@@ -6,12 +6,14 @@ function getUrlParameter(name) {
 };
 
 var linkfoto = getUrlParameter('linkfoto');
+var deleteHash = getUrlParameter('deletehash');
 
 var appang = angular.module('menjadimitra',[]);
 
 appang.controller("menjadimitraCtrl",['$scope','$http','$window', function($scope,$http,$window){
     $scope.data = {}
     $scope.data.linkfoto = linkfoto;
+    $scope.data.deleteHash = deleteHash;
 
     $scope.submitform = function(){
         $http({

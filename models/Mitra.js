@@ -6,6 +6,10 @@ const MitraSchema = new schema({
         type : String,
         required : true,
     },
+    deleteHash_foto:{
+        type : String,
+        required : true,
+    },
     nama_toko:{
         type : String,
         required : true
