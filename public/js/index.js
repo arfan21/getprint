@@ -12,6 +12,13 @@ app.controller("appCtrl", ['$scope','$http','$window', function($scope,$http,$wi
     }).then(function successCallback(response){
         $scope.databydate = response.data.mitra
     });
+    $http({
+        method: "GET",
+        url : "/api/mitra?sort=rating",
+    }).then(function successCallback(response){
+        $scope.databyrating = response.data.mitra
+    });
+    
 }]);
 
 $(window).on('load', function(){

@@ -7,8 +7,8 @@ router.post('/mitra', (req,res) => {
     let data = req.body;
 
     const newMitra = new Mitra({
-        link_foto : data.linkfoto,
-        deleteHash_foto : data.deleteHash,
+        link_foto : data.link_foto,
+        deleteHash_foto : data.deleteHash_foto,
         nama_toko : data.nama_toko,
         nama_pemilik : data.nama_pemilik,
         email : data.email,
@@ -53,6 +53,22 @@ router.get('/mitra', (req,res) =>{
             }
         });
         
+    }else if(sorting == 'rating'){
+        Mitra.find().sort({'rating.avg_point' : -1}).exec((err,data) => {
+            if(err){
+                res.status(400).json({status : false,
+                    message : 'failed get mitra',
+                    error : err});
+            }else if(data.length == 0){
+                res.status(400).json({status : false,
+                    message : 'failed get mitra',
+                    error : 'mitra not found'});
+            }else{
+                res.status(200).json({status : true,
+                    message : 'Success get mitra',
+                    mitra : data});
+            }
+        });
     }else{
         Mitra.find().exec((err,data) => {
             if(err){

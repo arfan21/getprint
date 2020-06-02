@@ -12,8 +12,8 @@ var appang = angular.module('menjadimitra',[]);
 
 appang.controller("menjadimitraCtrl",['$scope','$http','$window', function($scope,$http,$window){
     $scope.data = {}
-    $scope.data.linkfoto = linkfoto;
-    $scope.data.deleteHash = deleteHash;
+    $scope.data.link_foto = linkfoto;
+    $scope.data.deleteHash_foto = deleteHash;
 
     $scope.submitform = function(){
         $http({

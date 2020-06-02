@@ -35,6 +35,30 @@ const MitraSchema = new schema({
         type : String,
         required : true
     },
+    rating : {
+        total_point : {
+            type : Number,
+            default : 0,
+        },
+        avg_point : {
+            type : Number,
+            default : 0,
+        },
+        total_rating : {
+            type : Number,
+            default : 0,
+        },
+        user_rating : [
+            {
+                userid_line : {
+                    type : String,
+                },
+                rating_user : {
+                    type : Number,
+                }
+            }
+        ]
+    },
     added:{
         type : Date,
         default : Date.now

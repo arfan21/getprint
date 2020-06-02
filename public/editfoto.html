@@ -47,6 +47,7 @@
     };
     var id = getUrlParameter('id');
     var uidline = getUrlParameter('useridline');
+    var deleteHash_foto = getUrlParameter('deletehash')
  
     function uploadFile(e) {
         $('#progress-layout').html(`   
@@ -76,10 +77,21 @@
 
         xhr.onreadystatechange = function() {
             if (xhr.readyState == XMLHttpRequest.DONE) {
-    
                 let res = JSON.parse(xhr.responseText)
 
-                window.location = '/editmitra.html?id='+id+'&useridline='+uidline+'&linkfoto=' + res["data"].link;
+                const xhr2 = new XMLHttpRequest();
+                xhr2.open("DELETE", "https://api.imgur.com/3/image/" + deleteHash_foto);
+                xhr2.setRequestHeader("Authorization", "Client-ID f4a9a61acd375d4");
+                
+                xhr2.onreadystatechange = function() {
+                    if (xhr2.readyState == XMLHttpRequest.DONE) {
+                        window.location = '/editmitra.html?id='+id+'&useridline='+uidline+'&linkfoto=' + res["data"].link +'&deletehash='+ res["data"].deletehash;
+                    }
+                }
+            
+                data = "";
+                xhr2.send(data)
+                
             }
         }
 

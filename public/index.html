@@ -19,6 +19,7 @@
 
 <body ng-app="myApp">
     <div  id="loadingDiv"><div class="loader" >Loading...</div></div>
+
     <div id="page-index" class="container-fluid" ng-controller="appCtrl">
         <div id="header-container-title" class="row">
            
@@ -58,6 +59,41 @@
                                     <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
                                             <img src="{{d.link_foto}}" alt="foto toko" style="width: 110px; height: 90px;">
+                                            <span class="fa fa-star"
+                                                style="
+                                                    margin: 20px;
+                                                    padding: 10px;
+                                                    border-radius: 50px;
+                                                    background-color: blue;
+                                                    color: white;
+                                                "
+                                            > {{d.rating.avg_point}}</span>
+                                        </div>
+                                        <div id="card-text" class="col-xs-8">
+                                            <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
+                                            <p class="card-text text-muted"> {{d.alamat_toko}} </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="col-md-4" ng-repeat="d in databyrating">
+                            <div class="card container">
+                                <div class="row">
+                                    <a class="link" href="/detail.html?id={{d._id}}">
+                                        <div id="card-image" class="col-xs-4">
+                                            <img src="{{d.link_foto}}" alt="foto toko" style="width: 110px; height: 90px;">
+                                            <span class="fa fa-star"
+                                                style="
+                                                    margin: 20px;
+                                                    padding: 10px;
+                                                    border-radius: 50px;
+                                                    background-color: blue;
+                                                    color: white;
+                                                "
+                                            > {{d.rating.avg_point}}</span>
                                         </div>
                                         <div id="card-text" class="col-xs-8">
                                             <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
@@ -75,23 +111,15 @@
                                     <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
                                             <img src="{{d.link_foto}}" alt="foto toko" style="width: 110px; height: 90px;">
-                                        </div>
-                                        <div id="card-text" class="col-xs-8">
-                                            <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
-                                            <p class="card-text text-muted"> {{d.alamat_toko}} </p>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="col-md-4" ng-repeat="d in data">
-                            <div class="card container">
-                                <div class="row">
-                                    <a class="link" href="/detail.html?id={{d._id}}">
-                                        <div id="card-image" class="col-xs-4">
-                                            <img src="{{d.link_foto}}" alt="foto toko" style="width: 110px; height: 90px;">
+                                            <span class="fa fa-star"
+                                                style="
+                                                    margin: 20px;
+                                                    padding: 10px;
+                                                    border-radius: 50px;
+                                                    background-color: blue;
+                                                    color: white;
+                                                "
+                                            > {{d.rating.avg_point}}</span>
                                         </div>
                                         <div id="card-text" class="col-xs-8">
                                             <h5 class="font-weight-bold">{{d.nama_toko}}</h5>

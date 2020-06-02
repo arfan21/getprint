@@ -7,14 +7,12 @@ function getUrlParameter(name) {
 
 var id = getUrlParameter('id');
 var linkfoto = getUrlParameter('linkfoto');
-
+var deleteHash = getUrlParameter('deletehash');
 
 var appang = angular.module('menjadimitra',[]);
 
 appang.controller("menjadimitraCtrl",['$scope','$http','$window', function($scope,$http,$window){
     $scope.data = {}
-    
-    
     
     $http({
         method : "GET",
@@ -22,7 +20,6 @@ appang.controller("menjadimitraCtrl",['$scope','$http','$window', function($scop
     }).then(function successCallback(response){
         $scope.data = response.data.mitra[0]
         $scope.data.link_foto = linkfoto;
-        console.log(response.data.mitra[0]);
     });
 
     
@@ -30,6 +27,7 @@ appang.controller("menjadimitraCtrl",['$scope','$http','$window', function($scop
     $scope.submitform = function(){
 
         $scope.data.link_foto = linkfoto;
+        $scope.data.deleteHash_foto = deleteHash
 
         $http({
             method : "PUT",

@@ -33,12 +33,11 @@
         <div class="form-group" >
             <fieldset>
                 <label>Jenis Pesanan</label><br>
-            <!-- ng-model="data.print"ng-model="data.fotocopy"ng-model="data.scan" -->
-                <input type="radio"  class="jenispesanan" id="print" name="print"  value="print">
+                <input type="radio"  class="jenispesanan" id="print" name="print"  value="print" ng-model="data.print">
                 <label for="Print">Print</label>
-                <input type="radio"  class="jenispesanan" id="fotocopy" name="fotocopy"  value="fotocopy">
+                <input type="radio"  class="jenispesanan" id="fotocopy" name="fotocopy"  value="fotocopy" ng-model="data.fotocopy">
                 <label for="fotocopy">Fotocopy</label>
-                <input type="radio"  class="jenispesanan" id="scan" name="scan"  value="scan">
+                <input type="radio"  class="jenispesanan" id="scan" name="scan"  value="scan" ng-model="data.scan">
                 <label for="scan">Scan</label>
               </fieldset>
             
