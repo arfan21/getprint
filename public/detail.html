@@ -67,7 +67,7 @@
                 </div>
             </div>
         </div>
-        <a id="link" href="upload.html?id={{data._id}}" style="color: white;text-decoration: none;">
+        <a id="link" href="pesanan.html?id={{data._id}}" style="color: white;text-decoration: none;">
             <div class="pesan" id="input">
                 Pesan Sekarang
                 <span class="fa fa-angle-right"></span>
@@ -120,8 +120,8 @@
               </div>
         </div>
         <div class="modal-footer">
-            <a class="btn btn-secondary"  ng-click="resetRating()" data-dismiss="modal" id="batalBtn" style="color: white;">Batal</a>
-            <button type="submit" ng-disabled="formRating.$invalid" class="btn btn-primary" ng-click="updateRating()" data-dismiss="modal" style="color: white;">Submit</button>
+            <a class="btn btn-secondary"  ng-click="resetRating()" data-dismiss="modal" id="batalBtnRating" style="color: white;">Batal</a>
+            <button type="submit" id="submitRating" ng-disabled="formRating.$invalid" class="btn btn-primary" ng-click="updateRating()" data-dismiss="modal" style="color: white;">Submit</button>
         </div>
         </form>
         

@@ -65,4 +65,5 @@ const MitraSchema = new schema({
     }
 });
 
+
 module.exports = Mitra = mongoose.model("mitra", MitraSchema);

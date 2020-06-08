@@ -24,6 +24,7 @@ app.controller("appCtrl", ['$scope','$http','$window', function($scope,$http,$wi
 $(window).on('load', function(){
   setTimeout(removeLoader, 2000); //wait for page load PLUS two seconds.
 });
+
 function removeLoader(){
     $( "#loadingDiv" ).fadeOut(500, function() {
       // fadeOut complete. Remove the loading div

@@ -20,8 +20,18 @@ function uidlineSama(uid, any){
 }
 
 if(uidline.length == 0){
-    $('#rating-open').removeAttr('data-target');
-    $('#rating-open').removeAttr('data-toggle');
+    // $('#rating-open').removeAttr('data-target');
+    // $('#rating-open').removeAttr('data-toggle');
+    $(".rating-title").text('');
+    $(".star-rating").remove();
+    $("#rating-bar").html(`
+        <h3>Memberi Star harus melalui LINE</h3>
+    `);
+    $("#submitRating").remove();
+    $("#batalBtnRating").removeClass("btn-secondary");
+    $("#batalBtnRating").addClass("btn-primary");
+    $("#batalBtnRating").text("Ok");
+    
 }
 
 var app = angular.module('detailmitra', []);
@@ -30,43 +40,47 @@ app.controller("appCtrl", ['$scope','$http','$window', function($scope,$http,$wi
         method : "GET",
         url: "/api/mitra/" + id,
     }).then(function successCallback(response){
-        $scope.data = response.data.mitra[0]
+        $scope.data = response.data.mitra
 
-        if(uidline == "U806e7bec3288e9572243e079aa7b6b16"){
-            $('.getprint-round-navbar').append(`
-                <div class="detail-admin-menu">
-                    <a class="fa fa-pencil" href="/editmitra.html?id=`+$scope.data._id+`&useridline=U806e7bec3288e9572243e079aa7b6b16&linkfoto=`+$scope.data.link_foto+`"></a>
-                    <a class="fa fa-trash" data-toggle="modal" data-target="#exampleModalCenter" ></a>
-                </div>
-            `)
-        }
-
-        let user_rating = $scope.data.rating.user_rating;
-        
-        for(i = 0; i < user_rating.length ;i++){
-            if(uidline == user_rating[i].userid_line){
-                $(".rating-title").text('Mau mengubah rating anda ?')
-                console.log(user_rating[i].rating_user);
-                $scope.data.value_rating = user_rating[i].rating_user
-                $(".modal-rating-content").append(`
-                    <div class="modal-body">
-                        <span>Bintang Sebelumnya : </span>
-                        <span class="fa fa-star" id="rating-user" style="font-size:25px;"></span>
-                        <span>`+user_rating[i].rating_user+`</span>
-                    </div>
+        if(!response.data.status){
+            $window.location = "/pagenotfound.html"
+        }else{
+           if(uidline == "U806e7bec3288e9572243e079aa7b6b16"){
+                $('.getprint-round-navbar').append(`
+                    <div class="detail-admin-menu">
+                        <a class="fa fa-pencil" href="/editmitra.html?id=`+$scope.data._id+`&useridline=U806e7bec3288e9572243e079aa7b6b16&linkfoto=`+$scope.data.link_foto+`"></a>
+                        <a class="fa fa-trash" data-toggle="modal" data-target="#exampleModalCenter" ></a>
+                    </h3>
                 `)
-                if(user_rating[i].rating_user == 5){
-                    $("#rating-user").css('color','#14892c')
-                }else if (user_rating[i].rating_user == 4){
-                    $("#rating-user").css('color','#3f9e37')
-                }else if (user_rating[i].rating_user == 3){
-                    $("#rating-user").css('color','#f90')
-                }else if (user_rating[i].rating_user == 2){
-                    $("#rating-user").css('color','#ff6c35')
-                }else if (user_rating[i].rating_user == 1){
-                    $("#rating-user").css('color','#ff5254')
-                }
             }
+
+            let user_rating = $scope.data.rating.user_rating;
+            
+            for(i = 0; i < user_rating.length ;i++){
+                if(uidline == user_rating[i].userid_line){
+                    $(".rating-title").text('Mau mengubah rating anda ?')
+                    console.log(user_rating[i].rating_user);
+                    $scope.data.value_rating = user_rating[i].rating_user
+                    $(".modal-rating-content").append(`
+                        <div class="modal-body">
+                            <span>Bintang Sebelumnya : </span>
+                            <span class="fa fa-star" id="rating-user" style="font-size:25px;"></span>
+                            <span>`+user_rating[i].rating_user+`</span>
+                        </div>
+                    `)
+                    if(user_rating[i].rating_user == 5){
+                        $("#rating-user").css('color','#14892c')
+                    }else if (user_rating[i].rating_user == 4){
+                        $("#rating-user").css('color','#3f9e37')
+                    }else if (user_rating[i].rating_user == 3){
+                        $("#rating-user").css('color','#f90')
+                    }else if (user_rating[i].rating_user == 2){
+                        $("#rating-user").css('color','#ff6c35')
+                    }else if (user_rating[i].rating_user == 1){
+                        $("#rating-user").css('color','#ff5254')
+                    }
+                }
+            } 
         }
     });
 

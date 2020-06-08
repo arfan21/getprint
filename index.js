@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const db = require('./keys').mongoURI;
 const mitra = require("./routes/api/mitra");
 const pesanan = require("./routes/api/pesanan");
+const upload = require("./routes/api/upload")
 
 mongoose
     .connect(db,{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify : false })
@@ -20,6 +21,7 @@ app.use(bodyparser.json());
 app.use(express.static('public'));
 app.use('/api/', mitra);
 app.use('/api/', pesanan);
+app.use('/api/', upload);
 
 
 app.get('/send-id', function(req, res) {
@@ -33,5 +35,7 @@ app.get('*', function(req, res){
         return;
     }
 });
+
+
 
 app.listen(port, () => console.log(`app listening on port ${port}!`));

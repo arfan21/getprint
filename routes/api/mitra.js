@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Mitra = require("../../models/Mitra");
-const mongoose = require('mongoose');
 
 router.post('/mitra', (req,res) => {
     let data = req.body;
@@ -21,13 +20,30 @@ router.post('/mitra', (req,res) => {
         alamat_toko : data.alamat_toko,
     });
 
-    newMitra.save()
-        .then(mitra => console.log(mitra))
-        .catch(err => console.log(err));
-    
-    return res.status(200).json({status : true,
-                                 message : 'Success added mitra',
-                                 mitra : newMitra});
+    newMitra.save((err,data) => {
+        if(err){
+            console.log({   
+                status : false,
+                message : 'Gagal menambahkan mitra, cek lagi data yang dimasukkan!',
+                error : err
+            })
+            return res.json({
+                status : false,
+                message : 'Gagal menambahkan mitra, cek lagi data yang dimasukkan!',
+                error : err
+            })
+        }
+        console.log({
+            status : true,
+            message : 'Success added Mitra',
+            pesanan : data
+        })
+        res.json({
+            status : true,
+            message : 'Success added Mitra',
+            pesanan : data
+        })
+    })
 });
 
 router.get('/mitra', (req,res) =>{
@@ -35,19 +51,17 @@ router.get('/mitra', (req,res) =>{
     let sorting = req.query.sort
 
     if(sorting == 'date'){
-        Mitra.aggregate([
-            {$sort : {added : -1}},
-        ]).exec((err,data) => {
+        Mitra.find().sort({'added' : 1}).exec((err,data) => {
             if(err){
-                res.status(400).json({status : false,
+                return res.json({status : false,
                     message : 'failed get mitra',
                     error : err});
             }else if(data.length == 0){
-                res.status(400).json({status : false,
+                return res.json({status : false,
                     message : 'failed get mitra',
                     error : 'mitra not found'});
             }else{
-                res.status(200).json({status : true,
+                return res.status(200).json({status : true,
                     message : 'Success get mitra',
                     mitra : data});
             }
@@ -56,15 +70,15 @@ router.get('/mitra', (req,res) =>{
     }else if(sorting == 'rating'){
         Mitra.find().sort({'rating.avg_point' : -1}).exec((err,data) => {
             if(err){
-                res.status(400).json({status : false,
+                return res.json({status : false,
                     message : 'failed get mitra',
                     error : err});
             }else if(data.length == 0){
-                res.status(400).json({status : false,
+                return res.json({status : false,
                     message : 'failed get mitra',
                     error : 'mitra not found'});
             }else{
-                res.status(200).json({status : true,
+                return res.status(200).json({status : true,
                     message : 'Success get mitra',
                     mitra : data});
             }
@@ -72,15 +86,15 @@ router.get('/mitra', (req,res) =>{
     }else{
         Mitra.find().exec((err,data) => {
             if(err){
-                res.status(400).json({status : false,
+                return res.json({status : false,
                     message : 'failed get mitra',
                     error : err});
             }else if(data.length == 0){
-                res.status(400).json({status : false,
+                return res.json({status : false,
                     message : 'failed get mitra',
                     error : 'mitra not found'});
             }else{
-                res.status(200).json({status : true,
+                return res.status(200).json({status : true,
                     message : 'Success get mitra',
                     mitra : data});
             }
@@ -90,21 +104,19 @@ router.get('/mitra', (req,res) =>{
 });
 
 router.get('/mitra/:id', (req,res) => {
-    const id = req.params.id;
+    const id = req.params.id
 
-    Mitra.aggregate([
-        {$match : {'_id' : mongoose.Types.ObjectId(id)}},
-    ]).exec((err,data) => {
+    Mitra.findById(id).exec((err,data) => {
         if(err){
-            res.status(400).json({status : false,
+            return res.json({status : false,
                 message : 'failed get mitra',
                 error : err});
         }else if(data.length == 0){
-            res.status(400).json({status : false,
+            return res.json({status : false,
                 message : 'failed get mitra',
                 error : 'mitra not found'});
         }else{
-            res.status(200).json({status : true,
+            return res.status(200).json({status : true,
                 message : 'Success get mitra',
                 mitra : data});
         }
@@ -116,7 +128,7 @@ router.put('/mitra/:id', (req,res) => {
     const id = req.params.id;
     Mitra.findByIdAndUpdate(id, req.body, (err, data) => {
         if(err){
-            res.status(400).json({status : false,
+            res.json({status : false,
                 message : 'Failed update mitra',
                 error : err});
             return;
@@ -131,7 +143,7 @@ router.delete('/mitra/:id', (req,res) => {
     const id = req.params.id;
     Mitra.findByIdAndDelete(id, (err) => {
         if(err){
-            res.status(400).json({status : false,
+            res.json({status : false,
                 message : 'Failed delete mitra',
                 error : err});
             return;

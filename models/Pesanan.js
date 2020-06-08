@@ -10,6 +10,10 @@ const PesananSchema = new schema({
         type : mongoose.Schema.ObjectId,
         required : true,
     },
+    id_file : {
+        type : mongoose.Schema.ObjectId,
+        required : true,
+    },
     nama_pemesan : {
         type : String,
         required : true
@@ -25,10 +29,6 @@ const PesananSchema = new schema({
     alamat_pemesan : {
         type : String,
         required : true
-    },
-    link_file : {
-        type : String,
-        required : true,
     },
     added : {
         type : Date,

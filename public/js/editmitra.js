@@ -18,7 +18,7 @@ appang.controller("menjadimitraCtrl",['$scope','$http','$window', function($scop
         method : "GET",
         url: "/api/mitra/" + id,
     }).then(function successCallback(response){
-        $scope.data = response.data.mitra[0]
+        $scope.data = response.data.mitra
         $scope.data.link_foto = linkfoto;
     });
 

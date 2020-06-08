@@ -13,22 +13,33 @@ router.post('/pesanan', (req,res) => {
         nohp_pemesan : data.nohp_pemesan,
         jenis_pesanan : data.jenispesanan,
         alamat_pemesan : data.alamat_pemesan,
-        link_file : data.link_file,
+        id_file : data.id_file,
     })
 
-    newPesanan.save()
-        .then(pesanan => 
-            console.log(pesanan),
-            res.status(200).json({status : true,
-                            message : 'Success added Pesanan',
-                            pesanan : newPesanan})
-            )
-        .catch(err => 
-            console.log(err),
-            res.status(400).json({status : false,
+    newPesanan.save((err, data) => {
+        if(err){
+            console.log({   
+                status : false,
                 message : 'Pesanan gagal, cek lagi data yang dimasukkan!',
-                })
-            );  
+                error : err
+            })
+            return res.json({
+                status : false,
+                message : 'Pesanan gagal, cek lagi data yang dimasukkan!',
+                error : err
+            })
+        }
+        console.log({
+            status : true,
+            message : 'Success added Pesanan',
+            pesanan : data
+        })
+        res.json({
+            status : true,
+            message : 'Success added Pesanan',
+            pesanan : data
+        })
+    })
 });
 
 router.get('/pesanan/:lineid', (req,res) => {
@@ -38,13 +49,14 @@ router.get('/pesanan/:lineid', (req,res) => {
         {$sort : {added : -1}},
         {$match : {'userid_line' : lineid}},
         {$lookup : {from: 'mitras', localField: 'id_toko', foreignField: '_id' , as: 'toko',}},
+        {$lookup : {from: 'uploads', localField: 'id_file', foreignField: '_id' , as: 'file',}},
     ]).exec((err,data) => {
         if(err){
-            return res.status(400).json({status : false,
+            return res.json({status : false,
                                         message : 'failed get pesanan',
                                         error : err});
         }else if(data.length == 0){
-            return res.status(400).json({status : false,
+            return res.json({status : false,
                                         message : 'failed get pesanan',
                                         error : 'pesanan not found'});
         }else{
@@ -58,18 +70,26 @@ router.get('/pesanan/:lineid', (req,res) => {
 
 router.get('/pesanan/byid/:id', (req,res) => {
     const id = req.params.id;
+
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        return res.json({status : false,
+                        message : 'failed get pesanan',
+                        error : 'Id Pesanan invalid',
+                        });
+    }
     
     Pesanan.aggregate([
         {$sort : {added : -1}},
         {$match : {'_id' : mongoose.Types.ObjectId(id)}},
         {$lookup : {from: 'mitras', localField: 'id_toko', foreignField: '_id' , as: 'toko',}},
+        {$lookup : {from: 'uploads', localField: 'id_file', foreignField: '_id' , as: 'file',}},
     ]).exec((err,data) => {
         if(err){
-            return res.status(400).json({status : false,
+            return res.json({status : false,
                                         message : 'failed get pesanan',
                                         error : err});
         }else if(data.length == 0){
-            return res.status(400).json({status : false,
+            return res.json({status : false,
                                         message : 'failed get pesanan',
                                         error : 'pesanan not found'});
         }else{
