@@ -509,10 +509,16 @@ input[type="radio"] + .star-1:hover:before, input[type="radio"] + .star-1:hover 
 
 .getprint-round-navbar {
     background-color: #0029FF;
-    padding: 3px;
+    padding-bottom: 3px;
     color: white;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
+}
+
+.getprint-round-navbar a {
+    color: white;
+    padding-right: 30px;
+    font-size: 2rem; /* karena h4 1.5rem, dan angle-left-nya kekecilan */
 }
 
 .getprint-gray-bg {
@@ -575,7 +581,7 @@ input[type="radio"] + .star-1:hover:before, input[type="radio"] + .star-1:hover 
 }
 
 #detail-white-container #detail-nama-toko h4 {
-    margin-top: 100px;
+    margin-top: 150px;
     color: #0029FF;
     font-weight: bold;
 }
@@ -584,6 +590,7 @@ input[type="radio"] + .star-1:hover:before, input[type="radio"] + .star-1:hover 
     width: 75%;
     border-radius: 10px;
     box-shadow: 0px 15px 30px rgba(7, 5, 90, 0.1);
+    max-width: 450px; /* supaya tidak bleed ke bawah ketika layar besar */
     /* floating */
     position: absolute;
     z-index: 1;
@@ -609,7 +616,6 @@ input[type="radio"] + .star-1:hover:before, input[type="radio"] + .star-1:hover 
     border-radius: 25px;
     box-shadow: 0px 15px 30px rgba(7, 5, 90, 0.1);
     position: relative;
-    z-index: 1;
 }
 
 /* dari backendnya pakai class, takut break backend jadi tidak dirubah ke id */
@@ -644,4 +650,16 @@ input[type="radio"] + .star-1:hover:before, input[type="radio"] + .star-1:hover 
     color:white;
     margin: 10px;
     cursor: pointer;
+}
+
+/* page not found */
+
+#not-found {
+    color: #0029FF;
+    font-weight: 300;
+}
+
+#not-found img {
+    padding-top: 40px;
+    padding-bottom: 40px;
 }

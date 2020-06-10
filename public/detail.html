@@ -16,8 +16,8 @@
     <title>GetPrint</title>
 </head>
 <body class="getprint-gray-bg stretch-bottom-body" ng-app="detailmitra" ng-controller="appCtrl">
-    <div class="container-fluid getprint-round-navbar" style="display: flex;">
-        <a href="/" style="text-decoration: none; color:white;"><h4>GetPrint</h4></a>
+    <div class="container-fluid getprint-round-navbar">
+        <h4><a href="/"><i class="fa fa-angle-left"></i></a>GetPrint</h4>
     </div>
     <div id="detail-white-container" class="container getprint-white-container stretch-bottom-content pt-2">
         <img id="detail-img"  src="{{data.link_foto}}" alt="foto toko">
@@ -30,6 +30,7 @@
                 {{data.alamat_toko}}
             </p>
         </div>
+        <hr>
         <div class="rating-mitra">
             <a id="rating-open" data-toggle="modal" data-target="#exampleModalCenterRating" >
                 <span class="fa fa-star" style="margin: 20px;padding: 10px;border-radius: 50px;background-color: blue;color: white;cursor: pointer;"> 
