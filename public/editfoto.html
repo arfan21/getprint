@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="shortcut icon" href="assets/Logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
+    <title>GetPrint || add mitra </title>
+</head>
+<body class="getprint-gray-bg stretch-bottom-body">
+    <div class="container-fluid getprint-round-navbar" style="background-color: blue">
+        <h4>Upload Foto Mitra</h4>
+    </div>
+    <div id="upload-foto" class="container getprint-white-container stretch-bottom-content">
+        <form class="form" id="uploadForm">
+            <div class="form-group" >
+                <input type="file" class="form-control" name="mitraFoto" accept="image/*" id="inputFile">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary" id="bttn">Next</button>
+            </div>
+        </form>
+        <div id="progress-layout">
+
+        </div>
+    </div>
+</body>
+<script>
+    const uploadForm = document.getElementById("uploadForm");
+    const inputFIle = document.getElementById("inputFile");
+    
+
+    uploadForm.addEventListener("submit", uploadFile);
+
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    };
+    var id = getUrlParameter('id');
+    var uidline = getUrlParameter('useridline');
+    var deleteHash_foto = getUrlParameter('deletehash')
+ 
+    function uploadFile(e) {
+        $('#progress-layout').html(`   
+            <div class="progress" style="margin-top: 20px; " id="progress">
+                <div class="progress-bar" role="progressbar" " aria-valuemin="0" aria-valuemax="100">0%</div>
+            </div>
+        `)
+
+        const progress_bar = document.getElementsByClassName("progress-bar")[0];
+        
+        e.preventDefault();
+        
+        var data = new FormData(uploadForm)
+        data.append("image", e.target[0].files[0]);
+
+        const xhr = new XMLHttpRequest();
+
+        xhr.open("POST", "https://api.imgur.com/3/image");
+        xhr.upload.addEventListener("progress" , e => {
+            
+            const percent = e.lengthComputable ? (e.loaded/e.total) * 100 : 0;
+
+            progress_bar.style.width = percent.toFixed(2) + "%";
+            progress_bar.textContent = percent.toFixed(2) + "%";
+            
+        })
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                let res = JSON.parse(xhr.responseText)
+
+                const xhr2 = new XMLHttpRequest();
+                xhr2.open("DELETE", "https://api.imgur.com/3/image/" + deleteHash_foto);
+                xhr2.setRequestHeader("Authorization", "Client-ID f4a9a61acd375d4");
+                
+                xhr2.onreadystatechange = function() {
+                    if (xhr2.readyState == XMLHttpRequest.DONE) {
+                        window.location = '/editmitra.html?id='+id+'&useridline='+uidline+'&linkfoto=' + res["data"].link +'&deletehash='+ res["data"].deletehash;
+                    }
+                }
+            
+                data = "";
+                xhr2.send(data)
+                
+            }
+        }
+
+        xhr.setRequestHeader("Authorization", "Client-ID f4a9a61acd375d4");
+        xhr.send(data);
+        
+    }
+</script>
+</html>
