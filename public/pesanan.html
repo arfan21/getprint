@@ -12,63 +12,118 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
     <title>GetPrint || Upload </title>
 </head>
-<body ng-app="pesanan" ng-controller="myapp">
-    <form  id="uploadForm" name="formupload" >
-        <h1>Upload File</h1>
-        <p style="color: red ;">MAX 5 FILE !</p>
-        <div class="form-group form-upload" ng-repeat="form in forms" >
-            <label>{{form.name}}</label>
-            <input type="file" class="form-control" ng-model="data.myfile" name="myfile">
-            
-        </div>
-        <div class="form-group">
-            <input id="addForm" type="button" value="+" ng-click="addform()" class="btn btn-primary" style="text-decoration: none; color: white;">
-        </div>
-        
-        <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button>
-    </form>
-    <div id="progress-layout">
-
+<body class="getprint-gray-bg stretch-bottom-body" ng-app="pesanan" ng-controller="myapp">
+    <div class="container-fluid getprint-round-navbar">
+        <h4><a href="/"><i class="fa fa-angle-left"></i></a>Keranjang</h4>
     </div>
-    <form ng-submit="submitMyform()" name="formPesanan">
-        <div class="form-group" >
-            <label>Nama Pemesan</label>
-            <input type="text" class="form-control" ng-model="data.nama" name="nama" required>
-            <span style="color: red;"  ng-show="formPesanan.nama.$dirty && formPesanan.nama.$invalid || formPesanan.nama.$touched">
-                <span ng-show="formPesanan.nama.$error.required" >Nama Pemesan harus diisi</span>
-            </span>
+
+    <div id="order-details" class="container">
+        <h4><strong>Order Details</strong></h4>
+        <p>Delivery? </p>
+        <!-- https://gitbrent.github.io/bootstrap4-toggle/ -->
+        <input type="checkbox" checked data-toggle="toggle" data-size="xs" data-on="yes" data-off="no">
+
+        <!-- belum muncul -->
+        <h4>{{data.nama_toko}}</h4>
+        <h4>{{data.alamat_toko}}</h4>
+    </div>
+
+    <div class="container-fluid getprint-white-container stretch-bottom-content pt-2">
+        <div class="container">
+            <form ng-submit="submitMyform()" name="formPesanan">
+                <div class="form-group" >
+                    <!-- <label>Alamat Pemesan</label> -->
+                    <input type="text" class="form-control getprint-form-gray ng-model="data.alamat_pemesan" name="alamat_pemesan" placeholder="Location details (e.g. landmark)" required>
+                    <span style="color: red;"  ng-show="formPesanan.alamat_pemesan.$dirty && formPesanan.alamat_pemesan.$invalid || formPesanan.alamat_pemesan.$touched">
+                        <span ng-show="formPesanan.alamat_pemesan.$error.required" >Alamat Pemesan harus diisi</span>
+                    </span>
+                </div>
+                <div class="form-group" >
+                    <!-- <label>Nama Pemesan</label> -->
+                    <input type="text" class="form-control getprint-form-gray" ng-model="data.nama" name="nama" placeholder="Enter Recipient’s name..." required>
+                    <span style="color: red;"  ng-show="formPesanan.nama.$dirty && formPesanan.nama.$invalid || formPesanan.nama.$touched">
+                        <span ng-show="formPesanan.nama.$error.required" >Nama Pemesan harus diisi</span>
+                    </span>
+                </div>
+                <div class="form-group" >
+                    <!-- <label>No HP pemesan</label> -->
+                    <input type="text" class="form-control getprint-form-gray" ng-model="data.nohp_pemesan" name="nohp_pemesan" placeholder="Enter phone number..." required>
+                    <span style="color: red;"  ng-show="formPesanan.nohp_pemesan.$dirty && formPesanan.nohp_pemesan.$invalid || formPesanan.nohp_pemesan.$touched">
+                        <span ng-show="formPesanan.nohp_pemesan.$error.required" >No HP pemesan harus diisi</span>
+                    </span>
+                </div>
+                <!-- <div class="form-group" >
+                    <fieldset>
+                        <label>Jenis Pesanan</label><br>
+                        <input type="radio"  class="jenispesanan" id="print" name="print"  value="print" ng-model="data.print">
+                        <label for="Print">Print</label>
+                        <input type="radio"  class="jenispesanan" id="fotocopy" name="fotocopy"  value="fotocopy" ng-model="data.fotocopy">
+                        <label for="fotocopy">Fotocopy</label>
+                        <input type="radio"  class="jenispesanan" id="scan" name="scan"  value="scan" ng-model="data.scan">
+                        <label for="scan">Scan</label>
+                    </fieldset>
+                </div> -->
+                <div class="input-group">
+                    <select class="custom-select getprint-form-gray">
+                        <option selected>Choose Service (Print, Scan, Photocopy)</option>
+                        <option class="jenispesanan" id="print" name="print" value="print" ng-model="data.print">Print</option>
+                        <option class="jenispesanan" id="fotocopy" name="fotocopy" value="fotocopy" ng-model="data.fotocopy">Fotocopy</option>
+                        <option class="jenispesanan" id="scan" name="scan" value="scan" ng-model="data.scan">Scan</option>
+                    </select>
+                </div>
+
+            <form  id="uploadForm" name="formupload" >
+                <!-- <h1>Upload File</h1>
+                <p style="color: red ;">MAX 5 FILE !</p> -->
+                <!-- 
+                    intinya: #upload-container-parent > #uplaod container-child > .myLabel > input + span
+                    #upload-container-child yang diulang sampai 5x, typenya ingin dibuat inline biar kotak upload file sebaris
+                    #upload-container-parent yang membuat childnya center, sehingga parent dibuat flex, dan child dibuat inline
+                    seisinya dibuat untuk styling file input
+                -->
+                <div id="upload-container-parent">
+                    <div id="upload-container-child" class="form-group form-upload" ng-repeat="form in forms" >
+                        <!-- <label>{{form.name}}</label> ini isinya "file 1", "file 2", dst-->
+                        <!-- default dari backend
+                            <input type="file" class="form-control" ng-model="data.myfile" name="myfile">
+                        -->
+                        <div class="custom-file">
+                            <label for="files" class="btn btn-light custom-file-style"><i class="fa fa-plus"></i><br>ADD FILE</label>
+                            <input id="files" type="file" class="custom-file-input" id="customFile" value="choose">
+                            <!-- <label class="custom-file-label" for="customFile">Choose file</label> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="center-align form-group">
+                    <input id="addForm" type="button" value="Add more files" ng-click="addform()" class="btn btn-primary" style="text-decoration: none; color: white;">
+                    <!-- <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button> -->
+                    <input id="uploadBtn" type="submit" class="btn btn-primary" value="Upload"></button>
+                </div>
+                <div id="progress-layout"></div>
+                <div class="center-align">
+                    <a href="/" class="btn btn-light btn-lg getprint-shadow" style="background-color: white;">Cancel</a>
+                    <button type="submit" class="btn btn-primary btn-lg getprint-shadow" ng-disabled="formPesanan.$invalid">Order</button>
+                </div>
+            </form>
         </div>
-        <div class="form-group" >
-            <label>No HP pemesan</label>
-            <input type="text" class="form-control" ng-model="data.nohp_pemesan" name="nohp_pemesan" required>
-            <span style="color: red;"  ng-show="formPesanan.nohp_pemesan.$dirty && formPesanan.nohp_pemesan.$invalid || formPesanan.nohp_pemesan.$touched">
-                <span ng-show="formPesanan.nohp_pemesan.$error.required" >No HP pemesan harus diisi</span>
-            </span>
-        </div>
-        <div class="form-group" >
-            <fieldset>
-                <label>Jenis Pesanan</label><br>
-                <input type="radio"  class="jenispesanan" id="print" name="print"  value="print" ng-model="data.print">
-                <label for="Print">Print</label>
-                <input type="radio"  class="jenispesanan" id="fotocopy" name="fotocopy"  value="fotocopy" ng-model="data.fotocopy">
-                <label for="fotocopy">Fotocopy</label>
-                <input type="radio"  class="jenispesanan" id="scan" name="scan"  value="scan" ng-model="data.scan">
-                <label for="scan">Scan</label>
-              </fieldset>
-            
-        </div>
-        <div class="form-group" >
-            <label>Alamat Pemesan</label>
-            <input type="text" class="form-control" ng-model="data.alamat_pemesan" name="alamat_pemesan" required>
-            <span style="color: red;"  ng-show="formPesanan.alamat_pemesan.$dirty && formPesanan.alamat_pemesan.$invalid || formPesanan.alamat_pemesan.$touched">
-                <span ng-show="formPesanan.alamat_pemesan.$error.required" >Alamat Pemesan harus diisi</span>
-            </span>
-        </div>
-        
-        <button type="submit" class="btn btn-primary" ng-disabled="formPesanan.$invalid">Submit</button>
-    </form>
+    </div>
 </body>
 <script src="js/pesanan.js"></script>
+<!-- <script>
+    $( document ).ready(function() {
+        $(".custom-file-input").on("change", function() {
+            var fileName = $(this).val().split("\\").pop();
+            // $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            $(this).siblings().text(fileName);
+            console.log(fileName);
+        });
+    });
+</script> -->
+
 </html>

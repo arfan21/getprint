@@ -543,10 +543,6 @@ input[type="radio"] + .star-1:hover:before, input[type="radio"] + .star-1:hover 
     padding-top: 15px;
 }
 
-.getprint-white-container button {
-    margin-bottom: 1rem;
-}
-
 #upload-foto {
     margin-top: 50px;
     padding-top: 10px;
@@ -570,9 +566,17 @@ input[type="radio"] + .star-1:hover:before, input[type="radio"] + .star-1:hover 
     color: #838383;
 }
 
-.form-group .getprint-form-gray { /* specific to override default bootstrap values */
+.form-group .getprint-form-gray, .input-group .getprint-form-gray { /* specific to override default bootstrap values */
+    padding: 10px;
     background-color: #F4F4F4;
     box-shadow: 0px 15px 30px rgba(7, 5, 90, 0.1);
+    color: rgba(0, 0, 0, 0.5);
+    border: 0;
+}
+
+.getprint-shadow {
+    /* box-shadow: 0px 15px 30px rgba(7, 5, 90, 0.1); */
+    box-shadow: 0px 15px 30px rgba(9, 21, 125, 0.15);
 }
 
 #detail-white-container {
@@ -663,3 +667,70 @@ input[type="radio"] + .star-1:hover:before, input[type="radio"] + .star-1:hover 
     padding-top: 40px;
     padding-bottom: 40px;
 }
+
+/* pesanan */
+
+#upload-container-parent {
+    margin-top: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#upload-container-child {
+    text-align: center;
+    display: inline-block;
+    width: 100px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#order-details {
+    color: #0029FF;
+    padding: 1rem;
+}
+
+#order-details p {
+    display: inline;
+}
+
+#upload-container-child .custom-file-style {
+    color: #C4C4C4;
+    background-color: #F4F4F4;
+    width: 100px;
+    height: 100px;
+
+    /* align */
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+    flex-direction: column;
+}
+
+.custom-file-input {
+    height: 1px !important;
+}
+
+.center-align {
+    text-align: center;
+}
+
+/* bikin container hp makin kecil */
+
+@media (max-width: 720px) {
+    .container{
+        max-width: 450px;
+    }
+}
+
+/* override bootstrap button color */
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #0029FF !important;
+    border-radius: 10px !important;
+}
+
+/* .btn-light, .btn-light:hover, .btn-light:active, .btn-light:visited {
+    border-radius: 10px !important;
+} */
+
