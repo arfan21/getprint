@@ -20,26 +20,25 @@
 </head>
 <body class="getprint-gray-bg stretch-bottom-body" ng-app="pesanan" ng-controller="myapp">
     <div class="container-fluid getprint-round-navbar">
-        <h4><a href="/"><i class="fa fa-angle-left"></i></a>Keranjang</h4>
+        <h4><a id="arrowBack" href="/"><i class="fa fa-angle-left"></i></a>Keranjang</h4>
     </div>
 
     <div id="order-details" class="container">
+        <h4>{{mitra.nama_toko}}</h4>
+        <h5>{{mitra.alamat_toko}}</h5>
         <h4><strong>Order Details</strong></h4>
         <p>Delivery? </p>
         <!-- https://gitbrent.github.io/bootstrap4-toggle/ -->
-        <input type="checkbox" checked data-toggle="toggle" data-size="xs" data-on="yes" data-off="no">
-
-        <!-- belum muncul -->
-        <h4>{{data.nama_toko}}</h4>
-        <h4>{{data.alamat_toko}}</h4>
+        <input type="checkbox" data-toggle="toggle" data-size="xs" data-on="yes" data-off="no" name="customPermissions[]" ng-model="data.delivery"  value="delivery" ng-init="form.customPermissions.delivery=true" >
     </div>
 
     <div class="container-fluid getprint-white-container stretch-bottom-content pt-2">
         <div class="container">
-            <form ng-submit="submitMyform()" name="formPesanan">
+            <form name="formPesanan">
+                
                 <div class="form-group" >
                     <!-- <label>Alamat Pemesan</label> -->
-                    <input type="text" class="form-control getprint-form-gray ng-model="data.alamat_pemesan" name="alamat_pemesan" placeholder="Location details (e.g. landmark)" required>
+                    <input type="text" class="form-control getprint-form-gray" ng-model="data.alamat_pemesan" name="alamat_pemesan" placeholder="Location details (e.g. landmark)" required>
                     <span style="color: red;"  ng-show="formPesanan.alamat_pemesan.$dirty && formPesanan.alamat_pemesan.$invalid || formPesanan.alamat_pemesan.$touched">
                         <span ng-show="formPesanan.alamat_pemesan.$error.required" >Alamat Pemesan harus diisi</span>
                     </span>
@@ -58,17 +57,6 @@
                         <span ng-show="formPesanan.nohp_pemesan.$error.required" >No HP pemesan harus diisi</span>
                     </span>
                 </div>
-                <!-- <div class="form-group" >
-                    <fieldset>
-                        <label>Jenis Pesanan</label><br>
-                        <input type="radio"  class="jenispesanan" id="print" name="print"  value="print" ng-model="data.print">
-                        <label for="Print">Print</label>
-                        <input type="radio"  class="jenispesanan" id="fotocopy" name="fotocopy"  value="fotocopy" ng-model="data.fotocopy">
-                        <label for="fotocopy">Fotocopy</label>
-                        <input type="radio"  class="jenispesanan" id="scan" name="scan"  value="scan" ng-model="data.scan">
-                        <label for="scan">Scan</label>
-                    </fieldset>
-                </div> -->
                 <div class="input-group">
                     <select class="custom-select getprint-form-gray">
                         <option selected>Choose Service (Print, Scan, Photocopy)</option>
@@ -77,10 +65,8 @@
                         <option class="jenispesanan" id="scan" name="scan" value="scan" ng-model="data.scan">Scan</option>
                     </select>
                 </div>
-
+            </form>
             <form  id="uploadForm" name="formupload" >
-                <!-- <h1>Upload File</h1>
-                <p style="color: red ;">MAX 5 FILE !</p> -->
                 <!-- 
                     intinya: #upload-container-parent > #uplaod container-child > .myLabel > input + span
                     #upload-container-child yang diulang sampai 5x, typenya ingin dibuat inline biar kotak upload file sebaris
@@ -89,41 +75,26 @@
                 -->
                 <div id="upload-container-parent">
                     <div id="upload-container-child" class="form-group form-upload" ng-repeat="form in forms" >
-                        <!-- <label>{{form.name}}</label> ini isinya "file 1", "file 2", dst-->
-                        <!-- default dari backend
-                            <input type="file" class="form-control" ng-model="data.myfile" name="myfile">
-                        -->
                         <div class="custom-file">
-                            <label for="files" class="btn btn-light custom-file-style"><i class="fa fa-plus"></i><br>ADD FILE</label>
-                            <input id="files" type="file" class="custom-file-input" id="customFile" value="choose">
-                            <!-- <label class="custom-file-label" for="customFile">Choose file</label> -->
+                            <label for="{{form.name}}" class="btn btn-light custom-file-style"><i class="fa fa-plus" ></i><br><p id="{{form.filename}}" style="margin-bottom: 0">ADD FILE</p></label>
+                            <input id="{{form.name}}" type="file" class="custom-file-input" id="customFile" value="choose" name="myfile" custom-file-input required>
                         </div>
                     </div>
                 </div>
                 <div class="center-align form-group">
                     <input id="addForm" type="button" value="Add more files" ng-click="addform()" class="btn btn-primary" style="text-decoration: none; color: white;">
-                    <!-- <button id="uploadBtn" type="submit" class="btn btn-primary">Upload</button> -->
                     <input id="uploadBtn" type="submit" class="btn btn-primary" value="Upload"></button>
                 </div>
                 <div id="progress-layout"></div>
-                <div class="center-align">
-                    <a href="/" class="btn btn-light btn-lg getprint-shadow" style="background-color: white;">Cancel</a>
-                    <button type="submit" class="btn btn-primary btn-lg getprint-shadow" ng-disabled="formPesanan.$invalid">Order</button>
-                </div>
+                
             </form>
+            <div class="center-align">
+                    <a id="cancelBtn" href="/" class="btn btn-light btn-lg getprint-shadow" style="background-color: white;">Cancel</a>
+                    <button ng-click="submitMyform()" id="submitData" type="submit" class="btn btn-primary btn-lg getprint-shadow" ng-disabled="formPesanan.$invalid">Order</button>
+            </div>
+        
         </div>
     </div>
 </body>
 <script src="js/pesanan.js"></script>
-<!-- <script>
-    $( document ).ready(function() {
-        $(".custom-file-input").on("change", function() {
-            var fileName = $(this).val().split("\\").pop();
-            // $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-            $(this).siblings().text(fileName);
-            console.log(fileName);
-        });
-    });
-</script> -->
-
 </html>
