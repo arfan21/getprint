@@ -97,7 +97,6 @@ app.controller("menjadimitraCtrl", [
                                 url: "/api/mitra",
                                 data: $scope.data,
                             }).then(function successCallback(response) {
-                                console.log(response);
                                 $window.alert(response.data.message);
                                 $window.location.href = "/";
                             });

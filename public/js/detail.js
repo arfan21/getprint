@@ -65,9 +65,7 @@ app.controller("appCtrl", [
                     <div class="detail-admin-menu">
                         <a class="fa fa-pencil" href="/editmitra.html?id=` +
                             $scope.data._id +
-                            `&useridline=U806e7bec3288e9572243e079aa7b6b16&linkfoto=` +
-                            $scope.data.link_foto +
-                            `"></a>
+                            `&useridline=U806e7bec3288e9572243e079aa7b6b16"></a>
                         <a class="fa fa-trash" data-toggle="modal" data-target="#exampleModalCenter" ></a>
                     </h3>
                 `
@@ -79,7 +77,7 @@ app.controller("appCtrl", [
                 for (i = 0; i < user_rating.length; i++) {
                     if (uidline == user_rating[i].userid_line) {
                         $(".rating-title").text("Mau mengubah rating anda ?");
-                        console.log(user_rating[i].rating_user);
+
                         $scope.data.value_rating = user_rating[i].rating_user;
                         $(".modal-rating-content").append(
                             `
@@ -156,13 +154,10 @@ app.controller("appCtrl", [
             });
         };
 
-        $scope.deleteFunc = () => {
-            $http({
+        $scope.deleteFunc = async () => {
+            await $http({
                 method: "DELETE",
-                url:
-                    "https://api.imgur.com/3/image/" +
-                    $scope.data.deleteHash_foto,
-                headers: { Authorization: "Client-ID f4a9a61acd375d4" },
+                url: "/api/uploadfotomitra/" + $scope.data.fotomitra[0]._id,
             });
 
             $http({

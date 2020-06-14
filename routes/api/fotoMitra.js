@@ -119,4 +119,34 @@ router.put("/uploadfotomitra/:id", upload, (req, res) => {
     );
 });
 
+router.delete("/uploadfotomitra/:id", async (req, res) => {
+    const id = req.params.id;
+
+    await FotoMitra.findById(id).exec((err, data) => {
+        request({
+            method: "DELETE",
+            url: "https://api.imgur.com/3/image/" + data.deleteHash_foto,
+            headers: {
+                Authorization: IMGUR_CLIENT_ID,
+            },
+        });
+    });
+
+    FotoMitra.findByIdAndDelete(id, (err) => {
+        if (err) {
+            res.json({
+                status: false,
+                message: "Failed delete foto mitra",
+                error: err,
+            });
+            return;
+        }
+        console.log("Success delete foto mitra");
+        res.status(200).json({
+            status: true,
+            message: "Success delete foto mitra",
+        });
+    });
+});
+
 module.exports = router;
