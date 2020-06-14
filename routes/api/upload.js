@@ -5,8 +5,7 @@ const path = require("path");
 const Upload = require("../../models/Upload");
 const request = require("request");
 const fs = require("fs");
-const DROPBOX_TOKEN =
-    "ROeWeTjqfBAAAAAAAAAA8THYLkUNLOah4XqKA_j4mYkPaVmfE9u62DkTi2K936z7";
+const DROPBOX_TOKEN = token;
 
 const storage = multer.diskStorage({
     destination: path.join(__dirname + "./../../public/file4print"),
