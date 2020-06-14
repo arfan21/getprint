@@ -29,12 +29,15 @@ if (uidline.length == 0) {
             <h3>Untuk melakukan pemesanan harus melalui LINE</h3>
         `);
     });
+    $("#rating-open").on("click", () => {
+        $("#rating-bar").html(`
+        <h3>Memberi Rating harus melalui LINE</h3>
+        `);
+    });
 
     $(".rating-title").text("");
     $(".star-rating").remove();
-    $("#rating-bar").html(`
-        <h3>Memberi Rating harus melalui LINE</h3>
-    `);
+
     $("#submitRating").remove();
     $("#batalBtnRating").removeClass("btn-secondary");
     $("#batalBtnRating").addClass("btn-primary");
@@ -51,7 +54,7 @@ app.controller("appCtrl", [
             method: "GET",
             url: "/api/mitra/" + id,
         }).then(function successCallback(response) {
-            $scope.data = response.data.mitra;
+            $scope.data = response.data.mitra[0];
 
             if (!response.data.status) {
                 $window.location = "/pagenotfound.html";

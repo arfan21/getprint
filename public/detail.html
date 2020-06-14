@@ -1,135 +1,308 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="shortcut icon" href="assets/Logo.png">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap" rel="stylesheet"> 
-    <link rel="stylesheet" href="style.css">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="shortcut icon" href="assets/Logo.png" />
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
 
-    <title>GetPrint</title>
-</head>
-<body class="getprint-gray-bg stretch-bottom-body" ng-app="detailmitra" ng-controller="appCtrl">
-    <div class="container-fluid getprint-round-navbar">
-        <h4><a href="/"><i class="fa fa-angle-left"></i></a>GetPrint</h4>
-    </div>
-    <div id="detail-white-container" class="container-fluid getprint-white-container stretch-bottom-content pt-2">
-        <img id="detail-img"  src="{{data.link_foto}}" alt="foto toko">
-        <div id="detail-nama-toko">
-            <h4>{{data.nama_toko}}</h4>
+        <title>GetPrint</title>
+    </head>
+    <body
+        class="getprint-gray-bg stretch-bottom-body"
+        ng-app="detailmitra"
+        ng-controller="appCtrl"
+    >
+        <div class="container-fluid getprint-round-navbar">
+            <h4>
+                <a href="/"><i class="fa fa-angle-left"></i></a>GetPrint
+            </h4>
         </div>
-        <div id="detail-alamat-toko">
-            <p>
-                <span class="fa fa-map-marker"></span>
-                {{data.alamat_toko}}
-            </p>
-        </div>
-        <hr>
-        <div class="rating-mitra">
-            <a id="rating-open" data-toggle="modal" data-target="#exampleModalCenterRating" >
-                <span class="fa fa-star" style="margin: 20px;padding: 10px;border-radius: 50px;background-color: blue;color: white;cursor: pointer;"> 
-                {{data.rating.avg_point}} ({{data.rating.total_rating}})</span>
+        <div
+            id="detail-white-container"
+            class="container-fluid getprint-white-container stretch-bottom-content pt-2"
+        >
+            <img
+                id="detail-img"
+                src="{{data.fotomitra[0].link_foto}}"
+                alt="foto toko"
+            />
+            <div id="detail-nama-toko">
+                <h4>{{data.nama_toko}}</h4>
+            </div>
+            <div id="detail-alamat-toko">
+                <p>
+                    <span class="fa fa-map-marker"></span>
+                    {{data.alamat_toko}}
+                </p>
+            </div>
+            <hr />
+            <div class="rating-mitra">
+                <a
+                    id="rating-open"
+                    data-toggle="modal"
+                    data-target="#exampleModalCenterRating"
+                >
+                    <span
+                        class="fa fa-star"
+                        style="
+                            margin: 20px;
+                            padding: 10px;
+                            border-radius: 50px;
+                            background-color: blue;
+                            color: white;
+                            cursor: pointer;
+                        "
+                    >
+                        {{data.rating.avg_point}}
+                        ({{data.rating.total_rating}})</span
+                    >
+                </a>
+            </div>
+
+            <div id="info-detail" class="container">
+                <h4>Melayani</h4>
+                <div class="info-group row">
+                    <div class="col-3">
+                        <img
+                            src="assets/icon-print.png"
+                            alt="..."
+                            class="img-fluid w-100"
+                        />
+                    </div>
+                    <div class="col-9">
+                        <h4>Print</h4>
+                        <p>Rp.{{data.harga.print}} / Lembar</p>
+                    </div>
+                </div>
+                <div class="info-group row">
+                    <div class="col-3">
+                        <img
+                            src="assets/icon-scan.png"
+                            alt="..."
+                            class="img-fluid w-100"
+                        />
+                    </div>
+                    <div class="col-9">
+                        <h4>Scan</h4>
+                        <p>Rp.{{data.harga.scan}} / Lembar</p>
+                    </div>
+                </div>
+                <div class="info-group row">
+                    <div class="col-3">
+                        <img
+                            src="assets/icon-photocopy.png"
+                            alt="..."
+                            class="img-fluid w-100"
+                        />
+                    </div>
+                    <div class="col-9">
+                        <h4>Fotocopy</h4>
+                        <p>Rp.{{data.harga.fotocopy}} / Lembar</p>
+                    </div>
+                </div>
+            </div>
+            <a
+                id="link"
+                href="pesanan.html?id={{data._id}}"
+                style="color: white; text-decoration: none;"
+            >
+                <div class="pesan" id="input">
+                    Pesan Sekarang
+                    <span class="fa fa-angle-right"></span>
+                </div>
             </a>
         </div>
-
-        <div id="info-detail" class="container">
-            <h4>Melayani</h4>
-            <div class="info-group row">
-                <div class="col-3">
-                    <img src="assets/icon-print.png" alt="..." class="img-fluid w-100">
-                </div>
-                <div class="col-9">
-                    <h4>Print</h4>
-                    <p>Rp.{{data.harga.print}} / Lembar</p>
+        <!-- Modal -->
+        <div
+            class="modal fade"
+            id="exampleModalCenter"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">
+                            Apakah anda yakin untuk menghapus?
+                        </h5>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <a
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                            id="batalBtn"
+                            style="color: white;"
+                            >Batal</a
+                        >
+                        <a
+                            class="btn btn-primary"
+                            ng-click="deleteFunc()"
+                            id="deleteBtn"
+                            style="color: white;"
+                            >Delete</a
+                        >
+                    </div>
                 </div>
             </div>
-            <div class="info-group row">
-                <div class="col-3">
-                    <img src="assets/icon-scan.png" alt="..." class="img-fluid w-100">
-                </div>
-                <div class="col-9">
-                    <h4>Scan</h4>
-                    <p>Rp.{{data.harga.scan}} / Lembar</p>
+        </div>
+        <!-- Modal rating -->
+        <div
+            class="modal fade"
+            id="exampleModalCenterRating"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content modal-rating-content">
+                    <div class="modal-header">
+                        <h5
+                            class="modal-title rating-title"
+                            id="exampleModalLongTitle"
+                        >
+                            Beri Rating
+                        </h5>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form name="formRating">
+                        <div class="modal-body" id="rating-bar">
+                            <!-- https://medium.com/@chiragpatel_52497/pure-css-star-rating-system-with-color-change-5d05f536e788 -->
+                            <div class="star-rating">
+                                <div class="rating">
+                                    <input
+                                        type="radio"
+                                        id="star5"
+                                        name="rating"
+                                        value="5"
+                                        class="radio-1"
+                                        ng-model="data.value_rating"
+                                        required
+                                    />
+                                    <label
+                                        for="star5"
+                                        class="star star-1"
+                                        title="Excellent"
+                                    ></label>
+                                    <input
+                                        type="radio"
+                                        id="star4"
+                                        name="rating"
+                                        value="4"
+                                        class="radio-2"
+                                        ng-model="data.value_rating"
+                                        required
+                                    />
+                                    <label
+                                        for="star4"
+                                        class="star star-2"
+                                        title="Great"
+                                    ></label>
+                                    <input
+                                        type="radio"
+                                        id="star3"
+                                        name="rating"
+                                        value="3"
+                                        class="radio-3"
+                                        ng-model="data.value_rating"
+                                        required
+                                    />
+                                    <label
+                                        for="star3"
+                                        class="star star-3"
+                                        title="Average"
+                                    ></label>
+                                    <input
+                                        type="radio"
+                                        id="star2"
+                                        name="rating"
+                                        value="2"
+                                        class="radio-4"
+                                        ng-model="data.value_rating"
+                                        required
+                                    />
+                                    <label
+                                        for="star2"
+                                        class="star star-4"
+                                        title="Poor"
+                                    ></label>
+                                    <input
+                                        type="radio"
+                                        id="star1"
+                                        name="rating"
+                                        value="1"
+                                        class="radio-5"
+                                        ng-model="data.value_rating"
+                                        required
+                                    />
+                                    <label
+                                        for="star1"
+                                        class="star star-5"
+                                        title="Bad"
+                                    ></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a
+                                class="btn btn-secondary"
+                                ng-click="resetRating()"
+                                data-dismiss="modal"
+                                id="batalBtnRating"
+                                style="color: white;"
+                                >Batal</a
+                            >
+                            <button
+                                type="submit"
+                                id="submitRating"
+                                ng-disabled="formRating.$invalid"
+                                class="btn btn-primary"
+                                ng-click="updateRating()"
+                                data-dismiss="modal"
+                                style="color: white;"
+                            >
+                                Submit
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="info-group row">
-                <div class="col-3">
-                    <img src="assets/icon-photocopy.png" alt="..." class="img-fluid w-100">
-                </div>
-                <div class="col-9">
-                    <h4>Fotocopy</h4>
-                    <p>Rp.{{data.harga.fotocopy}} / Lembar</p>
-                </div>
-            </div>
         </div>
-        <a id="link" href="pesanan.html?id={{data._id}}" style="color: white;text-decoration: none;">
-            <div class="pesan" id="input">
-                Pesan Sekarang
-                <span class="fa fa-angle-right"></span>
-            </div>
-        </a>
-    </div>
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Apakah anda yakin untuk menghapus?</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-footer">
-          <a class="btn btn-secondary" data-dismiss="modal" id="batalBtn" style="color: white;">Batal</a>
-          <a class="btn btn-primary" ng-click="deleteFunc()" id="deleteBtn" style="color: white;">Delete</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Modal rating -->
-  <div class="modal fade" id="exampleModalCenterRating" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content modal-rating-content">
-        <div class="modal-header">
-          <h5 class="modal-title rating-title" id="exampleModalLongTitle">Beri Rating</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form name="formRating">
-            <div class="modal-body" id="rating-bar">
-            <!-- https://medium.com/@chiragpatel_52497/pure-css-star-rating-system-with-color-change-5d05f536e788 -->
-            <div class="star-rating"> 
-                <div class="rating" >
-                  <input type="radio" id="star5" name="rating" value="5" class="radio-1" ng-model="data.value_rating" required/>
-                  <label for="star5" class="star star-1" title="Excellent"></label>
-                  <input type="radio" id="star4" name="rating" value="4" class="radio-2" ng-model="data.value_rating" required/>
-                  <label for="star4" class="star star-2" title="Great"></label>
-                  <input type="radio" id="star3" name="rating" value="3" class="radio-3" ng-model="data.value_rating" required/>
-                  <label for="star3" class="star star-3" title="Average"></label>
-                  <input type="radio" id="star2" name="rating" value="2" class="radio-4" ng-model="data.value_rating" required/>
-                  <label for="star2" class="star star-4" title="Poor"></label>
-                  <input type="radio" id="star1" name="rating" value="1" class="radio-5" ng-model="data.value_rating" required/>
-                  <label for="star1" class="star star-5" title="Bad"></label>
-                </div>
-              </div>
-        </div>
-        <div class="modal-footer">
-            <a class="btn btn-secondary"  ng-click="resetRating()" data-dismiss="modal" id="batalBtnRating" style="color: white;">Batal</a>
-            <button type="submit" id="submitRating" ng-disabled="formRating.$invalid" class="btn btn-primary" ng-click="updateRating()" data-dismiss="modal" style="color: white;">Submit</button>
-        </div>
-        </form>
-        
-      </div>
-    </div>
-  </div>
-</body>
-<script src="js/detail.js"></script>
+    </body>
+    <script src="js/detail.js"></script>
 </html>

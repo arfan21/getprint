@@ -25,9 +25,7 @@ app.controller("appCtrl", [
     },
 ]);
 
-LIFF();
-
-function LIFF() {
+window.onload = function () {
     const useNodeJS = true; // if you are not using a node server, set this value to false
     const defaultLiffId = ""; // change the default LIFF value if you are not using a node server
 
@@ -52,7 +50,7 @@ function LIFF() {
         myLiffId = defaultLiffId;
         initializeLiffOrDie(myLiffId);
     }
-}
+};
 
 /**
  * Check if myLiffId is null. If null do not initiate liff.

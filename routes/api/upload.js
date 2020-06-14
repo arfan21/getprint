@@ -5,7 +5,8 @@ const path = require("path");
 const Upload = require("../../models/Upload");
 const request = require("request");
 const fs = require("fs");
-const DROPBOX_TOKEN = token;
+const DROPBOX_TOKEN =
+    "ROeWeTjqfBAAAAAAAAAA8THYLkUNLOah4XqKA_j4mYkPaVmfE9u62DkTi2K936z7";
 
 const storage = multer.diskStorage({
     destination: path.join(__dirname + "./../../public/file4print"),
@@ -82,7 +83,11 @@ router.post("/uploadfile", upload, (req, res) => {
                                         message: "Failed to upload file",
                                     });
                                 } else {
-                                    console.log(data);
+                                    console.log({
+                                        status: true,
+                                        message: "Success to upload file",
+                                        data: data,
+                                    });
                                     return res.status(200).json({
                                         status: true,
                                         message: "Success to upload file",
