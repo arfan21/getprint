@@ -13,60 +13,109 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
     <link rel="stylesheet" href="style.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap" rel="stylesheet"> 
+    
     <title>GetPrint</title>
 </head>
 
-<body ng-app="myApp">
+<body ng-app="myApp" class="getprint-gray-bg">
     <div  id="loadingDiv"><div class="loader" >Loading...</div></div>
+    <div id="page-index" ng-controller="appCtrl" class="stretch-bottom-body">
 
-    <div id="page-index" class="container-fluid" ng-controller="appCtrl">
-        <div id="header-container-title" class="row">
-           
-        </div>
-
-        <div class="container">
-            <div id="header-container-image" class="row">
-                <a class="link" href="/detail.html?id={{data[0]._id}}" style="color: white;">
-                    <div class="col-8">
-                        <p>{{databyrating[0].rating.avg_point}}</p>
-                        <p>Top of the week</p>
-                        <h1>{{databyrating[0].nama_toko}}</h1>
+        <!-- tinggi carouselnya dihardcode untuk ukuran hp -->
+        <div class="container header-container-parent">
+            <div id="carouselExampleIndicatorsTop" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicatorsTop" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicatorsTop" data-slide-to="1"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                                                <div class="header-container-image" class="row">
+                                                    <a class="link" href="/detail.html?id={{data[0]._id}}" style="color: white;">
+                                                        <div class="col-8">
+                                                            <p><span class="fa fa-star"></span> {{databyrating[0].rating.avg_point}}</p>
+                                                            <p style="font-size: 14px; font-weight: 100; margin-bottom: 0;">Top of the week</p>
+                                                            <h3>{{databyrating[0].nama_toko}}</h3>
+                                                            <div>
+                                                                <span class="fa fa-angle-right header-go"></span>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                    <img src="assets/banner-printer.png" alt="...">
+                                                </div>
                     </div>
-                </a>
-                <div class="col-4">
-                    <img src="assets/banner-printer.png" alt="...">
+                    <div class="carousel-item">
+                                                <div class="header-container-image" class="row">
+                                                    <a class="link" href="/addmitra.html" style="color: white;">
+                                                        <div class="col-8">
+                                                            <br>
+                                                            <br>
+                                                            <p style="font-size: 14px; font-weight: 100; margin-bottom: 0;">Mau jadi mitra?</p>
+                                                            <h3>Register Now!</h3>
+                                                            <div>
+                                                                <span class="fa fa-angle-right header-go"></span>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                    <img src="assets/banner-job.png" alt="...">
+                                                </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div id="item-container" class="row">
-            <div id="carouselExampleIndicators" class="carousel slide">
-                <!-- data-ride="carousel" for autoplay -->
-                <div id="button-container" >
-                    <button class="btn btn-link active" data-target="#carouselExampleIndicators"
-                        data-slide-to="0">Terbaru</button>
-                    <button class="btn btn-link" data-target="#carouselExampleIndicators"
-                        data-slide-to="1">Rekomendasi</button>
-                    <button class="btn btn-link" data-target="#carouselExampleIndicators" data-slide-to="2">
-                        Terdekat</button>
-                </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="col-md-4" ng-repeat="d in databydate">
+        
+        <!-- stretch-bottom-contentnya gak bisa di halaman index karena model nestingnya beda, jadi pakai padding bottom -->
+        <div class="container-fluid getprint-white-container stretch-bottom-content">
+            <div id="item-container" class="row">
+                <div id="carouselExampleIndicators" class="carousel slide">
+                    <!-- data-ride="carousel" for autoplay -->
+                    <div id="button-container" class="carousel-indicators" style="position: static"> <!-- override default carousel indicators location -->
+                        <button class="btn btn-link active" data-target="#carouselExampleIndicators" data-slide-to="0">Terbaru<br> </button>
+                        <button class="btn btn-link" data-target="#carouselExampleIndicators" data-slide-to="1">Rekomendasi<br> </button>
+                        <button class="btn btn-link" data-target="#carouselExampleIndicators" data-slide-to="2"> Terdekat<br> </button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div ng-repeat="d in databydate">
+                                <a class="link" href="/detail.html?id={{d._id}}">
+                                    <div class="card container">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                    <div class="card-image">
+                                                        <img class="card-image-content" src="{{d.link_foto}}" alt="foto toko">
+                                                </div>
+                                        </div>
+                                        <div class="col-8">
+                                            <div class="card-text" class="col-8">
+                                                <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
+                                                <p class="card-text text-muted"> {{d.alamat_toko}} </p>
+                                                <div class="getprint-indicator">
+                                                    <span class="fa fa-star" style="display: inline"></span>
+                                                    <span style="font-weight: 700; display: inline;">{{d.rating.avg_point}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div ng-repeat="d in databyrating">
                             <div class="card container">
                                 <div class="row">
                                     <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
                                             <img src="{{d.link_foto}}" alt="foto toko" style="width: 110px; height: 90px;">
                                             <span class="fa fa-star"
-                                                style="
-                                                    margin: 20px;
-                                                    padding: 10px;
-                                                    border-radius: 50px;
-                                                    background-color: blue;
-                                                    color: white;
-                                                "
+                                            style="
+                                            margin: 20px;
+                                            padding: 10px;
+                                            border-radius: 50px;
+                                            background-color: blue;
+                                            color: white;
+                                            "
                                             > {{d.rating.avg_point}}</span>
                                         </div>
                                         <div id="card-text" class="col-xs-8">
@@ -79,46 +128,20 @@
                         </div>
                     </div>
                     <div class="carousel-item">
-                        <div class="col-md-4" ng-repeat="d in databyrating">
+                        <div ng-repeat="d in data">
                             <div class="card container">
                                 <div class="row">
                                     <a class="link" href="/detail.html?id={{d._id}}">
                                         <div id="card-image" class="col-xs-4">
                                             <img src="{{d.link_foto}}" alt="foto toko" style="width: 110px; height: 90px;">
                                             <span class="fa fa-star"
-                                                style="
-                                                    margin: 20px;
-                                                    padding: 10px;
-                                                    border-radius: 50px;
-                                                    background-color: blue;
-                                                    color: white;
-                                                "
-                                            > {{d.rating.avg_point}}</span>
-                                        </div>
-                                        <div id="card-text" class="col-xs-8">
-                                            <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
-                                            <p class="card-text text-muted"> {{d.alamat_toko}} </p>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="col-md-4" ng-repeat="d in data">
-                            <div class="card container">
-                                <div class="row">
-                                    <a class="link" href="/detail.html?id={{d._id}}">
-                                        <div id="card-image" class="col-xs-4">
-                                            <img src="{{d.link_foto}}" alt="foto toko" style="width: 110px; height: 90px;">
-                                            <span class="fa fa-star"
-                                                style="
-                                                    margin: 20px;
-                                                    padding: 10px;
-                                                    border-radius: 50px;
-                                                    background-color: blue;
-                                                    color: white;
-                                                "
+                                            style="
+                                            margin: 20px;
+                                            padding: 10px;
+                                            border-radius: 50px;
+                                            background-color: blue;
+                                            color: white;
+                                            "
                                             > {{d.rating.avg_point}}</span>
                                         </div>
                                         <div id="card-text" class="col-xs-8">
@@ -134,8 +157,9 @@
             </div>
         </div>
     </div>
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-    <!-- <script src="liff-starter.js"></script> -->
+</div>
+<script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+<!-- <script src="liff-starter.js"></script> -->
 </body>
 <script src="js/index.js"></script>
 

@@ -16,6 +16,8 @@
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap" rel="stylesheet"> 
+
     <title>GetPrint || Upload </title>
 </head>
 <body class="getprint-gray-bg stretch-bottom-body" ng-app="pesanan" ng-controller="myapp">
@@ -24,8 +26,9 @@
     </div>
 
     <div id="order-details" class="container">
-        <h4>{{mitra.nama_toko}}</h4>
-        <h5>{{mitra.alamat_toko}}</h5>
+        <h4><strong>{{mitra.nama_toko}}</strong></h4>
+        <i class="fa fa-map-marker"></i><p> {{mitra.alamat_toko}}</p>
+        <hr>
         <h4><strong>Order Details</strong></h4>
         <p>Delivery? </p>
         <!-- https://gitbrent.github.io/bootstrap4-toggle/ -->

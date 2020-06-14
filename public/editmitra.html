@@ -11,17 +11,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="style.css">
     
     <title>GetPrint</title>
 </head>
 <body class="getprint-gray-bg stretch-bottom-body" ng-app = "menjadimitra" ng-controller="menjadimitraCtrl">
     <div class="container-fluid getprint-round-navbar" style="background-color: blue">
-        <h4>Form Mitra Baru</h4>
+        <h4>Edit Data Mitra</h4>
     </div>
-    <div class="container">
-        <p class="getprint-blue-title">Data Mitra</p>
-        <div style="width: 170px;height: 170px;background-color: white;border-radius: 25px;">
+    <div class="container center-align">
+        <!-- <p class="getprint-blue-title">Data Mitra</p> -->
+        <div style="width: 170px;height: 170px;background-color: white;border-radius: 25px; display: block; margin: auto; margin-top: 2rem;">
             <img src="{{data.link_foto}}" style="width: 150px; height: 150px;margin: 10px;border-radius: 25px;"><br> 
         </div>
         
@@ -103,7 +104,7 @@
                 </span>
                 <span class="fa fa-info-circle fa-form-position"></span>
             </div>
-            <div class="text-center">
+            <div class="text-center" style="margin-bottom: 2rem;">
                 <button type="submit" class="btn btn-primary" ng-disabled="formMitra.$invalid">Submit</button>
             </div>
         </form>
