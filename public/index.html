@@ -82,17 +82,68 @@
                                     <div class="card container">
                                         <div class="row">
                                             <div class="col-4">
-                                                    <div class="card-image">
-                                                        <img class="card-image-content" src="{{d.fotomitra[0].link_foto}}" alt="foto toko">
+                                                <div class="card-image">
+                                                    <img class="card-image-content" src="{{d.fotomitra[0].link_foto}}" alt="foto toko">
                                                 </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="card-text" class="col-8">
+                                                    <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
+                                                    <p class="card-text text-muted"> {{d.alamat_toko}} </p>
+                                                    <div class="getprint-indicator">
+                                                        <span class="fa fa-star" style="display: inline"></span>
+                                                        <span style="font-weight: 700; display: inline;">{{d.rating.avg_point}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-8">
-                                            <div class="card-text" class="col-8">
-                                                <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
-                                                <p class="card-text text-muted"> {{d.alamat_toko}} </p>
-                                                <div class="getprint-indicator">
-                                                    <span class="fa fa-star" style="display: inline"></span>
-                                                    <span style="font-weight: 700; display: inline;">{{d.rating.avg_point}}</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div ng-repeat="d in databyrating">
+                                <a class="link" href="/detail.html?id={{d._id}}">
+                                    <div class="card container">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div class="card-image">
+                                                    <img class="card-image-content" src="{{d.fotomitra[0].link_foto}}" alt="foto toko">
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="card-text" class="col-8">
+                                                    <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
+                                                    <p class="card-text text-muted"> {{d.alamat_toko}} </p>
+                                                    <div class="getprint-indicator">
+                                                        <span class="fa fa-star" style="display: inline"></span>
+                                                        <span style="font-weight: 700; display: inline;">{{d.rating.avg_point}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div ng-repeat="d in data">
+                                <a class="link" href="/detail.html?id={{d._id}}">
+                                    <div class="card container">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div class="card-image">
+                                                    <img class="card-image-content" src="{{d.fotomitra[0].link_foto}}" alt="foto toko">
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="card-text" class="col-8">
+                                                    <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
+                                                    <p class="card-text text-muted"> {{d.alamat_toko}} </p>
+                                                    <div class="getprint-indicator">
+                                                        <span class="fa fa-star" style="display: inline"></span>
+                                                        <span style="font-weight: 700; display: inline;">{{d.rating.avg_point}}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -101,59 +152,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="carousel-item">
-                        <div ng-repeat="d in databyrating">
-                            <div class="card container">
-                                <div class="row">
-                                    <a class="link" href="/detail.html?id={{d._id}}">
-                                        <div id="card-image" class="col-xs-4">
-                                            <img src="{{d.fotomitra[0].link_foto}}" alt="foto toko" style="width: 110px; height: 90px;">
-                                            <span class="fa fa-star"
-                                            style="
-                                            margin: 20px;
-                                            padding: 10px;
-                                            border-radius: 50px;
-                                            background-color: blue;
-                                            color: white;
-                                            "
-                                            > {{d.rating.avg_point}}</span>
-                                        </div>
-                                        <div id="card-text" class="col-xs-8">
-                                            <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
-                                            <p class="card-text text-muted"> {{d.alamat_toko}} </p>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div ng-repeat="d in data">
-                            <div class="card container">
-                                <div class="row">
-                                    <a class="link" href="/detail.html?id={{d._id}}">
-                                        <div id="card-image" class="col-xs-4">
-                                            <img src="{{d.fotomitra[0].link_foto}}" alt="foto toko" style="width: 110px; height: 90px;">
-                                            <span class="fa fa-star"
-                                            style="
-                                            margin: 20px;
-                                            padding: 10px;
-                                            border-radius: 50px;
-                                            background-color: blue;
-                                            color: white;
-                                            "
-                                            > {{d.rating.avg_point}}</span>
-                                        </div>
-                                        <div id="card-text" class="col-xs-8">
-                                            <h5 class="font-weight-bold">{{d.nama_toko}}</h5>
-                                            <p class="card-text text-muted"> {{d.alamat_toko}} </p>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
