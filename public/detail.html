@@ -26,12 +26,14 @@
         <title>GetPrint</title>
     </head>
     <body
+        id="bodyCtrl"
         class="getprint-gray-bg stretch-bottom-body"
         ng-app="detailmitra"
         ng-controller="appCtrl"
     >
+        <div id="loadingDiv"><div class="loader">Loading...</div></div>
         <div class="container-fluid getprint-round-navbar">
-            <h4>
+            <h4 style="display: inline;">
                 <a href="/"><i class="fa fa-angle-left"></i></a>GetPrint
             </h4>
         </div>
@@ -40,8 +42,9 @@
             class="container-fluid getprint-white-container stretch-bottom-content pt-2"
         >
             <img
+                style="display: none;"
                 id="detail-img"
-                src="{{data.fotomitra[0].link_foto}}"
+                ng-src="{{data.fotomitra[0].link_foto}}"
                 alt="foto toko"
             />
             <div id="detail-nama-toko">
@@ -55,11 +58,7 @@
             </div>
             <hr />
             <div class="rating-mitra">
-                <a
-                    id="rating-open"
-                    data-toggle="modal"
-                    data-target="#exampleModalCenterRating"
-                >
+                <a id="rating-open">
                     <span
                         class="fa fa-star"
                         style="
@@ -119,10 +118,10 @@
                     </div>
                 </div>
             </div>
+
             <a
                 id="link"
-                href="pesanan.html?id={{data._id}}"
-                style="color: white; text-decoration: none;"
+                style="color: white; text-decoration: none; cursor: pointer;"
             >
                 <div class="pesan" id="input">
                     Pesan Sekarang
@@ -304,5 +303,9 @@
             </div>
         </div>
     </body>
-    <script src="js/detail.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script src="js/LIFF/liffInit.js"></script>
+    <script src="js/helper/isAdmin.js"></script>
+    <script src="js/helper/getUrlParameter.js"></script>
+    <script src="js/pages/detail.js"></script>
 </html>

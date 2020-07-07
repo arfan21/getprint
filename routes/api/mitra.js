@@ -69,7 +69,7 @@ router.get("/mitra", (req, res) => {
                     message: "failed get mitra",
                     error: err,
                 });
-            } else if (data == null) {
+            } else if (data.length == 0) {
                 return res.json({
                     status: false,
                     message: "failed get mitra",
@@ -101,7 +101,7 @@ router.get("/mitra", (req, res) => {
                     message: "failed get mitra",
                     error: err,
                 });
-            } else if (data == null) {
+            } else if (data.length == 0) {
                 return res.json({
                     status: false,
                     message: "failed get mitra",
@@ -132,7 +132,7 @@ router.get("/mitra", (req, res) => {
                     message: "failed get mitra",
                     error: err,
                 });
-            } else if (data == null) {
+            } else if (data.length == 0) {
                 return res.json({
                     status: false,
                     message: "failed get mitra",
@@ -153,7 +153,7 @@ router.get("/mitra/:id", (req, res) => {
     const id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.json({
+        return res.status(400).json({
             status: false,
             message: "failed get mitra",
             error: "Id Mitra invalid",
@@ -172,13 +172,13 @@ router.get("/mitra/:id", (req, res) => {
         },
     ]).exec((err, data) => {
         if (err) {
-            return res.json({
+            return res.status(400).json({
                 status: false,
                 message: "failed get mitra",
                 error: err,
             });
-        } else if (data == null) {
-            return res.json({
+        } else if (data.length == 0) {
+            return res.status(400).json({
                 status: false,
                 message: "failed get mitra",
                 error: "mitra not found",

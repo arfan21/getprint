@@ -9,6 +9,9 @@ const mitra = require("./routes/api/mitra");
 const pesanan = require("./routes/api/pesanan");
 const upload = require("./routes/api/upload");
 const uploadfotomitra = require("./routes/api/fotoMitra");
+const followingmitra = require("./routes/api/followingMitra");
+const admin = require("./routes/api/admin");
+
 mongoose
     .connect(db, {
         useNewUrlParser: true,
@@ -27,6 +30,8 @@ app.use("/api/", mitra);
 app.use("/api/", pesanan);
 app.use("/api/", upload);
 app.use("/api/", uploadfotomitra);
+app.use("/api/", followingmitra);
+app.use("/api/", admin);
 
 app.get("/send-id", function (req, res) {
     res.json({ id: myLiffId });
@@ -41,7 +46,5 @@ app.get("*", function (req, res) {
         return;
     }
 });
-
-var waktu = new Date();
 
 app.listen(port, () => console.log(`app listening on port ${port}!`));

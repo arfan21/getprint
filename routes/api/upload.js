@@ -3,9 +3,8 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const Upload = require("../../models/Upload");
-const request = require("request");
-const fs = require("fs");
-const DROPBOX_TOKEN = token;
+const uploadDropbox = require("../DROPBOX_API/uploadDropbox");
+const getSharedLink = require("../DROPBOX_API/getSharedLink");
 
 const storage = multer.diskStorage({
     destination: path.join(__dirname + "./../../public/file4print"),
@@ -16,90 +15,100 @@ const storage = multer.diskStorage({
         );
     },
 });
+var maxSize = 15 * 1024 * 1024;
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: maxSize },
+}).array("myfile", 5);
 
-const upload = multer({ storage: storage }).array("myfile", 5);
+router.post("/uploadfile", upload, async (req, res) => {
+    // console.log(req.files);
+    // res.status(200).json({
+    //     status: true,
+    //     message: "Success to upload file",
+    // });
+    const lengthFile = req.files.length;
+    const newSharedLink = [];
 
-router.post("/uploadfile", upload, (req, res) => {
     //looping untuk mengupload satu persatu file ke dropbox
-    let newfile = [];
-
-    for (i = 0; i < req.files.length; i++) {
+    for (i = 0; i < lengthFile; i++) {
         let filename = req.files[i].filename;
-        request(
-            {
-                method: "POST",
-                url: "https://content.dropboxapi.com/2/files/upload",
-                headers: {
-                    "Content-Type": "application/octet-stream",
-                    Authorization: "Bearer " + DROPBOX_TOKEN,
-                    "Dropbox-API-Arg":
-                        '{"path": "/getprint/' +
-                        filename +
-                        '","mode": "add","autorename": true,"mute": false,"strict_conflict": false}',
-                },
-                body: fs.readFileSync(
-                    path.join(
-                        __dirname + "./../../public/file4print/" + filename
-                    )
-                ),
+
+        const fileFromDropBox = await uploadDropbox(filename).then(
+            (result) => {
+                return {
+                    status: true,
+                    result: result,
+                };
             },
-            (err, response, body) => {
-                let resJson = JSON.parse(body);
-
-                //melakukan request ke dropbox untuk membuat shared link dari file yang sudah di upload
-
-                request(
-                    {
-                        method: "POST",
-                        url:
-                            "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: "Bearer " + DROPBOX_TOKEN,
-                        },
-                        body: '{"path": "' + resJson.path_display + '"}',
-                    },
-                    (err, response, body) => {
-                        resJson = JSON.parse(body);
-
-                        //shared link di simpan di array newfile
-
-                        newfile.push(resJson.url);
-
-                        //jika panjang array new file == panjang dari request file (atau sudah di akhir looping)
-
-                        if (newfile.length == req.files.length) {
-                            //shared link disimpan ke mongodb
-
-                            const newUpload = new Upload({
-                                link_file: newfile,
-                            });
-                            newUpload.save((err, data) => {
-                                if (err) {
-                                    console.log(err);
-                                    return res.json({
-                                        status: false,
-                                        message: "Failed to upload file",
-                                    });
-                                } else {
-                                    console.log({
-                                        status: true,
-                                        message: "Success to upload file",
-                                        data: data,
-                                    });
-                                    return res.status(200).json({
-                                        status: true,
-                                        message: "Success to upload file",
-                                        data: data,
-                                    });
-                                }
-                            });
-                        }
-                    }
-                );
+            (err) => {
+                return {
+                    status: false,
+                    error: err,
+                };
             }
         );
+
+        if (!fileFromDropBox.status) {
+            console.log(fileFromDropBox.error);
+            return res.status(500).json({
+                status: false,
+                message: fileFromDropBox.error,
+            });
+        }
+
+        const path_display = fileFromDropBox.result.path_display;
+
+        const sharedLink = await getSharedLink(path_display).then(
+            (result) => {
+                return {
+                    status: true,
+                    result: result,
+                };
+            },
+            (err) => {
+                return {
+                    status: false,
+                    error: err,
+                };
+            }
+        );
+
+        if (!sharedLink.status) {
+            console.log(sharedLink.error);
+            return res.status(500).json({
+                status: false,
+                message: sharedLink.error,
+            });
+        }
+
+        newSharedLink.push(sharedLink.result.url);
     }
+
+    const newUpload = new Upload({
+        link_file: newSharedLink,
+    });
+
+    newUpload.save((err, data) => {
+        if (err) {
+            console.log(err);
+            return res.json({
+                status: false,
+                message: "Failed to upload file",
+            });
+        } else {
+            console.log({
+                status: true,
+                message: "Success to upload file",
+                data: data,
+            });
+            return res.status(200).json({
+                status: true,
+                message: "Success to upload file",
+                data: data,
+            });
+        }
+    });
 });
 
 module.exports = router;

@@ -20,7 +20,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
         <title>GetPrint || Menjadi Mitra</title>
     </head>
-    <body class="getprint-gray-bg stretch-bottom-body" ng-app="menjadimitra" ng-controller="menjadimitraCtrl">
+    <body class="getprint-gray-bg stretch-bottom-body" ng-app="menjadimitra" ng-controller="menjadimitraCtrl" style="display: none;">
         <div class="container-fluid getprint-round-navbar">
             <h4>Form Mitra Baru</h4>
         </div>
@@ -221,12 +221,12 @@
                     <div id="upload-container-child" class="form-group form-upload">
                         <div class="custom-file">
                             <label for="file1" class="btn btn-light custom-file-style"><i class="fa fa-plus" ></i><br><p id="filename1" style="margin-bottom: 0">ADD FOTO</p></label>
-                            <input id="file1" type="file" class="custom-file-input" id="customFile" value="choose" name="mitraFoto" custom-file-input required>
+                            <input onchange="angular.element(this).scope().listFile(this, this.files)" id="file1" type="file" class="custom-file-input" id="customFile" value="choose" name="mitraFoto" custom-file-input required>
                         </div>
                     </div>
                 </div>
                 <div class="center-align form-group">
-                    <input id="uploadBtn" type="submit" class="btn btn-primary" value="Upload"></button>
+                    <input ng-click="uploadFIle()" id="uploadBtn" type="submit" class="btn btn-primary" value="Upload"></button>
                 </div>
                 <div id="progress-layout"></div>
                 
@@ -243,5 +243,8 @@
             </div>
         </div>
     </body>
-    <script src="js/mitra.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script src="js/LIFF/liffInit.js"></script>
+    <script src="js/helper/isAdmin.js"></script>
+    <script src="js/pages/mitra.js"></script>
 </html>

@@ -20,7 +20,7 @@
 
     <title>GetPrint || Pesanan </title>
 </head>
-<body class="getprint-gray-bg stretch-bottom-body" ng-app="pesanan" ng-controller="myapp">
+<body class="getprint-gray-bg stretch-bottom-body" ng-app="pesanan" ng-controller="myapp" style="display: none;">
     <div class="container-fluid getprint-round-navbar">
         <h4><a id="arrowBack" href="/"><i class="fa fa-angle-left"></i></a>Keranjang</h4>
     </div>
@@ -30,7 +30,7 @@
         <i class="fa fa-map-marker"></i><p> {{mitra.alamat_toko}}</p>
         <hr>
         <h4><strong>Order Details</strong></h4>
-        <p>Delivery? </p>
+        <p>Delivery?</p>
         <!-- https://gitbrent.github.io/bootstrap4-toggle/ -->
         <input type="checkbox" data-toggle="toggle" data-size="xs" data-on="yes" data-off="no" name="customPermissions[]" ng-model="data.delivery"  value="delivery" ng-init="form.customPermissions.delivery=true" >
     </div>
@@ -80,17 +80,18 @@
                     <div id="upload-container-child" class="form-group form-upload" ng-repeat="form in forms" >
                         <div class="custom-file">
                             <label for="{{form.name}}" class="btn btn-light custom-file-style"><i class="fa fa-plus" ></i><br><p id="{{form.filename}}" style="margin-bottom: 0">ADD FILE</p></label>
-                            <input id="{{form.name}}" type="file" class="custom-file-input" id="customFile" value="choose" name="myfile" custom-file-input required>
+                            <input onchange="angular.element(this).scope().listFile(this, this.files)" id="{{form.name}}" type="file" class="custom-file-input" id="customFile" value="choose" name="myfile" custom-file-input required>
                         </div>
                     </div>
                 </div>
                 <div class="center-align form-group">
                     <input id="addForm" type="button" value="Add more files" ng-click="addform()" class="btn btn-primary" style="text-decoration: none; color: white;">
-                    <input id="uploadBtn" type="submit" class="btn btn-primary" value="Upload"></button>
+                    <input ng-click="uploadFiles()" id="uploadBtn" type="submit" class="btn btn-primary" value="Upload"></button>
                 </div>
                 <div id="progress-layout"></div>
                 
             </form>
+            
             <div class="center-align">
                     <a id="cancelBtn" href="/" class="btn btn-light btn-lg getprint-shadow" style="background-color: white;">Cancel</a>
                     <button ng-click="submitMyform()" id="submitData" type="submit" class="btn btn-primary btn-lg getprint-shadow" ng-disabled="formPesanan.$invalid">Order</button>
@@ -99,5 +100,8 @@
         </div>
     </div>
 </body>
-<script src="js/pesanan.js"></script>
+<script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+<script src="js/LIFF/liffInit.js"></script>
+<script src="js/helper/getUrlParameter.js"></script>
+<script src="js/pages/pesanan.js"></script>
 </html>

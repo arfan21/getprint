@@ -1,8 +1,7 @@
 const Pesanan = require("../../models/Pesanan");
 const { LineClient } = require("messaging-api-line");
-const LINE_ACCESS_TOKEN =
-    "p9CAbsuPw7WdDFaanqFuGPaMgUS1HrZd5O8CqOrW5HVEWdElPB0A2g2WR3UuPxd7YjPVkp9o8BZVoAobHGZecEQn1HmdB9VQOYwskQmfyTCumeAh6d1TvOgGGxx7Fwj9bYUtE8fVdaGcLvcsgEnkcgdB04t89/1O/w1cDnyilFU=";
-const LINE_CHANNEL_SECRET = "b47886df29e4531049bc034326d3eb9f";
+const LINE_ACCESS_TOKEN = "token";
+const LINE_CHANNEL_SECRET = "token";
 
 // get accessToken and channelSecret from LINE developers website
 const client = new LineClient({

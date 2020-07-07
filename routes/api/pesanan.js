@@ -18,7 +18,7 @@ router.post("/pesanan", (req, res) => {
         delivery: data.delivery,
     });
 
-    newPesanan.save((err, data) => {
+    newPesanan.save(async (err, data) => {
         if (err) {
             console.log({
                 status: false,
@@ -36,7 +36,7 @@ router.post("/pesanan", (req, res) => {
             message: "Success added Pesanan",
             pesanan: data,
         });
-        sendPesananToLine(data._id);
+        await sendPesananToLine(data._id);
         return res.json({
             status: true,
             message: "Success added Pesanan",
@@ -81,13 +81,11 @@ router.get("/pesanan/:lineid", (req, res) => {
                 error: "pesanan not found",
             });
         } else {
-            return res
-                .status(200)
-                .json({
-                    status: true,
-                    message: "succes get pesanan",
-                    pesanan: data,
-                });
+            return res.status(200).json({
+                status: true,
+                message: "succes get pesanan",
+                pesanan: data,
+            });
         }
     });
 });
@@ -136,13 +134,11 @@ router.get("/pesanan/byid/:id", (req, res) => {
                 error: "pesanan not found",
             });
         } else {
-            return res
-                .status(200)
-                .json({
-                    status: true,
-                    message: "succes get pesanan",
-                    pesanan: data,
-                });
+            return res.status(200).json({
+                status: true,
+                message: "succes get pesanan",
+                pesanan: data,
+            });
         }
     });
 });

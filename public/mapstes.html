@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Simple Map</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
+        <style type="text/css">
+            /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+            #map {
+                height: 50%;
+                width: 50%;
+            }
+
+            /* Optional: Makes the sample page fill the window. */
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #map .marker-centered {
+                position: absolute;
+                /*url of the marker*/
+                background: url(https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2_hdpi.png)
+                    no-repeat;
+                background-size: 25px;
+                /*center the marker*/
+                top: 50%;
+                left: 50%;
+                z-index: 1;
+                /*fix offset when needed*/
+                margin-left: -10px;
+                margin-top: -34px;
+                /*size of the image*/
+                height: 40px;
+                width: 25px;
+                cursor: pointer;
+            }
+
+            .form-add-post {
+                box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.5);
+                width: 500px;
+                margin-left: 20px;
+                padding: 10px;
+                margin-bottom: 50px;
+                border-radius: 4px;
+            }
+
+            .form-add-post label {
+                display: block;
+                font-size: 14px;
+                color: #607088;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            .form-add-post input,
+            .form-add-post textarea {
+                outline: none;
+                border: 1px solid #607088;
+                padding: 12px;
+                border-radius: 4px;
+                margin-bottom: 20px;
+                width: 100%;
+                box-sizing: border-box;
+                font-size: 12px;
+                color: #607088;
+            }
+
+            button.btn-submit {
+                outline: none;
+                border: 1px solid #2196f3;
+                padding: 10px 30px;
+                border-radius: 40px;
+                color: #2196f3;
+                text-transform: uppercase;
+                font-weight: bold;
+                margin-top: 30px;
+            }
+
+            button.btn-submit:hover {
+                cursor: pointer;
+            }
+
+            .section-title {
+                margin-left: 20px;
+                font-size: 20px;
+                font-weight: bold;
+                color: #4a4a4a;
+            }
+        </style>
+    </head>
+    <body>
+        <p className="section-title">My Location</p>
+
+        <div id="map"></div>
+
+        <div class="form-add-post">
+            <!-- <label for="lat">Latitude</label> -->
+            <input
+                type="text"
+                name="lat"
+                id="default_latitude"
+                placeholder="Latitude"
+            />
+            <!-- <label for="lng">Longitude</label> -->
+            <input
+                type="text"
+                name="lng"
+                id="default_longitude"
+                placeholder="Longitude"
+            />
+            <label for="distance">Distance</label>
+            <input
+                type="text"
+                name="distance"
+                id="distance"
+                placeholder="distance"
+            />
+            <label for="address">Address</label>
+            <textarea
+                name="address"
+                id="address"
+                placeholder="address"
+                cols="20"
+                rows="3"
+            ></textarea>
+            <button class="btn-submit" id="mapsBtn">open google maps</button>
+            <button class="btn-submit" id="submitBtn">Submit</button>
+        </div>
+    </body>
+    <script>
+        const getLocation = () => {
+            return new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        resolve({
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                        });
+                    },
+                    (err) => {
+                        reject(err);
+                    }
+                );
+            });
+        };
+    </script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoCPnKE4LwdDEAtqlqnYOrEKH7P4Ig-rE&callback=initMap&libraries=geometry&v=weekly"
+        defer
+    ></script>
+
+    <script>
+        async function initMap() {
+            const myLocation = await getLocation().then(
+                (result) => {
+                    return {
+                        status: true,
+                        coords: result,
+                    };
+                },
+                (err) => {
+                    return {
+                        status: false,
+                        error: err,
+                    };
+                }
+            );
+
+            if (!myLocation.status) {
+                return alert(myLocation.error);
+            }
+
+            const latlng = [
+                new google.maps.LatLng(
+                    myLocation.coords.latitude,
+                    myLocation.coords.longitude
+                ),
+            ];
+
+            const firsLatLng = [
+                new google.maps.LatLng(
+                    myLocation.coords.latitude,
+                    myLocation.coords.longitude
+                ),
+            ];
+
+            mapRender(google, latlng[0], firsLatLng[0]);
+        }
+
+        const mapRender = (google, latlng, firstLatLng) => {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: latlng,
+                zoom: 20,
+            });
+
+            var geocoder = new google.maps.Geocoder();
+
+            getLocationCenter(google, geocoder, map, latlng, firstLatLng);
+
+            $("<div/>").addClass("marker-centered").appendTo(map.getDiv());
+            $("#default_latitude").val(latlng.lat());
+            $("#default_longitude").val(latlng.lng());
+
+            getAddress(geocoder, latlng);
+            var distance = getDistance(google, firstLatLng, latlng);
+
+            $("#distance").val(distance);
+        };
+
+        const getLocationCenter = (
+            google,
+            geocoder,
+            map,
+            latlng,
+            firstLatLng
+        ) => {
+            google.maps.event.addListener(map, "center_changed", function () {
+                latlng = new google.maps.LatLng(
+                    map.getCenter().lat(),
+                    map.getCenter().lng()
+                );
+
+                $("#default_latitude").val(latlng.lat);
+                $("#default_longitude").val(latlng.lng);
+
+                getAddress(geocoder, latlng);
+
+                var distance = getDistance(google, firstLatLng, latlng);
+
+                $("#distance").val(distance);
+            });
+        };
+
+        const getAddress = (geocoder, latlng) => {
+            geocoder.geocode({ location: latlng }, (result, status) => {
+                if (status == "OK") {
+                    $("#address").val(result[0].formatted_address);
+                }
+            });
+        };
+
+        const getDistance = (google, from, to) => {
+            return (
+                google.maps.geometry.spherical.computeDistanceBetween(
+                    from,
+
+                    to
+                ) / 1000
+            ).toFixed(2);
+        };
+
+        $("#submitBtn").on("click", () => {
+            const latlng = {
+                lat: $("#default_latitude").val(),
+                lng: $("#default_longitude").val(),
+            };
+
+            const distance = $("#distance").val();
+            const address = $("#address").val();
+            console.log({
+                latlng: latlng,
+                distance: distance,
+                address: address,
+            });
+        });
+
+        $("#mapsBtn").on("click", () => {
+            window.open(
+                `https://www.google.com/maps/search/?api=1&query=${$(
+                    "#default_latitude"
+                ).val()},${$("#default_longitude").val()}`,
+                "_blank"
+            );
+        });
+    </script>
+</html>
