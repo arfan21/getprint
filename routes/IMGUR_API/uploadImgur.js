@@ -1,9 +1,7 @@
-const fs = require("fs");
-const path = require("path");
 const { default: Axios } = require("axios");
-const IMGUR_CLIENT_ID = "token";
+const IMGUR_CLIENT_ID = `Client-ID ${process.env.IMGUR_CLIENT_ID}`;
 
-const uploadImgur = (filename) => {
+const uploadImgur = (file) => {
     const promise = new Promise((resolve, reject) => {
         Axios({
             method: "POST",
@@ -11,9 +9,7 @@ const uploadImgur = (filename) => {
             headers: {
                 Authorization: IMGUR_CLIENT_ID,
             },
-            data: fs.readFileSync(
-                path.join(__dirname + "./../../public/assets/" + filename)
-            ),
+            data: file.buffer,
         }).then(
             (result) => {
                 resolve(result.data);

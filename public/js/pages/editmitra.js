@@ -2,6 +2,15 @@ $("#fotoMitra").on("load", () => {
     $("#fotoMitra").css("display", "block");
 });
 
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+    var results = regex.exec(location.search);
+    return results === null
+        ? ""
+        : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 var id = getUrlParameter("id");
 
 if (id.length == 0) {
@@ -45,30 +54,25 @@ app.controller("menjadimitraCtrl", [
     "$scope",
     "$http",
     "$window",
-    async ($scope, $http, $window) => {
-        $scope.data = {};
-
+    async function ($scope, $http, $window) {
         const callLiffInit = await liffInit(liff).then(
-            async (result) => {
-                await liffApp();
+            (result) => {
+                liffApp();
             },
             (err) => {
                 alert(err);
             }
         );
 
+        $scope.data = {};
+        $scope.data.coords = {};
+
         $http({
             method: "GET",
             url: "/api/mitra/" + id,
-        }).then(
-            function successCallback(response) {
-                $scope.data = response.data.mitra[0];
-                $("body").css("display", "block");
-            },
-            (err) => {
-                $window.location = "/pagenotfound.html";
-            }
-        );
+        }).then(function successCallback(response) {
+            $scope.data = response.data.mitra[0];
+        });
 
         const file = [];
         $scope.listFile = (e, files) => {
@@ -172,5 +176,79 @@ const liffApp = async () => {
         window.location = "/pagenotfound.html";
     }
 
-    //$("body").css("display", "block");
+    $("body").css("display", "block");
 };
+
+async function initMap() {
+    const myLocation = await getLocation().then(
+        (result) => {
+            return {
+                status: true,
+                coords: result,
+            };
+        },
+        (err) => {
+            return {
+                status: false,
+                error: err,
+            };
+        }
+    );
+
+    if (!myLocation.status) {
+        return alert(myLocation.error);
+    }
+
+    const latlng = [
+        new google.maps.LatLng(
+            myLocation.coords.latitude,
+            myLocation.coords.longitude
+        ),
+    ];
+
+    mapRender(google, latlng[0]);
+}
+
+const mapRender = (google, latlng) => {
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: latlng,
+        zoom: 20,
+        disableDefaultUI: true,
+    });
+
+    var geocoder = new google.maps.Geocoder();
+
+    getLocationCenter(google, geocoder, map, latlng);
+
+    $("<div/>").addClass("marker-centered").appendTo(map.getDiv());
+    $("#default_latitude").val(latlng.lat()).trigger("input");
+    $("#default_longitude").val(latlng.lng()).trigger("input");
+
+    getAddress(geocoder, latlng);
+};
+
+const getLocationCenter = (google, geocoder, map, latlng) => {
+    google.maps.event.addListener(map, "center_changed", function () {
+        latlng = new google.maps.LatLng(
+            map.getCenter().lat(),
+            map.getCenter().lng()
+        );
+
+        $("#default_latitude").val(latlng.lat).trigger("input");
+        $("#default_longitude").val(latlng.lng).trigger("input");
+
+        getAddress(geocoder, latlng);
+    });
+};
+
+const getAddress = (geocoder, latlng) => {
+    geocoder.geocode({ location: latlng }, (result, status) => {
+        if (status == "OK") {
+            $("#address").val(result[0].formatted_address);
+        }
+    });
+};
+
+$("#saveLocation").on("click", () => {
+    $("#fixAddress").val($("#address").val()).trigger("input");
+});

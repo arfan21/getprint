@@ -17,6 +17,10 @@ router.post("/mitra", (req, res) => {
             scan: data.harga.scan,
             fotocopy: data.harga.fotocopy,
         },
+        coords: {
+            lat: data.coords.lat,
+            lng: data.coords.lng,
+        },
         alamat_toko: data.alamat_toko,
     });
 
@@ -53,7 +57,7 @@ router.get("/mitra", (req, res) => {
 
     if (sorting == "date") {
         Mitra.aggregate([
-            { $sort: { added: 1 } },
+            { $sort: { added: -1 } },
             {
                 $lookup: {
                     from: "fotomitras",
@@ -178,7 +182,7 @@ router.get("/mitra/:id", (req, res) => {
                 error: err,
             });
         } else if (data.length == 0) {
-            return res.status(400).json({
+            return res.status(404).json({
                 status: false,
                 message: "failed get mitra",
                 error: "mitra not found",

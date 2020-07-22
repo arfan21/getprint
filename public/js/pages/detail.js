@@ -29,7 +29,7 @@ app.controller("appCtrl", [
                 liffApp();
             },
             (err) => {
-                alert(err);
+                alert(err.error);
             }
         );
 
@@ -146,14 +146,7 @@ const liffApp = () => {
     $("#rating-open").attr("data-target", "#exampleModalCenterRating");
 
     $(".pesan").on("click", () => {
-        if (liff.isInClient()) {
-            liff.openWindow({
-                url: `https://977bcfa13438.ngrok.io/pesanan.html?id=${id}`,
-                external: true,
-            });
-        } else {
-            window.location = `/pesanan.html?id=${id}`;
-        }
+        window.location = `/pesanan.html?id=${id}`;
     });
 };
 

@@ -31,6 +31,16 @@ const MitraSchema = new schema({
         type: String,
         required: true,
     },
+    coords: {
+        lat: {
+            type: String,
+            required: true,
+        },
+        lng: {
+            type: String,
+            required: true,
+        },
+    },
     rating: {
         total_point: {
             type: Number,

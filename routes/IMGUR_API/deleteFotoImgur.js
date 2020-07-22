@@ -1,5 +1,5 @@
 const { default: Axios } = require("axios");
-const IMGUR_CLIENT_ID = "token";
+const IMGUR_CLIENT_ID = `Client-ID ${process.env.IMGUR_CLIENT_ID}`;
 
 const deleteFotoImgur = (deleteHash) => {
     const promise = new Promise((resolve, reject) => {

@@ -37,14 +37,30 @@ app.directive("customFileInput", [
     },
 ]);
 
+$("body").on("change", () => {
+    if ($("#file1").val().length == 0) {
+        $("#submit-form").prop("disabled", true);
+    }
+});
+
 app.controller("menjadimitraCtrl", [
     "$scope",
     "$http",
     "$window",
-    function ($scope, $http, $window) {
+    async function ($scope, $http, $window) {
+        const callLiffInit = await liffInit(liff).then(
+            (result) => {
+                liffApp();
+            },
+            (err) => {
+                alert(err);
+            }
+        );
+
         $scope.data = {};
         $scope.data.coords = {};
         const file = [];
+
         $scope.listFile = (e, files) => {
             var id = e.id.charAt(e.id.length - 1);
             file[id - 1] = files[0];
@@ -91,6 +107,7 @@ app.controller("menjadimitraCtrl", [
                     $("#progress-layout").html(`
                         <p style="color:#00FF00;text-align: center;">FILE terupload!</p>
                     `);
+                    $("#submit-form").prop("disabled", false);
                     result = result.data;
 
                     $scope.data.id_foto = result.data._id;
@@ -106,40 +123,62 @@ app.controller("menjadimitraCtrl", [
                     };
                 },
                 (err) => {
-                    $("#progress-layout").html(``);
+                    $("#progress-layout").html(`
+                        <p style="color:#00FF00;text-align: center;">FILE gagal terupload!</p>
+                    `);
                     $("#uploadBtn").prop("disabled", false);
                     $("#addForm").prop("disabled", false);
                     alert("Try again to upload file");
                 }
             );
         };
-        $scope.submitform = function () {
-            console.log($scope.data);
-            // $http({
-            //     method: "POST",
-            //     url: "/api/mitra",
-            //     data: $scope.data,
-            // }).then(function successCallback(response) {
-            //     $window.alert(response.data.message);
-            //     $window.location.href = "/";
-            // });
-        };
     },
 ]);
+
+const uidLine = [];
+
+const liffApp = async () => {
+    if (!liff.isLoggedIn()) {
+        window.location = "/pagenotfound.html";
+        return;
+    }
+
+    let profile = liff.getDecodedIDToken();
+
+    uidLine[0] = profile.sub;
+
+    const admin = await isAdmin(uidLine[0]).then(
+        (result) => {
+            return result;
+        },
+        (err) => {
+            return err;
+        }
+    );
+
+    if (!admin.success) {
+        alert(admin.err);
+        return;
+    }
+
+    if (!admin.admin) {
+        window.location = "/pagenotfound.html";
+    }
+
+    $("body").css("display", "block");
+};
 
 async function initMap() {
     const defaulLatlng = new google.maps.LatLng(-0.789275, 113.921327);
 
     const myLocation = await getLocation().then(
         (result) => {
-            alert(result);
             return {
                 status: true,
                 coords: result,
             };
         },
         (err) => {
-            alert(err);
             return {
                 status: false,
                 error: err,
@@ -159,17 +198,11 @@ async function initMap() {
             ),
         ];
 
-        const firsLatLng = [
-            new google.maps.LatLng(
-                myLocation.coords.latitude,
-                myLocation.coords.longitude
-            ),
-        ];
-        mapRender(google, latlng[0], firsLatLng[0]);
+        mapRender(google, latlng[0]);
     }
 }
 
-const mapRender = (google, latlng, firstLatLng) => {
+const mapRender = (google, latlng) => {
     const defaulLatlng = new google.maps.LatLng(-0.789275, 113.921327);
     var zoom = 20;
     if (
@@ -187,19 +220,16 @@ const mapRender = (google, latlng, firstLatLng) => {
 
     var geocoder = new google.maps.Geocoder();
 
-    getLocationCenter(google, geocoder, map, latlng, firstLatLng);
+    getLocationCenter(google, geocoder, map, latlng);
 
     $("<div/>").addClass("marker-centered").appendTo(map.getDiv());
     $("#default_latitude").val(latlng.lat()).trigger("input");
     $("#default_longitude").val(latlng.lng()).trigger("input");
 
     getAddress(geocoder, latlng);
-    var distance = getDistance(google, firstLatLng, latlng);
-
-    $("#distance").val(distance);
 };
 
-const getLocationCenter = (google, geocoder, map, latlng, firstLatLng) => {
+const getLocationCenter = (google, geocoder, map, latlng) => {
     google.maps.event.addListener(map, "center_changed", function () {
         latlng = new google.maps.LatLng(
             map.getCenter().lat(),
@@ -210,10 +240,6 @@ const getLocationCenter = (google, geocoder, map, latlng, firstLatLng) => {
         $("#default_longitude").val(latlng.lng).trigger("input");
 
         getAddress(geocoder, latlng);
-
-        var distance = getDistance(google, firstLatLng, latlng);
-
-        $("#distance").val(distance);
     });
 };
 
@@ -225,48 +251,6 @@ const getAddress = (geocoder, latlng) => {
     });
 };
 
-const getDistance = (google, from, to) => {
-    return (
-        google.maps.geometry.spherical.computeDistanceBetween(
-            from,
-
-            to
-        ) / 1000
-    ).toFixed(2);
-};
-
-$("#submitBtn").on("click", () => {
-    const latlng = {
-        lat: $("#default_latitude").val(),
-        lng: $("#default_longitude").val(),
-    };
-
-    const distance = $("#distance").val();
-    const address = $("#address").val();
-    console.log({
-        latlng: latlng,
-        distance: distance,
-        address: address,
-    });
-});
-
 $("#saveLocation").on("click", () => {
     $("#fixAddress").val($("#address").val()).trigger("input");
-});
-
-navigator.permissions
-    .query({ name: "geolocation" })
-    .then(function (permissionStatus) {
-        console.log("geolocation permission state is ", permissionStatus.state);
-
-        permissionStatus.onchange = function () {
-            console.log(
-                "geolocation permission state has changed to ",
-                this.state
-            );
-        };
-    });
-
-$("#mapBtn").on("click", async () => {
-    const myLoc = await getLocation();
 });

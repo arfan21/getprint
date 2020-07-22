@@ -1,6 +1,6 @@
 const { default: Axios } = require("axios");
 
-const DROPBOX_TOKEN = "token";
+const { DROPBOX_TOKEN } = process.env;
 
 const getSharedLink = (path) => {
     const promise = new Promise((resolve, reject) => {

@@ -26,9 +26,19 @@ const PesananSchema = new schema({
         type: String,
         required: true,
     },
-    alamat_pemesan: {
-        type: String,
-        required: true,
+    lokasi: {
+        alamat_pemesan: {
+            type: String,
+            required: true,
+        },
+        lat: {
+            type: String,
+            required: true,
+        },
+        lng: {
+            type: String,
+            required: true,
+        },
     },
     delivery: {
         type: Boolean,

@@ -1,3 +1,12 @@
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+    var results = regex.exec(location.search);
+    return results === null
+        ? ""
+        : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 var app = angular.module("menjadimitra", []);
 
 app.directive("customFileInput", [
@@ -28,11 +37,17 @@ app.directive("customFileInput", [
     },
 ]);
 
+$("body").on("change", () => {
+    if ($("#file1").val().length == 0) {
+        $("#submit-form").prop("disabled", true);
+    }
+});
+
 app.controller("menjadimitraCtrl", [
     "$scope",
     "$http",
     "$window",
-    async ($scope, $http, $window) => {
+    async function ($scope, $http, $window) {
         const callLiffInit = await liffInit(liff).then(
             (result) => {
                 liffApp();
@@ -43,8 +58,9 @@ app.controller("menjadimitraCtrl", [
         );
 
         $scope.data = {};
-
+        $scope.data.coords = {};
         const file = [];
+
         $scope.listFile = (e, files) => {
             var id = e.id.charAt(e.id.length - 1);
             file[id - 1] = files[0];
@@ -91,6 +107,7 @@ app.controller("menjadimitraCtrl", [
                     $("#progress-layout").html(`
                         <p style="color:#00FF00;text-align: center;">FILE terupload!</p>
                     `);
+                    $("#submit-form").prop("disabled", false);
                     result = result.data;
 
                     $scope.data.id_foto = result.data._id;
@@ -106,7 +123,9 @@ app.controller("menjadimitraCtrl", [
                     };
                 },
                 (err) => {
-                    $("#progress-layout").html(``);
+                    $("#progress-layout").html(`
+                        <p style="color:#00FF00;text-align: center;">FILE gagal terupload!</p>
+                    `);
                     $("#uploadBtn").prop("disabled", false);
                     $("#addForm").prop("disabled", false);
                     alert("Try again to upload file");
@@ -148,3 +167,90 @@ const liffApp = async () => {
 
     $("body").css("display", "block");
 };
+
+async function initMap() {
+    const defaulLatlng = new google.maps.LatLng(-0.789275, 113.921327);
+
+    const myLocation = await getLocation().then(
+        (result) => {
+            return {
+                status: true,
+                coords: result,
+            };
+        },
+        (err) => {
+            return {
+                status: false,
+                error: err,
+            };
+        }
+    );
+
+    if (!myLocation.status) {
+        console.log(myLocation.error);
+        alert(myLocation.error.message);
+        mapRender(google, defaulLatlng, defaulLatlng);
+    } else {
+        const latlng = [
+            new google.maps.LatLng(
+                myLocation.coords.latitude,
+                myLocation.coords.longitude
+            ),
+        ];
+
+        mapRender(google, latlng[0]);
+    }
+}
+
+const mapRender = (google, latlng) => {
+    const defaulLatlng = new google.maps.LatLng(-0.789275, 113.921327);
+    var zoom = 20;
+    if (
+        latlng.lat() == defaulLatlng.lat() &&
+        latlng.lng() == defaulLatlng.lng()
+    ) {
+        var zoom = 5;
+    }
+
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: latlng,
+        zoom: zoom,
+        disableDefaultUI: true,
+    });
+
+    var geocoder = new google.maps.Geocoder();
+
+    getLocationCenter(google, geocoder, map, latlng);
+
+    $("<div/>").addClass("marker-centered").appendTo(map.getDiv());
+    $("#default_latitude").val(latlng.lat()).trigger("input");
+    $("#default_longitude").val(latlng.lng()).trigger("input");
+
+    getAddress(geocoder, latlng);
+};
+
+const getLocationCenter = (google, geocoder, map, latlng) => {
+    google.maps.event.addListener(map, "center_changed", function () {
+        latlng = new google.maps.LatLng(
+            map.getCenter().lat(),
+            map.getCenter().lng()
+        );
+
+        $("#default_latitude").val(latlng.lat).trigger("input");
+        $("#default_longitude").val(latlng.lng).trigger("input");
+
+        getAddress(geocoder, latlng);
+    });
+};
+
+const getAddress = (geocoder, latlng) => {
+    geocoder.geocode({ location: latlng }, (result, status) => {
+        if (status == "OK") {
+            $("#address").val(result[0].formatted_address);
+        }
+    });
+};
+
+$("#saveLocation").on("click", () => {
+    $("#fixAddress").val($("#address").val()).trigger("input");
+});

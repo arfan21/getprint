@@ -6,24 +6,11 @@ const FotoMitra = require("../../models/FotoMitra");
 const uploadImgur = require("../IMGUR_API/uploadImgur");
 const deleteFotoImgur = require("../IMGUR_API/deleteFotoImgur");
 
-const IMGUR_CLIENT_ID = "Client-ID f4a9a61acd375d4";
-
-const storage = multer.diskStorage({
-    destination: path.join(__dirname + "./../../public/assets"),
-    filename: function (req, file, cb) {
-        cb(
-            null,
-            file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-        );
-    },
-});
-
-const upload = multer({ storage: storage }).single("mitraFoto");
+const upload = multer().single("mitraFoto");
 
 router.post("/uploadfotomitra", upload, async (req, res) => {
     let file = req.file;
-    let filename = file.filename;
-    const fotoFromImgur = await uploadImgur(filename).then(
+    const fotoFromImgur = await uploadImgur(file).then(
         (result) => {
             return {
                 status: true,

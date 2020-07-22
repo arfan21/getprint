@@ -1,7 +1,7 @@
 const Pesanan = require("../../models/Pesanan");
 const { LineClient } = require("messaging-api-line");
-const LINE_ACCESS_TOKEN = "token";
-const LINE_CHANNEL_SECRET = "token";
+const { LINE_ACCESS_TOKEN } = process.env;
+const { LINE_CHANNEL_SECRET } = process.env;
 
 // get accessToken and channelSecret from LINE developers website
 const client = new LineClient({
@@ -115,7 +115,7 @@ module.exports = function sendPesananToLine(idpesanan) {
                     },
                     {
                         type: "text",
-                        text: data[0].alamat_pemesan,
+                        text: data[0].lokasi.alamat_pemesan,
                     },
                     {
                         type: "text",

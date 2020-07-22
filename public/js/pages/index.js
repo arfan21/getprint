@@ -3,31 +3,129 @@ app.controller("appCtrl", [
     "$scope",
     "$http",
     "$window",
-    function ($scope, $http, $window) {
-        $scope.data = {};
+    async function ($scope, $http, $window) {
+        const callLiffInit = await liffInit(liff).then(
+            (result) => {
+                liffApp();
+            },
+            (err) => {
+                alert(err.error);
+            }
+        );
 
-        $http({
+        const myLocation = await getLocation().then(
+            (result) => {
+                return {
+                    status: true,
+                    coords: result,
+                };
+            },
+            (err) => {
+                return {
+                    status: false,
+                    error: err,
+                };
+            }
+        );
+
+        const myLatLng = [];
+
+        if (!myLocation.status) {
+            alert(myLocation.error.message);
+            myLatLng[0] = new google.maps.LatLng(-0.789275, 113.921327);
+        } else {
+            myLatLng[0] = new google.maps.LatLng(
+                myLocation.coords.latitude,
+                myLocation.coords.longitude
+            );
+        }
+
+        await $http({
             method: "GET",
             url: "/api/mitra",
         }).then(function successCallback(response) {
-            $scope.data = response.data.mitra;
+            if (!response.data.status) {
+                $scope.data = [];
+                return;
+            }
+
+            let data = {};
+            data = response.data.mitra;
+
+            for (i = 0; i < data.length; i++) {
+                let mitraLatLng = new google.maps.LatLng(
+                    data[i].coords.lat,
+                    data[i].coords.lng
+                );
+                let distance = getDistance(google, myLatLng[0], mitraLatLng);
+                data[i].distance = distance;
+            }
+            data.sort((a, b) => {
+                return a.distance - b.distance;
+            });
+            $scope.data = data;
         });
-        $http({
+
+        await $http({
             method: "GET",
             url: "/api/mitra?sort=date",
         }).then(function successCallback(response) {
             $scope.databydate = response.data.mitra;
         });
-        $http({
+
+        await $http({
             method: "GET",
             url: "/api/mitra?sort=rating",
         }).then(function successCallback(response) {
             $scope.databyrating = response.data.mitra;
         });
+
+        if ($scope.data.length != 0) {
+            printDistance($scope.data, myLatLng[0], google);
+        }
+
+        await $http({
+            method: "GET",
+            url: "/api/followingmitra/" + uidLine[0],
+        }).then(
+            (response) => {
+                let followed = response.data.followingdata;
+
+                if (response.status) {
+                    for (i = 0; i < followed.length; i++) {
+                        let classFollowing = followed[i].id_toko;
+                        $("." + classFollowing).removeClass("fa-heart-o");
+                        $("." + classFollowing).addClass("fa-heart");
+                        $("." + classFollowing).addClass(followed[i]._id);
+                        $("." + followed[i]._id).removeClass(classFollowing);
+                    }
+                }
+            },
+            (err) => {}
+        );
+
+        removeLoader();
+        $("#heart-body").attr("data-useridline", uidLine[0]);
     },
 ]);
 
-function follow(obj) {
+const printDistance = (data, myLatLng, google) => {
+    for (i = 0; i < data.length; i++) {
+        let mitraLatLng = new google.maps.LatLng(
+            data[i].coords.lat,
+            data[i].coords.lng
+        );
+        let distance = getDistance(google, myLatLng, mitraLatLng);
+
+        if (distance != -1) {
+            $(`.${data[i].id_foto}`).text(`${distance} km`);
+        }
+    }
+};
+
+var locked = false;
+
+async function follow(obj) {
     let classObj = $(obj).attr("class");
     let className = classObj.split(" ");
     let id = className[className.length - 1];
@@ -36,53 +134,52 @@ function follow(obj) {
     if (useridline == undefined) {
         return;
     }
+    if (id == undefined) {
+        return;
+    }
 
     if ($("." + id).hasClass("fa-heart")) {
-        $("." + id).removeClass("fa-heart");
-        $("." + id).addClass("fa-heart-o");
-        $.ajax({
-            method: "DELETE",
-            url: "/api/followingmitra/" + id,
-            success: function (response) {
-                let idbaru = response.followingdata.id_toko;
-                $("." + id).addClass(idbaru);
-                $("." + idbaru).removeClass(id);
-            },
-        });
-    } else {
+        if (id != "fa-heart") {
+            $("." + id).toggleClass("fa-heart fa-heart-o");
+            $.ajax({
+                method: "DELETE",
+                url: "/api/followingmitra/" + id,
+                success: function (response) {
+                    if (response.status) {
+                        let idbaru = response.followingdata.id_toko;
+                        $("." + id).addClass(idbaru);
+                        $("." + idbaru).removeClass(id);
+                    }
+                },
+            });
+        }
+    } else if ($("." + id).hasClass("fa-heart-o")) {
         let data = {
             id_toko: id,
             userid_line: useridline,
         };
-        $.ajax({
-            method: "POST",
-            url: "/api/followingmitra/",
-            data: data,
-            success: function (response) {
-                let idBaru = response.followingdata._id;
-                $("." + id).addClass(idBaru);
-                $("." + idBaru).removeClass(id);
-            },
-        });
 
-        $("." + id).removeClass("fa-heart-o");
-        $("." + id).addClass("fa-heart");
+        if (id != "fa-heart-o") {
+            $("." + id).toggleClass("fa-heart-o fa-heart");
+            $.ajax({
+                method: "POST",
+                url: "/api/followingmitra/",
+                data: data,
+                success: function (response) {
+                    if (response.status) {
+                        let idBaru = response.followingdata._id;
+                        $("." + id).addClass(idBaru);
+                        $("." + idBaru).removeClass(id);
+                    }
+                },
+            });
+        }
     }
 }
 
-const callLiffInit = liffInit(liff).then(
-    (result) => {
-        liffApp();
-    },
-    (err) => {
-        alert(err.error);
-    }
-);
-
-function liffApp() {
+async function liffApp() {
+    await checkIsInClient();
     App();
-
-    checkIsInClient();
 }
 
 function checkIsInClient() {
@@ -110,8 +207,12 @@ function checkIsInClient() {
                 window.location.reload();
             });
         }
+    } else {
+        alert("Untuk melanjutkan, harap aktifkan device lokasi");
     }
 }
+
+const uidLine = [];
 
 const App = async () => {
     if (liff.isLoggedIn()) {
@@ -119,7 +220,7 @@ const App = async () => {
 
         const profileName = profile.name;
         const linkProfilePicture = profile.picture;
-        const userIDLine = profile.sub;
+        uidLine[0] = profile.sub;
 
         $("#welcome-message #profileName").html(
             `
@@ -137,32 +238,12 @@ const App = async () => {
             "-webkit-inline-box"
         );
 
-        $("#heart-body").attr("data-useridline", userIDLine);
-        await $.ajax({
-            method: "GET",
-            url: "/api/followingmitra/" + userIDLine,
-            success: function (response) {
-                let followed = response.followingdata;
-
-                if (response.status) {
-                    for (i = 0; i < followed.length; i++) {
-                        let classFollowing = followed[i].id_toko;
-                        $("." + classFollowing).removeClass("fa-heart-o");
-                        $("." + classFollowing).addClass("fa-heart");
-                        $("." + classFollowing).addClass(followed[i]._id);
-                        $("." + followed[i]._id).removeClass(classFollowing);
-                    }
-                }
-            },
-        });
-
-        await adminMenu(userIDLine);
+        await adminMenu(uidLine[0]);
     } else {
         $(".fa-heart-o").click(() => {
             liff.login();
         });
     }
-    removeLoader();
 };
 
 async function adminMenu(userIDLine) {
@@ -192,6 +273,21 @@ async function adminMenu(userIDLine) {
         );
     }
 }
+
+const getDistance = (google, from, to) => {
+    const myLatLng = [];
+    myLatLng[0] = new google.maps.LatLng(-0.789275, 113.921327);
+    if (from.lat() == myLatLng[0].lat() && from.lng() == myLatLng[0].lng()) {
+        return -1;
+    }
+    return (
+        google.maps.geometry.spherical.computeDistanceBetween(
+            from,
+
+            to
+        ) / 1000
+    ).toFixed(2);
+};
 
 function removeLoader() {
     $("#loadingDiv").fadeOut(500, function () {

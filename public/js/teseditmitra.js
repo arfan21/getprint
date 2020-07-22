@@ -2,10 +2,6 @@ $("#fotoMitra").on("load", () => {
     $("#fotoMitra").css("display", "block");
 });
 
-document.addEventListener("DOMContentLoaded", function (event) {
-    document.body.style.display = "block";
-});
-
 function getUrlParameter(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
@@ -16,9 +12,8 @@ function getUrlParameter(name) {
 }
 
 var id = getUrlParameter("id");
-var uidline = getUrlParameter("useridline");
 
-if (id.length == 0 || uidline.length == 0) {
+if (id.length == 0) {
     window.location = "/pagenotfound.html";
 }
 
@@ -59,9 +54,19 @@ app.controller("menjadimitraCtrl", [
     "$scope",
     "$http",
     "$window",
-    function ($scope, $http, $window) {
+    async function ($scope, $http, $window) {
+        const callLiffInit = await liffInit(liff).then(
+            (result) => {
+                liffApp();
+            },
+            (err) => {
+                alert(err);
+            }
+        );
+
         $scope.data = {};
         $scope.data.coords = {};
+
         $http({
             method: "GET",
             url: "/api/mitra/" + id,
@@ -129,21 +134,50 @@ app.controller("menjadimitraCtrl", [
         };
 
         $scope.submitform = function () {
-            // $http({
-            //     method: "PUT",
-            //     url: `/api/mitra/${id}`,
-            //     data: $scope.data,
-            // }).then(function successCallback(response) {
-            //     $window.alert(response.data.message);
-            //     $window.location.href =
-            //         "/detail.html?id=" +
-            //         id +
-            //         "&useridline=U806e7bec3288e9572243e079aa7b6b16";
-            // });
-            console.log($scope.data);
+            $http({
+                method: "PUT",
+                url: `/api/mitra/${id}`,
+                data: $scope.data,
+            }).then(function successCallback(response) {
+                $window.alert(response.data.message);
+                $window.location.href = `/detail.html?id=${id}`;
+            });
         };
     },
 ]);
+
+const uidLine = [];
+
+const liffApp = async () => {
+    if (!liff.isLoggedIn()) {
+        window.location = "/pagenotfound.html";
+        return;
+    }
+
+    let profile = liff.getDecodedIDToken();
+
+    uidLine[0] = profile.sub;
+
+    const admin = await isAdmin(uidLine[0]).then(
+        (result) => {
+            return result;
+        },
+        (err) => {
+            return err;
+        }
+    );
+
+    if (!admin.success) {
+        alert(admin.err);
+        return;
+    }
+
+    if (!admin.admin) {
+        window.location = "/pagenotfound.html";
+    }
+
+    $("body").css("display", "block");
+};
 
 async function initMap() {
     const myLocation = await getLocation().then(
@@ -172,17 +206,10 @@ async function initMap() {
         ),
     ];
 
-    const firsLatLng = [
-        new google.maps.LatLng(
-            myLocation.coords.latitude,
-            myLocation.coords.longitude
-        ),
-    ];
-
-    mapRender(google, latlng[0], firsLatLng[0]);
+    mapRender(google, latlng[0]);
 }
 
-const mapRender = (google, latlng, firstLatLng) => {
+const mapRender = (google, latlng) => {
     map = new google.maps.Map(document.getElementById("map"), {
         center: latlng,
         zoom: 20,
@@ -191,19 +218,16 @@ const mapRender = (google, latlng, firstLatLng) => {
 
     var geocoder = new google.maps.Geocoder();
 
-    getLocationCenter(google, geocoder, map, latlng, firstLatLng);
+    getLocationCenter(google, geocoder, map, latlng);
 
     $("<div/>").addClass("marker-centered").appendTo(map.getDiv());
     $("#default_latitude").val(latlng.lat()).trigger("input");
     $("#default_longitude").val(latlng.lng()).trigger("input");
 
     getAddress(geocoder, latlng);
-    var distance = getDistance(google, firstLatLng, latlng);
-
-    $("#distance").val(distance);
 };
 
-const getLocationCenter = (google, geocoder, map, latlng, firstLatLng) => {
+const getLocationCenter = (google, geocoder, map, latlng) => {
     google.maps.event.addListener(map, "center_changed", function () {
         latlng = new google.maps.LatLng(
             map.getCenter().lat(),
@@ -214,10 +238,6 @@ const getLocationCenter = (google, geocoder, map, latlng, firstLatLng) => {
         $("#default_longitude").val(latlng.lng).trigger("input");
 
         getAddress(geocoder, latlng);
-
-        var distance = getDistance(google, firstLatLng, latlng);
-
-        $("#distance").val(distance);
     });
 };
 
@@ -228,31 +248,6 @@ const getAddress = (geocoder, latlng) => {
         }
     });
 };
-
-const getDistance = (google, from, to) => {
-    return (
-        google.maps.geometry.spherical.computeDistanceBetween(
-            from,
-
-            to
-        ) / 1000
-    ).toFixed(2);
-};
-
-$("#submitBtn").on("click", () => {
-    const latlng = {
-        lat: $("#default_latitude").val(),
-        lng: $("#default_longitude").val(),
-    };
-
-    const distance = $("#distance").val();
-    const address = $("#address").val();
-    console.log({
-        latlng: latlng,
-        distance: distance,
-        address: address,
-    });
-});
 
 $("#saveLocation").on("click", () => {
     $("#fixAddress").val($("#address").val()).trigger("input");

@@ -127,14 +127,27 @@
 
                 <div class="form-group">
                     <!-- <label>Alamat Toko</label required> -->
-                    <input
-                        type="text"
-                        class="form-control getprint-form-gray"
-                        ng-model="data.alamat_toko"
-                        name="alamat_toko"
-                        placeholder="Alamat Toko"
-                        required
-                    />
+                    <div class="form-row">
+                        <div class="col-12">
+                            <textarea
+                                type="text"
+                                class="form-control getprint-form-gray"
+                                ng-model="data.alamat_toko"
+                                name="alamat_toko"
+                                placeholder="Alamat Toko"
+                                id="fixAddress"
+                                cols="20"
+                                rows="2"
+                                required
+                                disabled
+                            ></textarea>
+                            <span class="fa fa-map-marker fa-form-position"></span>
+                        </div>
+                        <div class="col d-flex justify-content-center">
+                            <a id="mapBtn" class="btn btn-primary" style="color: white;height:40px;margin-top: 3%;" data-toggle="modal" data-target="#exampleModalCenter">Pilih Lewat Peta</a>
+                        </div>
+                        
+                    </div>
                     <span
                         style="color: red;"
                         ng-show="formMitra.alamat_toko.$dirty && formMitra.alamat_toko.$invalid || formMitra.alamat_toko.$touched"
@@ -143,7 +156,7 @@
                             >Alamat harus diisi</span
                         >
                     </span>
-                    <span class="fa fa-map-marker fa-form-position"></span>
+                    
                 </div>
 
                 <p class="getprint-blue-title">Data Harga</p>
@@ -208,6 +221,20 @@
                         >
                     </span>
                     <span class="fa fa-info-circle fa-form-position"></span>
+                    <input
+                        type="text"
+                        name="lat"
+                        id="default_latitude"
+                        ng-model="data.coords.lat"
+                        style="display: none;"
+                    />
+                    <input
+                        type="text"
+                        name="lng"
+                        id="default_longitude"
+                        ng-model="data.coords.lng"
+                        style="display: none;"
+                    />
                 </div>
             </form>
             <form  id="uploadForm" name="formupload" >
@@ -233,6 +260,7 @@
             </form>
             <div class="text-center">
                 <button
+                    id="submit-form"
                     type="submit"
                     class="btn btn-primary"
                     ng-disabled="formMitra.$invalid"
@@ -242,9 +270,48 @@
                 </button>
             </div>
         </div>
-    </body>
+
+        <!-- Modal Map -->
+        <div class="modal fade " id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="width: 100%; height: 100%; padding: 0;">
+            <div class="modal-content" style="height: auto;
+            min-height: 100%;
+            border-radius: 0;">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Maps</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body" id="map" style="width: 100%; height: 100%;padding: 33%;">
+                    
+                </div>
+                <div class="modal-footer">
+                    <textarea
+                        type="text"
+                        class="form-control getprint-form-gray"
+                        name="alamat_toko"
+                        placeholder="Alamat Toko"
+                        id="address"
+                        cols="20"
+                        rows="2"
+                        required
+                    ></textarea>
+                    
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveLocation">Save Location</button>
+                </div>
+            </div>
+            </div>
+        </div>
+    </body>  
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="js/LIFF/liffInit.js"></script>
     <script src="js/helper/isAdmin.js"></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=<KEY_GOOGLE_API>&callback=initMap&libraries=geometry&v=weekly"
+        defer
+    ></script>
+    <script src="js/getLocation.js"></script>
     <script src="js/pages/mitra.js"></script>
 </html>

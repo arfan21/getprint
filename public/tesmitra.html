@@ -40,7 +40,7 @@
             }
         </style>
     </head>
-    <body class="getprint-gray-bg stretch-bottom-body" ng-app="menjadimitra" ng-controller="menjadimitraCtrl">
+    <body class="getprint-gray-bg stretch-bottom-body" ng-app="menjadimitra" ng-controller="menjadimitraCtrl" style="display: none;">
         <div class="container-fluid getprint-round-navbar">
             <h4>Form Mitra Baru</h4>
         </div>
@@ -280,6 +280,7 @@
             </form>
             <div class="text-center">
                 <button
+                    id="submit-form"
                     type="submit"
                     class="btn btn-primary"
                     ng-disabled="formMitra.$invalid"
@@ -290,7 +291,7 @@
             </div>
         </div>
 
-        <!-- Modal -->
+        <!-- Modal Map -->
         <div class="modal fade " id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="width: 100%; height: 100%; padding: 0;">
             <div class="modal-content" style="height: auto;
@@ -323,11 +324,14 @@
             </div>
             </div>
         </div>
-    </body>
-    <script src="js/tesmitra.js"></script>
+    </body>  
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script src="js/LIFF/liffInit.js"></script>
+    <script src="js/helper/isAdmin.js"></script>
     <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoCPnKE4LwdDEAtqlqnYOrEKH7P4Ig-rE&callback=initMap&libraries=geometry&v=weekly"
+        src="https://maps.googleapis.com/maps/api/js?key=<KEY_GOOGLE_API>&callback=initMap&libraries=geometry&v=weekly"
         defer
     ></script>
     <script src="js/getLocation.js"></script>
+    <script src="js/tesmitra.js"></script>
 </html>

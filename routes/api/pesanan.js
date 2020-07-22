@@ -6,14 +6,17 @@ const sendPesananToLine = require("../LINE/line.js");
 
 router.post("/pesanan", (req, res) => {
     let data = req.body;
-
     const newPesanan = new Pesanan({
         userid_line: data.userid_line,
         id_toko: data.id_toko,
         nama_pemesan: data.nama,
         nohp_pemesan: data.nohp_pemesan,
         jenis_pesanan: data.jenispesanan,
-        alamat_pemesan: data.alamat_pemesan,
+        lokasi: {
+            alamat_pemesan: data.lokasi.alamat_pemesan,
+            lat: data.lokasi.lat,
+            lng: data.lokasi.lng,
+        },
         id_file: data.id_file,
         delivery: data.delivery,
     });

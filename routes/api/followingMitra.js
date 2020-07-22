@@ -51,13 +51,13 @@ router.get("/followingmitra/:useridline", (req, res) => {
         },
     ]).exec((err, data) => {
         if (err) {
-            return res.json({
+            return res.status(500).json({
                 status: false,
                 message: "failed get following mitra",
                 error: err,
             });
         } else if (data.length == 0) {
-            return res.json({
+            return res.status(404).json({
                 status: false,
                 message: "failed get following mitra",
                 error: "following mitra not found",

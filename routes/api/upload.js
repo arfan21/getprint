@@ -6,35 +6,17 @@ const Upload = require("../../models/Upload");
 const uploadDropbox = require("../DROPBOX_API/uploadDropbox");
 const getSharedLink = require("../DROPBOX_API/getSharedLink");
 
-const storage = multer.diskStorage({
-    destination: path.join(__dirname + "./../../public/file4print"),
-    filename: function (req, file, cb) {
-        cb(
-            null,
-            file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-        );
-    },
-});
-var maxSize = 15 * 1024 * 1024;
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: maxSize },
-}).array("myfile", 5);
+const upload = multer().array("myfile", 5);
 
 router.post("/uploadfile", upload, async (req, res) => {
-    // console.log(req.files);
-    // res.status(200).json({
-    //     status: true,
-    //     message: "Success to upload file",
-    // });
     const lengthFile = req.files.length;
     const newSharedLink = [];
 
     //looping untuk mengupload satu persatu file ke dropbox
     for (i = 0; i < lengthFile; i++) {
-        let filename = req.files[i].filename;
+        let file = req.files[i];
 
-        const fileFromDropBox = await uploadDropbox(filename).then(
+        const fileFromDropBox = await uploadDropbox(file).then(
             (result) => {
                 return {
                     status: true,

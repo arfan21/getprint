@@ -1,11 +1,15 @@
 const { default: Axios } = require("axios");
-const fs = require("fs");
-const path = require("path");
 
-const DROPBOX_TOKEN = "token";
+const path = require("path");
+const ProgressBar = require("progress-stream");
+
+const { DROPBOX_TOKEN } = process.env;
 
 const uploadDropbox = (file) => {
-    const promise = new Promise((resolve, reject) => {
+    var filename =
+        file.fieldname + "-" + Date.now() + path.extname(file.originalname);
+
+    const promise = new Promise(async (resolve, reject) => {
         Axios({
             method: "POST",
             url: "https://content.dropboxapi.com/2/files/upload",
@@ -14,12 +18,10 @@ const uploadDropbox = (file) => {
                 Authorization: "Bearer " + DROPBOX_TOKEN,
                 "Dropbox-API-Arg":
                     '{"path": "/getprint/' +
-                    file +
+                    filename +
                     '","mode": "add","autorename": true,"mute": false,"strict_conflict": false}',
             },
-            data: fs.readFileSync(
-                path.join(__dirname + "./../../public/file4print/" + file)
-            ),
+            data: file.buffer,
         }).then(
             (result) => {
                 resolve(result.data);
