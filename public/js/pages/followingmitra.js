@@ -43,6 +43,9 @@ app.controller("appCtrl", [
         await $http({
             method: "GET",
             url: "/api/followingmitra/" + uidLine[0],
+            headers: {
+                Authorization: `Bearer ${idToken[0]}`,
+            },
         }).then(
             async (response) => {
                 $scope.followed = response.data.followingdata;
@@ -77,7 +80,12 @@ app.controller("appCtrl", [
 
                     if ($scope.data.length == 0) {
                         $("container-following").html(`
-                            <h1>Anda belum mengikuti toko manapun</h1>
+                            <div id="not-found" class="text-center container">
+                                <img src="./assets/banner-404.png" alt="...">
+                                <br>
+                                <p>Maaf, kami tidak bisa menemukan mitra yang anda ikuti.</p>
+                                <a href="/" class="btn btn-primary">BACK</a>
+                            </div>
                         `);
                     }
                 }
@@ -85,12 +93,17 @@ app.controller("appCtrl", [
             (err) => {
                 $("body").css("display", "block");
                 $("#container-following").html(`
-                <h1>Anda belum mengikuti toko manapun</h1>
-            `);
+                    <div id="not-found" class="text-center container">
+                        <img src="./assets/banner-404.png" alt="...">
+                        <br>
+                        <p>Maaf, kami tidak bisa menemukan mitra yang anda ikuti.</p>
+                        <a href="/" class="btn btn-primary">BACK</a>
+                    </div>
+                `);
             }
         );
 
-        $("#heart-body").attr("data-useridline", uidLine[0]);
+        $(".heart-body").attr("data-useridline", uidLine[0]);
 
         if ($scope.data != undefined) {
             for (i = 0; i < $scope.data.length; i++) {
@@ -130,7 +143,7 @@ function unfollow(array, index) {
     let classNameObj = classNameEvent.split(" ");
     let id = classNameObj[classNameObj.length - 1];
 
-    let useridline = $("#heart-body").data("useridline");
+    let useridline = $(".heart-body").data("useridline");
 
     if (useridline == undefined) {
         return;
@@ -141,17 +154,27 @@ function unfollow(array, index) {
         $("." + id).addClass("fa-heart-o");
 
         array.splice(index, 1);
-
         if (array.length == 0) {
-            $("body").css("display", "block");
-            $("container-following").html(`
-                <h1>Anda belum mengikuti toko manapun</h1>
+            $("#container-following").html(`
+                <div id="not-found" class="text-center container">
+                    <img src="./assets/banner-404.png" alt="...">
+                    <br>
+                    <p>Maaf, kami tidak bisa menemukan mitra yang anda ikuti.</p>
+                    <a href="/" class="btn btn-primary">BACK</a>
+                </div>
             `);
         }
 
         $.ajax({
             method: "DELETE",
-            url: "/api/followingmitra/" + id,
+            url: `/api/followingmitra/${id}`,
+            data: {
+                userid_line: useridline,
+            },
+            headers: {
+                Authorization: `Bearer ${idToken[0]}`,
+            },
+
             success: function (response) {
                 let idbaru = response.followingdata.id_toko;
                 $("." + id).addClass(idbaru);
@@ -166,6 +189,7 @@ async function liffApp() {
 }
 
 const uidLine = [];
+const idToken = [];
 
 const App = async () => {
     if (liff.isLoggedIn()) {
@@ -174,6 +198,7 @@ const App = async () => {
         const profileName = profile.name;
         const linkProfilePicture = profile.picture;
         uidLine[0] = profile.sub;
+        idToken[0] = liff.getIDToken();
 
         $("#welcome-message #profileName").html(
             `

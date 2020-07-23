@@ -1,9 +1,12 @@
-const isAdmin = (uidline) => {
+const isAdmin = (uidline, idToken) => {
     return new Promise((reslove, reject) => {
         $.ajax({
             method: "POST",
             url: "/api/admincheck",
-            data: { uid: uidline },
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+            data: { userid_line: uidline },
             success: function (response) {
                 reslove({
                     success: true,

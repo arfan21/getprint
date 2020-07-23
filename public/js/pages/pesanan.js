@@ -59,8 +59,10 @@ app.controller("myapp", [
                 alert(err);
             }
         );
+        //userid_line untuk auth
+        $scope.data.userid_line = uidLine[0];
 
-        $http({
+        await $http({
             method: "GET",
             url: "/api/mitra/" + id,
         }).then(
@@ -71,6 +73,8 @@ app.controller("myapp", [
                 $window.location = "/pagenotfound.html";
             }
         );
+
+        $("body").css("display", "block");
 
         $scope.forms = [{ name: "file1", filename: "filename1" }];
         $scope.addform = function () {
@@ -93,6 +97,8 @@ app.controller("myapp", [
             for (i = 0; i < file.length; i++) {
                 fd.append("myfile", file[i]);
             }
+            //userid_line untuk auth
+            fd.append("userid_line", uidLine[0]);
 
             $("#progress-layout").html(`   
                 <div class="progress" style="margin-top: 20px; margin-bottom:20px" id="progress">
@@ -114,6 +120,7 @@ app.controller("myapp", [
                         const percent = e.lengthComputable
                             ? (e.loaded / e.total) * 100
                             : 0;
+
                         if (percent < 100) {
                             progress_bar.style.width = percent.toFixed(2) + "%";
                             progress_bar.textContent = percent.toFixed(2) + "%";
@@ -122,7 +129,10 @@ app.controller("myapp", [
                 },
                 data: fd,
                 transformRequest: angular.identity,
-                headers: { "Content-Type": undefined },
+                headers: {
+                    "Content-Type": undefined,
+                    Authorization: `Bearer ${idToken[0]}`,
+                },
             }).then(
                 (result) => {
                     $("#submitData").prop("disabled", false);
@@ -152,6 +162,9 @@ app.controller("myapp", [
                         $http({
                             method: "POST",
                             url: "/api/pesanan",
+                            headers: {
+                                Authorization: `Bearer ${idToken[0]}`,
+                            },
                             data: $scope.data,
                         }).then(function successCallback(response) {
                             let data = response.data.pesanan;
@@ -193,23 +206,24 @@ const sendToWa = (data) => {
     } else {
         delivery = "Pesanan diambil sendiri";
     }
-
-    window.open(
-        `https://api.whatsapp.com/send?phone=${nohpID}&text=*GETPRINT*%0A%0A*Delivery%20%3F*%0A${delivery}%0A%0A*INFO%20PEMESAN*%0ANama%20Pemesan%20%09%3A%20${data[0].nama_pemesan}%2C%0ANo%20HP%20%09%09%3A%20${data[0].nohp_pemesan}%2C%0AAlamat%20Pemesanan%3A%20${data[0].lokasi.alamat_pemesan}%2C%0A%0A*Jenis%20Pesanan*%0A${data[0].jenis_pesanan}%2C%0A%0A*Lokasi%20Pemesan*%0Ahttps%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2F%3Fapi%3D1%26query%3D${data[0].lokasi.lat}%2C${data[0].lokasi.lng}%0A%0A*Link%20File*%0A-${linkString}`,
-        "_blank"
-    );
+    liff.openWindow({
+        url: `https://api.whatsapp.com/send?phone=${nohpID}&text=*GETPRINT*%0A%0A*Delivery%20%3F*%0A${delivery}%0A%0A*INFO%20PEMESAN*%0ANama%20Pemesan%20%09%3A%20${data[0].nama_pemesan}%2C%0ANo%20HP%20%09%09%3A%20${data[0].nohp_pemesan}%2C%0AAlamat%20Pemesanan%3A%20${data[0].lokasi.alamat_pemesan}%2C%0A%0A*Jenis%20Pesanan*%0A${data[0].jenis_pesanan}%2C%0A%0A*Lokasi%20Pemesan*%0Ahttps%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2F%3Fapi%3D1%26query%3D${data[0].lokasi.lat}%2C${data[0].lokasi.lng}%0A%0A*Link%20File*%0A-${linkString}`,
+        external: true,
+    });
 };
 
 const uidLine = [];
+const idToken = [];
 
 const liffApp = () => {
     if (!liff.isLoggedIn()) {
         liff.login();
         return;
     }
-    $("body").css("display", "block");
+
     let profile = liff.getDecodedIDToken();
     uidLine[0] = profile.sub;
+    idToken[0] = liff.getIDToken();
 };
 
 async function initMap() {

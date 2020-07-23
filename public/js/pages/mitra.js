@@ -48,6 +48,7 @@ app.controller("menjadimitraCtrl", [
     "$http",
     "$window",
     async function ($scope, $http, $window) {
+        //initial liff
         const callLiffInit = await liffInit(liff).then(
             (result) => {
                 liffApp();
@@ -59,6 +60,8 @@ app.controller("menjadimitraCtrl", [
 
         $scope.data = {};
         $scope.data.coords = {};
+        //userid_line untuk auth
+        $scope.data.userid_line = uidLine[0];
         const file = [];
 
         $scope.listFile = (e, files) => {
@@ -71,6 +74,8 @@ app.controller("menjadimitraCtrl", [
             for (i = 0; i < file.length; i++) {
                 fd.append("mitraFoto", file[i]);
             }
+            //userid_line untuk auth
+            fd.append("userid_line", uidLine[0]);
 
             $("#progress-layout").html(`   
                 <div class="progress" style="margin-top: 20px; margin-bottom:20px" id="progress">
@@ -101,13 +106,17 @@ app.controller("menjadimitraCtrl", [
                 },
                 data: fd,
                 transformRequest: angular.identity,
-                headers: { "Content-Type": undefined },
+                headers: {
+                    "Content-Type": undefined,
+                    Authorization: `Bearer ${idToken[0]}`,
+                },
             }).then(
                 (result) => {
                     $("#progress-layout").html(`
                         <p style="color:#00FF00;text-align: center;">FILE terupload!</p>
                     `);
                     $("#submit-form").prop("disabled", false);
+
                     result = result.data;
 
                     $scope.data.id_foto = result.data._id;
@@ -115,16 +124,24 @@ app.controller("menjadimitraCtrl", [
                         $http({
                             method: "POST",
                             url: "/api/mitra",
+                            headers: {
+                                Authorization: `Bearer ${idToken[0]}`,
+                            },
                             data: $scope.data,
-                        }).then(function successCallback(response) {
-                            $window.alert(response.data.message);
-                            $window.location.href = "/";
-                        });
+                        }).then(
+                            function successCallback(response) {
+                                $window.alert(response.data.message);
+                                $window.location.href = "/";
+                            },
+                            (err) => {
+                                alert(err.data.message);
+                            }
+                        );
                     };
                 },
                 (err) => {
                     $("#progress-layout").html(`
-                        <p style="color:#00FF00;text-align: center;">FILE gagal terupload!</p>
+                        <p style="color:red;text-align: center;">FILE gagal terupload!</p>
                     `);
                     $("#uploadBtn").prop("disabled", false);
                     $("#addForm").prop("disabled", false);
@@ -136,6 +153,7 @@ app.controller("menjadimitraCtrl", [
 ]);
 
 const uidLine = [];
+const idToken = [];
 
 const liffApp = async () => {
     if (!liff.isLoggedIn()) {
@@ -145,9 +163,10 @@ const liffApp = async () => {
 
     let profile = liff.getDecodedIDToken();
 
+    idToken[0] = liff.getIDToken();
     uidLine[0] = profile.sub;
 
-    const admin = await isAdmin(uidLine[0]).then(
+    const admin = await isAdmin(uidLine[0], idToken[0]).then(
         (result) => {
             return result;
         },
@@ -157,7 +176,11 @@ const liffApp = async () => {
     );
 
     if (!admin.success) {
-        alert(admin.err);
+        let msg = admin.error.responseJSON.message;
+        if (msg == "IdToken expired.") {
+            alert("Sesi anda telah habis, silahkan login kembali");
+            liff.login();
+        }
         return;
     }
 

@@ -84,28 +84,35 @@ app.controller("appCtrl", [
             printDistance($scope.data, myLatLng[0], google);
         }
 
-        await $http({
-            method: "GET",
-            url: "/api/followingmitra/" + uidLine[0],
-        }).then(
-            (response) => {
-                let followed = response.data.followingdata;
+        if (uidLine.length != 0) {
+            await $http({
+                method: "GET",
+                url: "/api/followingmitra/" + uidLine[0],
+                headers: {
+                    Authorization: `Bearer ${idToken[0]}`,
+                },
+            }).then(
+                (response) => {
+                    let followed = response.data.followingdata;
 
-                if (response.status) {
-                    for (i = 0; i < followed.length; i++) {
-                        let classFollowing = followed[i].id_toko;
-                        $("." + classFollowing).removeClass("fa-heart-o");
-                        $("." + classFollowing).addClass("fa-heart");
-                        $("." + classFollowing).addClass(followed[i]._id);
-                        $("." + followed[i]._id).removeClass(classFollowing);
+                    if (response.status) {
+                        for (i = 0; i < followed.length; i++) {
+                            let classFollowing = followed[i].id_toko;
+                            $("." + classFollowing).removeClass("fa-heart-o");
+                            $("." + classFollowing).addClass("fa-heart");
+                            $("." + classFollowing).addClass(followed[i]._id);
+                            $("." + followed[i]._id).removeClass(
+                                classFollowing
+                            );
+                        }
                     }
-                }
-            },
-            (err) => {}
-        );
+                },
+                (err) => {}
+            );
+            $(".heart-body").attr("data-useridline", uidLine[0]);
+        }
 
         removeLoader();
-        $("#heart-body").attr("data-useridline", uidLine[0]);
     },
 ]);
 
@@ -130,8 +137,9 @@ async function follow(obj) {
     let className = classObj.split(" ");
     let id = className[className.length - 1];
 
-    let useridline = $("#heart-body").data("useridline");
+    let useridline = $(".heart-body").data("useridline");
     if (useridline == undefined) {
+        liff.login();
         return;
     }
     if (id == undefined) {
@@ -143,7 +151,13 @@ async function follow(obj) {
             $("." + id).toggleClass("fa-heart fa-heart-o");
             $.ajax({
                 method: "DELETE",
-                url: "/api/followingmitra/" + id,
+                url: `/api/followingmitra/${id}`,
+                data: {
+                    userid_line: useridline,
+                },
+                headers: {
+                    Authorization: `Bearer ${idToken[0]}`,
+                },
                 success: function (response) {
                     if (response.status) {
                         let idbaru = response.followingdata.id_toko;
@@ -164,6 +178,9 @@ async function follow(obj) {
             $.ajax({
                 method: "POST",
                 url: "/api/followingmitra/",
+                headers: {
+                    Authorization: `Bearer ${idToken[0]}`,
+                },
                 data: data,
                 success: function (response) {
                     if (response.status) {
@@ -213,6 +230,7 @@ function checkIsInClient() {
 }
 
 const uidLine = [];
+const idToken = [];
 
 const App = async () => {
     if (liff.isLoggedIn()) {
@@ -221,6 +239,7 @@ const App = async () => {
         const profileName = profile.name;
         const linkProfilePicture = profile.picture;
         uidLine[0] = profile.sub;
+        idToken[0] = liff.getIDToken();
 
         $("#welcome-message #profileName").html(
             `
@@ -238,7 +257,7 @@ const App = async () => {
             "-webkit-inline-box"
         );
 
-        await adminMenu(uidLine[0]);
+        await adminMenu(uidLine[0], idToken[0]);
     } else {
         $(".fa-heart-o").click(() => {
             liff.login();
@@ -246,8 +265,8 @@ const App = async () => {
     }
 };
 
-async function adminMenu(userIDLine) {
-    const admin = await isAdmin(userIDLine).then(
+async function adminMenu(userIDLine, idToken) {
+    const admin = await isAdmin(userIDLine, idToken).then(
         (result) => {
             return result;
         },
@@ -256,7 +275,11 @@ async function adminMenu(userIDLine) {
         }
     );
     if (!admin.success) {
-        alert(admin.err);
+        let msg = admin.error.responseJSON.message;
+        if (msg == "IdToken expired.") {
+            alert("Sesi anda telah habis, silahkan login kembali");
+            liff.login();
+        }
         return;
     }
     if (admin.admin) {

@@ -86,6 +86,8 @@ app.controller("menjadimitraCtrl", [
                 fd.append("mitraFoto", file[i]);
             }
 
+            fd.append("userid_line", uidLine[0]);
+
             $("#progress-layout").html(`   
                 <div class="progress" style="margin-top: 20px; margin-bottom:20px" id="progress">
                     <div class="progress-bar" role="progressbar" " aria-valuemin="0" aria-valuemax="100">0%</div>
@@ -115,7 +117,10 @@ app.controller("menjadimitraCtrl", [
                 },
                 data: fd,
                 transformRequest: angular.identity,
-                headers: { "Content-Type": undefined },
+                headers: {
+                    "Content-Type": undefined,
+                    Authorization: `Bearer ${idToken[0]}`,
+                },
             }).then(
                 (result) => {
                     result = result.data;
@@ -134,9 +139,13 @@ app.controller("menjadimitraCtrl", [
         };
 
         $scope.submitform = function () {
+            $scope.data.userid_line = uidLine[0];
             $http({
                 method: "PUT",
                 url: `/api/mitra/${id}`,
+                headers: {
+                    Authorization: `Bearer ${idToken[0]}`,
+                },
                 data: $scope.data,
             }).then(function successCallback(response) {
                 $window.alert(response.data.message);
@@ -147,6 +156,7 @@ app.controller("menjadimitraCtrl", [
 ]);
 
 const uidLine = [];
+const idToken = [];
 
 const liffApp = async () => {
     if (!liff.isLoggedIn()) {
@@ -157,8 +167,9 @@ const liffApp = async () => {
     let profile = liff.getDecodedIDToken();
 
     uidLine[0] = profile.sub;
+    idToken[0] = liff.getIDToken();
 
-    const admin = await isAdmin(uidLine[0]).then(
+    const admin = await isAdmin(uidLine[0], idToken[0]).then(
         (result) => {
             return result;
         },
@@ -168,7 +179,11 @@ const liffApp = async () => {
     );
 
     if (!admin.success) {
-        alert(admin.err);
+        let msg = admin.error.responseJSON.message;
+        if (msg == "IdToken expired.") {
+            alert("Sesi anda telah habis, silahkan login kembali");
+            liff.login();
+        }
         return;
     }
 

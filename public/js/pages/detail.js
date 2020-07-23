@@ -42,7 +42,10 @@ app.controller("appCtrl", [
                 if (!result.data.status) {
                     $window.location = "/pagenotfound.html";
                 } else {
-                    await adminMenu($scope, uidLine[0]);
+                    if (liff.isLoggedIn()) {
+                        await adminMenu($scope, uidLine[0], idToken[0]);
+                    }
+
                     let user_rating = $scope.data.rating.user_rating;
                     userRated(uidLine[0], user_rating);
 
@@ -93,9 +96,14 @@ app.controller("appCtrl", [
                 });
             }
 
+            $scope.data.userid_line = uidLine[0];
+
             $http({
                 method: "PUT",
                 url: "/api/mitra/" + id,
+                headers: {
+                    Authorization: `Bearer ${idToken[0]}`,
+                },
                 data: $scope.data,
             }).then(function successCallback(response) {
                 $scope.data.value_rating = null;
@@ -104,29 +112,54 @@ app.controller("appCtrl", [
         };
 
         $scope.deleteFunc = async () => {
-            await $http({
-                method: "DELETE",
-                url: "/api/uploadfotomitra/" + $scope.data.fotomitra[0]._id,
-            });
+            await $http
+                .delete(
+                    `/api/uploadfotomitra/${$scope.data.fotomitra[0]._id}`,
+                    {
+                        data: {
+                            userid_line: uidLine[0],
+                        },
+                        headers: {
+                            "Content-Type": "application/json;charset=utf-8",
+                            Authorization: `Bearer ${idToken[0]}`,
+                        },
+                    }
+                )
+                .then(
+                    (result) => {},
+                    (err) => {
+                        alert(err);
+                    }
+                );
 
-            $http({
-                method: "DELETE",
-                url: "/api/mitra/" + id,
-            }).then(function successCallback(response) {
-                $("#exampleModalLongTitle").text("Mitra berhasil terhapus !");
-                $("#deleteBtn").css("display", "none");
-                $("#batalBtn").removeClass("btn-secondary");
-                $("#batalBtn").addClass("btn-primary");
-                $("#batalBtn").text("Ok");
-                $("#batalBtn").removeAttr("data-dismiss");
-                $("#batalBtn").attr("href", "/");
-                $(".close").css("display", "none");
-            });
+            $http
+                .delete(`/api/mitra/${id}`, {
+                    data: {
+                        userid_line: uidLine[0],
+                    },
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                        Authorization: `Bearer ${idToken[0]}`,
+                    },
+                })
+                .then(function successCallback(response) {
+                    $("#exampleModalLongTitle").text(
+                        "Mitra berhasil terhapus !"
+                    );
+                    $("#deleteBtn").css("display", "none");
+                    $("#batalBtn").removeClass("btn-secondary");
+                    $("#batalBtn").addClass("btn-primary");
+                    $("#batalBtn").text("Ok");
+                    $("#batalBtn").removeAttr("data-dismiss");
+                    $("#batalBtn").attr("href", "/");
+                    $(".close").css("display", "none");
+                });
         };
     },
 ]);
 
 const uidLine = [];
+const idToken = [];
 
 const liffApp = () => {
     if (!liff.isLoggedIn()) {
@@ -141,6 +174,7 @@ const liffApp = () => {
 
     let profile = liff.getDecodedIDToken();
     uidLine[0] = profile.sub;
+    idToken[0] = liff.getIDToken();
 
     $("#rating-open").attr("data-toggle", "modal");
     $("#rating-open").attr("data-target", "#exampleModalCenterRating");
@@ -179,8 +213,8 @@ const userRated = (uidline, user_rating) => {
     }
 };
 
-const adminMenu = async ($scope, uidline) => {
-    const admin = await isAdmin(uidline).then(
+const adminMenu = async ($scope, uidline, idToken) => {
+    const admin = await isAdmin(uidline, idToken).then(
         (result) => {
             return result;
         },
@@ -190,7 +224,11 @@ const adminMenu = async ($scope, uidline) => {
     );
 
     if (!admin.success) {
-        alert(admin.err);
+        let msg = admin.error.responseJSON.message;
+        if (msg == "IdToken expired.") {
+            alert("Sesi anda telah habis, silahkan login kembali");
+            liff.login();
+        }
         return;
     }
 

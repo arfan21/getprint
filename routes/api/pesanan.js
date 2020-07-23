@@ -3,8 +3,9 @@ const router = express.Router();
 const Pesanan = require("../../models/Pesanan");
 const mongoose = require("mongoose");
 const sendPesananToLine = require("../LINE/line.js");
+const authLineIdToken = require("../middleware/middleware");
 
-router.post("/pesanan", (req, res) => {
+router.post("/pesanan", authLineIdToken, (req, res) => {
     let data = req.body;
     const newPesanan = new Pesanan({
         userid_line: data.userid_line,

@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Mitra = require("../../models/Mitra");
 const mongoose = require("mongoose");
+const authLineIdToken = require("../middleware/middleware");
 
-router.post("/mitra", (req, res) => {
+router.post("/mitra", authLineIdToken, (req, res) => {
     let data = req.body;
-
     const newMitra = new Mitra({
         id_foto: data.id_foto,
         nama_toko: data.nama_toko,
@@ -23,33 +23,32 @@ router.post("/mitra", (req, res) => {
         },
         alamat_toko: data.alamat_toko,
     });
-
-    newMitra.save((err, data) => {
-        if (err) {
+    newMitra
+        .save()
+        .then((data) => {
+            console.log({
+                status: true,
+                message: "Success added Mitra",
+                pesanan: data,
+            });
+            res.json({
+                status: true,
+                message: "Success added Mitra",
+                pesanan: data,
+            });
+        })
+        .catch((err) => {
             console.log({
                 status: false,
-                message:
-                    "Gagal menambahkan mitra, cek lagi data yang dimasukkan!",
-                error: err,
+                message: err.errors,
             });
-            return res.json({
+
+            return res.status(400).json({
                 status: false,
                 message:
                     "Gagal menambahkan mitra, cek lagi data yang dimasukkan!",
-                error: err,
             });
-        }
-        console.log({
-            status: true,
-            message: "Success added Mitra",
-            pesanan: data,
         });
-        res.json({
-            status: true,
-            message: "Success added Mitra",
-            pesanan: data,
-        });
-    });
 });
 
 router.get("/mitra", (req, res) => {
@@ -197,7 +196,7 @@ router.get("/mitra/:id", (req, res) => {
     });
 });
 
-router.put("/mitra/:id", (req, res) => {
+router.put("/mitra/:id", authLineIdToken, (req, res) => {
     const id = req.params.id;
     Mitra.findByIdAndUpdate(id, req.body, (err, data) => {
         if (err) {
@@ -216,7 +215,7 @@ router.put("/mitra/:id", (req, res) => {
     });
 });
 
-router.delete("/mitra/:id", (req, res) => {
+router.delete("/mitra/:id", authLineIdToken, (req, res) => {
     const id = req.params.id;
     Mitra.findByIdAndDelete(id, (err) => {
         if (err) {

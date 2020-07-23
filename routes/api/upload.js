@@ -5,10 +5,10 @@ const path = require("path");
 const Upload = require("../../models/Upload");
 const uploadDropbox = require("../DROPBOX_API/uploadDropbox");
 const getSharedLink = require("../DROPBOX_API/getSharedLink");
-
+const authLineIdToken = require("../middleware/middleware");
 const upload = multer().array("myfile", 5);
 
-router.post("/uploadfile", upload, async (req, res) => {
+router.post("/uploadfile", upload, authLineIdToken, async (req, res) => {
     const lengthFile = req.files.length;
     const newSharedLink = [];
 

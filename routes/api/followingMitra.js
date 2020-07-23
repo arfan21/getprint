@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const FollowingMitra = require("../../models/FollowingMitra");
+const authLineIdToken = require("../middleware/middleware");
 
-router.post("/followingmitra", async (req, res) => {
+router.post("/followingmitra", authLineIdToken, async (req, res) => {
     let data = req.body;
 
     const NewFollowingmitra = new FollowingMitra({
@@ -36,7 +37,7 @@ router.post("/followingmitra", async (req, res) => {
     });
 });
 
-router.get("/followingmitra/:useridline", (req, res) => {
+router.get("/followingmitra/:useridline", authLineIdToken, (req, res) => {
     const id = req.params.useridline;
 
     FollowingMitra.aggregate([
@@ -98,7 +99,7 @@ router.get("/followingmitra/byid/:id", (req, res) => {
     });
 });
 
-router.delete("/followingmitra/:id", (req, res) => {
+router.delete("/followingmitra/:id", authLineIdToken, (req, res) => {
     const id = req.params.id;
     FollowingMitra.findById(id).exec((err, data1) => {
         FollowingMitra.findByIdAndDelete(id, (err, data) => {
