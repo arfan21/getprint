@@ -6,12 +6,8 @@ const myLiffId = process.env.MY_LIFF_ID;
 const bodyparser = require("body-parser");
 const mongoose = require("mongoose");
 const db = require("./keys").mongoURI;
-const mitra = require("./routes/api/mitra");
-const pesanan = require("./routes/api/pesanan");
-const upload = require("./routes/api/upload");
-const uploadfotomitra = require("./routes/api/fotoMitra");
-const followingmitra = require("./routes/api/followingMitra");
 const admin = require("./routes/api/admin");
+const router = require("./routes/api/routes");
 
 mongoose
     .connect(db, {
@@ -27,12 +23,8 @@ app.use(bodyparser.json());
 
 //route api
 app.use(express.static("public"));
-app.use("/api/", mitra);
-app.use("/api/", pesanan);
-app.use("/api/", upload);
-app.use("/api/", uploadfotomitra);
-app.use("/api/", followingmitra);
 app.use("/api/", admin);
+app.use("/api/", router);
 
 app.get("/send-id", function (req, res) {
     res.json({ id: myLiffId });

@@ -64,15 +64,38 @@ app.controller("menjadimitraCtrl", [
             }
         );
 
+        const admin = await isAdmin(user.uidLine, user.idToken).then(
+            (result) => {
+                return result;
+            },
+            (err) => {
+                return err;
+            }
+        );
+
+        if (!admin.success) {
+            let msg = admin.error.responseJSON.message;
+            if (msg == "IdToken expired.") {
+                alert("Sesi anda telah habis, silahkan login kembali");
+                liff.logout();
+                window.location.reload();
+            }
+            return;
+        }
+
         $scope.data = {};
         $scope.data.coords = {};
 
-        $http({
+        await $http({
             method: "GET",
             url: "/api/mitra/" + id,
         }).then(function successCallback(response) {
-            $scope.data = response.data.mitra[0];
+            $scope.data = response.data.data[0];
         });
+
+        if (!admin.admin || user.uidLine != $scope.data.userid_line_pemilik) {
+            window.location = "/pagenotfound.html";
+        }
 
         const file = [];
         $scope.listFile = (e, files) => {
@@ -86,7 +109,7 @@ app.controller("menjadimitraCtrl", [
                 fd.append("mitraFoto", file[i]);
             }
 
-            fd.append("userid_line", uidLine[0]);
+            fd.append("userid_line", user.uidLine);
 
             $("#progress-layout").html(`   
                 <div class="progress" style="margin-top: 20px; margin-bottom:20px" id="progress">
@@ -102,7 +125,13 @@ app.controller("menjadimitraCtrl", [
 
             $http({
                 method: "PUT",
-                url: `/api/uploadfotomitra/${$scope.data.fotomitra[0]._id}`,
+                url: `/api/fotomitra/${$scope.data.fotomitra[0]._id}`,
+                data: fd,
+                transformRequest: angular.identity,
+                headers: {
+                    "Content-Type": undefined,
+                    Authorization: `Bearer ${user.idToken}`,
+                },
                 uploadEventHandlers: {
                     progress: (e) => {
                         const percent = e.lengthComputable
@@ -115,19 +144,13 @@ app.controller("menjadimitraCtrl", [
                         }
                     },
                 },
-                data: fd,
-                transformRequest: angular.identity,
-                headers: {
-                    "Content-Type": undefined,
-                    Authorization: `Bearer ${idToken[0]}`,
-                },
             }).then(
                 (result) => {
                     result = result.data;
                     $("#progress-layout").html(`
                         <p style="color:#00FF00;text-align: center;">FILE terupload!</p>
                     `);
-                    $("#fotoMitra").attr("src", result.fotomitra.link_foto);
+                    $("#fotoMitra").attr("src", result.data.link_foto);
                 },
                 (err) => {
                     $("#progress-layout").html(``);
@@ -139,12 +162,12 @@ app.controller("menjadimitraCtrl", [
         };
 
         $scope.submitform = function () {
-            $scope.data.userid_line = uidLine[0];
+            $scope.data.userid_line = user.uidLine;
             $http({
                 method: "PUT",
                 url: `/api/mitra/${id}`,
                 headers: {
-                    Authorization: `Bearer ${idToken[0]}`,
+                    Authorization: `Bearer ${user.idToken}`,
                 },
                 data: $scope.data,
             }).then(function successCallback(response) {
@@ -152,11 +175,11 @@ app.controller("menjadimitraCtrl", [
                 $window.location.href = `/detail.html?id=${id}`;
             });
         };
+        $("body").css("display", "block");
     },
 ]);
 
-const uidLine = [];
-const idToken = [];
+const user = {};
 
 const liffApp = async () => {
     if (!liff.isLoggedIn()) {
@@ -165,33 +188,8 @@ const liffApp = async () => {
     }
 
     let profile = liff.getDecodedIDToken();
-
-    uidLine[0] = profile.sub;
-    idToken[0] = liff.getIDToken();
-
-    const admin = await isAdmin(uidLine[0], idToken[0]).then(
-        (result) => {
-            return result;
-        },
-        (err) => {
-            return err;
-        }
-    );
-
-    if (!admin.success) {
-        let msg = admin.error.responseJSON.message;
-        if (msg == "IdToken expired.") {
-            alert("Sesi anda telah habis, silahkan login kembali");
-            liff.login();
-        }
-        return;
-    }
-
-    if (!admin.admin) {
-        window.location = "/pagenotfound.html";
-    }
-
-    $("body").css("display", "block");
+    user["uidLine"] = profile.sub;
+    user["idToken"] = liff.getIDToken();
 };
 
 async function initMap() {

@@ -44,7 +44,11 @@ const PesananSchema = new schema({
         type: Boolean,
         required: true,
     },
-    added: {
+    created_at: {
+        type: Date,
+        default: Date.now,
+    },
+    updated_at: {
         type: Date,
         default: Date.now,
     },

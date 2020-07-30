@@ -1,13 +1,9 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
-const FotoMitraSchema = new schema({
-    link_foto: {
-        type: String,
-        required: true,
-    },
-    deleteHash_foto: {
-        type: String,
+const UploadSchema = new schema({
+    link_file: {
+        type: [String],
         required: true,
     },
     created_at: {
@@ -20,4 +16,4 @@ const FotoMitraSchema = new schema({
     },
 });
 
-module.exports = Upload = mongoose.model("fotoMitra", FotoMitraSchema);
+module.exports = Upload = mongoose.model("files", UploadSchema);

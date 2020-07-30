@@ -18,7 +18,7 @@ const authLineIdToken = async (req, res, next) => {
         .then((result) => {
             let idFromJWT = result.data.sub;
 
-            if (idFromJWT == req.params.useridline) {
+            if (idFromJWT == req.query.userid_line) {
                 return next();
             }
 

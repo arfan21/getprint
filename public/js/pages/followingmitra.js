@@ -42,30 +42,36 @@ app.controller("appCtrl", [
 
         await $http({
             method: "GET",
-            url: "/api/followingmitra/" + uidLine[0],
+            url: `/api/followmitra?match=userid_line&userid_line=${user.uidLine}`,
             headers: {
-                Authorization: `Bearer ${idToken[0]}`,
+                Authorization: `Bearer ${user.idToken}`,
             },
         }).then(
             async (response) => {
-                $scope.followed = response.data.followingdata;
+                $scope.followed = response.data.data;
                 let dataToko = [];
                 if (response.status) {
                     for (i = 0; i < $scope.followed.length; i++) {
-                        let idToko = response.data.followingdata[i].id_toko;
+                        let idToko = response.data.data[i].id_toko;
                         let toko = await getToko($http, idToko).then(
                             (result) => {
                                 return result;
                             },
                             (err) => {
-                                $.ajax({
-                                    method: "DELETE",
-                                    url:
-                                        "/api/followingmitra/" +
-                                        response.data.followingdata[i]._id,
-                                });
-                                console.log(response.data.followingdata[i]._id);
-                                console.log(err);
+                                $http.delete(
+                                    `/api/followmitra/${response.data.data[i]._id}`,
+                                    {
+                                        data: {
+                                            userid_line: user.uidLine,
+                                        },
+                                        headers: {
+                                            "Content-Type":
+                                                "application/json;charset=utf-8",
+                                            Authorization: `Bearer ${user.idToken}`,
+                                        },
+                                    }
+                                );
+
                                 return null;
                             }
                         );
@@ -103,8 +109,6 @@ app.controller("appCtrl", [
             }
         );
 
-        $(".heart-body").attr("data-useridline", uidLine[0]);
-
         if ($scope.data != undefined) {
             for (i = 0; i < $scope.data.length; i++) {
                 let classFollowing = $scope.data[i]._id;
@@ -128,7 +132,7 @@ const getToko = ($http, id) => {
         }).then(
             (result) => {
                 if (result.data.status) {
-                    resolve(result.data.mitra[0]);
+                    resolve(result.data.data[0]);
                 }
             },
             (err) => {
@@ -142,12 +146,6 @@ function unfollow(array, index) {
     let classNameEvent = event.srcElement.className;
     let classNameObj = classNameEvent.split(" ");
     let id = classNameObj[classNameObj.length - 1];
-
-    let useridline = $(".heart-body").data("useridline");
-
-    if (useridline == undefined) {
-        return;
-    }
 
     if ($("." + id).hasClass("fa-heart")) {
         $("." + id).removeClass("fa-heart");
@@ -167,16 +165,16 @@ function unfollow(array, index) {
 
         $.ajax({
             method: "DELETE",
-            url: `/api/followingmitra/${id}`,
+            url: `/api/followmitra/${id}`,
             data: {
-                userid_line: useridline,
+                userid_line: user.uidLine,
             },
             headers: {
-                Authorization: `Bearer ${idToken[0]}`,
+                Authorization: `Bearer ${user.idToken}`,
             },
 
             success: function (response) {
-                let idbaru = response.followingdata.id_toko;
+                let idbaru = response.data.id_toko;
                 $("." + id).addClass(idbaru);
                 $("." + idbaru).removeClass(id);
             },
@@ -188,33 +186,14 @@ async function liffApp() {
     App();
 }
 
-const uidLine = [];
-const idToken = [];
+const user = {};
 
 const App = async () => {
     if (liff.isLoggedIn()) {
         let profile = liff.getDecodedIDToken();
 
-        const profileName = profile.name;
-        const linkProfilePicture = profile.picture;
-        uidLine[0] = profile.sub;
-        idToken[0] = liff.getIDToken();
-
-        $("#welcome-message #profileName").html(
-            `
-            <img src="` +
-                linkProfilePicture +
-                `" alt="Profile-Picture" style="width: 40px;height: 40px;border-radius: 50%;">
-            <h2 style="margin: 0px 0px 0px 10px;">` +
-                profileName +
-                `</h2>
-        `
-        );
-
-        await $("#welcome-message #profileName").css(
-            "display",
-            "-webkit-inline-box"
-        );
+        user["uidLine"] = profile.sub;
+        user["idToken"] = liff.getIDToken();
     } else {
         liff.login();
     }

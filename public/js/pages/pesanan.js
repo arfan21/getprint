@@ -60,21 +60,18 @@ app.controller("myapp", [
             }
         );
         //userid_line untuk auth
-        $scope.data.userid_line = uidLine[0];
+        $scope.data.userid_line = user.uidLine;
 
         await $http({
             method: "GET",
             url: "/api/mitra/" + id,
-        }).then(
-            function successCallback(response) {
-                $scope.mitra = response.data.mitra[0];
-            },
-            (err) => {
+        })
+            .then(function successCallback(response) {
+                $scope.mitra = response.data.data[0];
+            })
+            .catch((err) => {
                 $window.location = "/pagenotfound.html";
-            }
-        );
-
-        $("body").css("display", "block");
+            });
 
         $scope.forms = [{ name: "file1", filename: "filename1" }];
         $scope.addform = function () {
@@ -98,7 +95,7 @@ app.controller("myapp", [
                 fd.append("myfile", file[i]);
             }
             //userid_line untuk auth
-            fd.append("userid_line", uidLine[0]);
+            fd.append("userid_line", user.uidLine);
 
             $("#progress-layout").html(`   
                 <div class="progress" style="margin-top: 20px; margin-bottom:20px" id="progress">
@@ -131,19 +128,19 @@ app.controller("myapp", [
                 transformRequest: angular.identity,
                 headers: {
                     "Content-Type": undefined,
-                    Authorization: `Bearer ${idToken[0]}`,
+                    Authorization: `Bearer ${user.idToken}`,
                 },
-            }).then(
-                (result) => {
+            })
+                .then((data) => {
                     $("#submitData").prop("disabled", false);
                     $("#progress-layout").html(`
                         <p style="color:#00FF00;text-align: center;">FILE terupload!</p>
                     `);
-                    result = result.data;
+                    let dataFile = data.data;
 
                     $scope.data.id_toko = id;
-                    $scope.data.userid_line = uidLine[0];
-                    $scope.data.id_file = result.data._id;
+                    $scope.data.userid_line = user.uidLine;
+                    $scope.data.id_file = dataFile.data._id;
 
                     $scope.submitMyform = function () {
                         let jenispesanan;
@@ -163,57 +160,68 @@ app.controller("myapp", [
                             method: "POST",
                             url: "/api/pesanan",
                             headers: {
-                                Authorization: `Bearer ${idToken[0]}`,
+                                Authorization: `Bearer ${user.idToken}`,
                             },
                             data: $scope.data,
-                        }).then(function successCallback(response) {
-                            let data = response.data.pesanan;
-                            $window.alert(response.data.message);
+                        })
+                            .then((data) => {
+                                let dataPesanan = data.data;
+                                $window.alert(dataPesanan.message);
 
-                            $http({
-                                method: "GET",
-                                url: "/api/pesanan/byid/" + data._id,
-                            }).then(function successCallback(response) {
-                                let data = response.data.pesanan;
-
-                                sendToWa(data);
-
+                                sendToWa(
+                                    dataPesanan.data,
+                                    $scope.mitra,
+                                    dataFile.data
+                                );
                                 $window.location = "/";
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                                if (err.data.message == "IdToken expired.") {
+                                    alert("Sesi anda telah habis");
+                                    liff.loguout();
+                                    window.location = "/";
+                                    return;
+                                }
                             });
-                        });
                     };
-                },
-                (err) => {
+                })
+                .catch((err) => {
+                    if (err.data.message == "IdToken expired.") {
+                        alert("Sesi anda telah habis");
+                        liff.loguout();
+                        window.location = "/";
+                        return;
+                    }
                     $("#progress-layout").html(``);
                     $("#uploadBtn").prop("disabled", false);
                     $("#addForm").prop("disabled", false);
                     alert("Try again to upload file");
-                }
-            );
+                });
         };
+        $("body").css("display", "block");
     },
 ]);
 
-const sendToWa = (data) => {
-    let nohp_fromdata = data[0].toko[0].no_hp;
+const sendToWa = (data, dataToko, dataFile) => {
+    let nohp_fromdata = dataToko.no_hp;
     let nohpID = nohp_fromdata.replace("0", "62");
 
-    let link = data[0].file[0].link_file;
+    let link = dataFile.link_file;
     let linkString = link.join("%0A-");
-    let delivery = data[0].delivery;
+    let delivery = data.delivery;
     if (delivery) {
         delivery = "Pesanan diantar";
     } else {
         delivery = "Pesanan diambil sendiri";
     }
     liff.openWindow({
-        url: `https://api.whatsapp.com/send?phone=${nohpID}&text=*GETPRINT*%0A%0A*Delivery%20%3F*%0A${delivery}%0A%0A*INFO%20PEMESAN*%0ANama%20Pemesan%20%09%3A%20${data[0].nama_pemesan}%2C%0ANo%20HP%20%09%09%3A%20${data[0].nohp_pemesan}%2C%0AAlamat%20Pemesanan%3A%20${data[0].lokasi.alamat_pemesan}%2C%0A%0A*Jenis%20Pesanan*%0A${data[0].jenis_pesanan}%2C%0A%0A*Lokasi%20Pemesan*%0Ahttps%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2F%3Fapi%3D1%26query%3D${data[0].lokasi.lat}%2C${data[0].lokasi.lng}%0A%0A*Link%20File*%0A-${linkString}`,
+        url: `https://api.whatsapp.com/send?phone=${nohpID}&text=*GETPRINT*%0A%0A*Delivery%20%3F*%0A${delivery}%0A%0A*INFO%20PEMESAN*%0ANama%20Pemesan%20%09%3A%20${data.nama_pemesan}%2C%0ANo%20HP%20%09%09%3A%20${data.nohp_pemesan}%2C%0AAlamat%20Pemesanan%3A%20${data.lokasi.alamat_pemesan}%2C%0A%0A*Jenis%20Pesanan*%0A${data.jenis_pesanan}%2C%0A%0A*Lokasi%20Pemesan*%0Ahttps%3A%2F%2Fwww.google.com%2Fmaps%2Fsearch%2F%3Fapi%3D1%26query%3D${data.lokasi.lat}%2C${data.lokasi.lng}%0A%0A*Link%20File*%0A-${linkString}`,
         external: true,
     });
 };
 
-const uidLine = [];
-const idToken = [];
+const user = {};
 
 const liffApp = () => {
     if (!liff.isLoggedIn()) {
@@ -222,8 +230,8 @@ const liffApp = () => {
     }
 
     let profile = liff.getDecodedIDToken();
-    uidLine[0] = profile.sub;
-    idToken[0] = liff.getIDToken();
+    user["uidLine"] = profile.sub;
+    user["idToken"] = liff.getIDToken();
 };
 
 async function initMap() {

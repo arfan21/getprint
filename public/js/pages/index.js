@@ -39,78 +39,88 @@ app.controller("appCtrl", [
                 myLocation.coords.longitude
             );
         }
+        await $http
+            .get("/api/mitra?sort=rating")
+            .then((response) => {
+                $scope.databyrating = response.data.data;
+                setTimeout(() => {
+                    printDistance($scope.databyrating, myLatLng[0], google);
+                }, 1);
+            })
+            .catch((err) => {
+                $scope.databyrating = [];
+            });
 
-        await $http({
-            method: "GET",
-            url: "/api/mitra",
-        }).then(function successCallback(response) {
-            if (!response.data.status) {
-                $scope.data = [];
+        if (user.uidLine != undefined) {
+            await printFollowingMitra($http, user.uidLine, user.idToken);
+        }
+
+        $scope.getDataByDate = async () => {
+            if ($scope.databydate != undefined) {
                 return;
             }
+            await $http
+                .get("/api/mitra?sort=created_at")
 
-            let data = {};
-            data = response.data.mitra;
+                .then((response) => {
+                    $scope.databydate = response.data.data;
+                })
+                .catch((err) => {
+                    $scope.databydate = [];
+                });
 
-            for (i = 0; i < data.length; i++) {
-                let mitraLatLng = new google.maps.LatLng(
-                    data[i].coords.lat,
-                    data[i].coords.lng
-                );
-                let distance = getDistance(google, myLatLng[0], mitraLatLng);
-                data[i].distance = distance;
+            if (user.uidLine != undefined) {
+                await printFollowingMitra($http, user.uidLine, user.idToken);
             }
-            data.sort((a, b) => {
-                return a.distance - b.distance;
-            });
-            $scope.data = data;
-        });
+            printDistance($scope.databydate, myLatLng[0], google);
+        };
 
-        await $http({
-            method: "GET",
-            url: "/api/mitra?sort=date",
-        }).then(function successCallback(response) {
-            $scope.databydate = response.data.mitra;
-        });
+        $scope.getDataByDistance = async () => {
+            if ($scope.data != undefined) {
+                return;
+            }
+            await $http
+                .get("/api/mitra")
+                .then((response) => {
+                    if (!response.data.status) {
+                        $scope.data = [];
+                        return;
+                    }
 
-        await $http({
-            method: "GET",
-            url: "/api/mitra?sort=rating",
-        }).then(function successCallback(response) {
-            $scope.databyrating = response.data.mitra;
-        });
+                    let data = {};
+                    data = response.data.data;
 
-        if ($scope.data.length != 0) {
-            printDistance($scope.data, myLatLng[0], google);
-        }
-
-        if (uidLine.length != 0) {
-            await $http({
-                method: "GET",
-                url: "/api/followingmitra/" + uidLine[0],
-                headers: {
-                    Authorization: `Bearer ${idToken[0]}`,
-                },
-            }).then(
-                (response) => {
-                    let followed = response.data.followingdata;
-
-                    if (response.status) {
-                        for (i = 0; i < followed.length; i++) {
-                            let classFollowing = followed[i].id_toko;
-                            $("." + classFollowing).removeClass("fa-heart-o");
-                            $("." + classFollowing).addClass("fa-heart");
-                            $("." + classFollowing).addClass(followed[i]._id);
-                            $("." + followed[i]._id).removeClass(
-                                classFollowing
+                    for (i = 0; i < data.length; i++) {
+                        let mitraLatLng = new google.maps.LatLng(
+                            data[i].coords.lat,
+                            data[i].coords.lng
+                        );
+                        let distance = getDistance(
+                            google,
+                            myLatLng[0],
+                            mitraLatLng
+                        );
+                        data[i].distance = distance;
+                    }
+                    data.sort((a, b) => {
+                        return a.distance - b.distance;
+                    });
+                    $scope.data = data;
+                    setTimeout(() => {
+                        if (user.uidLine != undefined) {
+                            printFollowingMitra(
+                                $http,
+                                user.uidLine,
+                                user.idToken
                             );
                         }
-                    }
-                },
-                (err) => {}
-            );
-            $(".heart-body").attr("data-useridline", uidLine[0]);
-        }
+                        printDistance($scope.data, myLatLng[0], google);
+                    }, 1);
+                })
+                .catch((err) => {
+                    $scope.data = [];
+                });
+        };
 
         removeLoader();
     },
@@ -130,14 +140,41 @@ const printDistance = (data, myLatLng, google) => {
     }
 };
 
-var locked = false;
+const printFollowingMitra = async ($http, uidLine, idToken) => {
+    await $http({
+        method: "GET",
+        url: `/api/followmitra?match=userid_line&userid_line=${uidLine}`,
+        headers: {
+            Authorization: `Bearer ${idToken}`,
+        },
+    }).then(
+        (response) => {
+            let followed = response.data.data;
+
+            if (response.status) {
+                for (i = 0; i < followed.length; i++) {
+                    let classFollowing = followed[i].id_toko;
+                    $("." + classFollowing).removeClass("fa-heart-o");
+                    $("." + classFollowing).addClass("fa-heart");
+                    $("." + classFollowing).addClass(followed[i]._id);
+                    $("." + followed[i]._id).removeClass(classFollowing);
+                }
+            }
+        },
+        (err) => {}
+    );
+};
+
+const showList = (className) => {
+    $(`.${className}`).css("display", "block");
+};
 
 async function follow(obj) {
     let classObj = $(obj).attr("class");
     let className = classObj.split(" ");
     let id = className[className.length - 1];
 
-    let useridline = $(".heart-body").data("useridline");
+    let useridline = user.uidLine;
     if (useridline == undefined) {
         liff.login();
         return;
@@ -151,16 +188,16 @@ async function follow(obj) {
             $("." + id).toggleClass("fa-heart fa-heart-o");
             $.ajax({
                 method: "DELETE",
-                url: `/api/followingmitra/${id}`,
+                url: `/api/followmitra/${id}`,
                 data: {
                     userid_line: useridline,
                 },
                 headers: {
-                    Authorization: `Bearer ${idToken[0]}`,
+                    Authorization: `Bearer ${user.idToken}`,
                 },
                 success: function (response) {
                     if (response.status) {
-                        let idbaru = response.followingdata.id_toko;
+                        let idbaru = response.data.id_toko;
                         $("." + id).addClass(idbaru);
                         $("." + idbaru).removeClass(id);
                     }
@@ -177,14 +214,14 @@ async function follow(obj) {
             $("." + id).toggleClass("fa-heart-o fa-heart");
             $.ajax({
                 method: "POST",
-                url: "/api/followingmitra/",
+                url: "/api/followmitra/",
                 headers: {
-                    Authorization: `Bearer ${idToken[0]}`,
+                    Authorization: `Bearer ${user.idToken}`,
                 },
                 data: data,
                 success: function (response) {
                     if (response.status) {
-                        let idBaru = response.followingdata._id;
+                        let idBaru = response.data._id;
                         $("." + id).addClass(idBaru);
                         $("." + idBaru).removeClass(id);
                     }
@@ -229,8 +266,7 @@ function checkIsInClient() {
     }
 }
 
-const uidLine = [];
-const idToken = [];
+const user = {};
 
 const App = async () => {
     if (liff.isLoggedIn()) {
@@ -238,8 +274,8 @@ const App = async () => {
 
         const profileName = profile.name;
         const linkProfilePicture = profile.picture;
-        uidLine[0] = profile.sub;
-        idToken[0] = liff.getIDToken();
+        user["uidLine"] = profile.sub;
+        user["idToken"] = liff.getIDToken();
 
         $("#welcome-message #profileName").html(
             `
@@ -257,7 +293,7 @@ const App = async () => {
             "-webkit-inline-box"
         );
 
-        await adminMenu(uidLine[0], idToken[0]);
+        await adminMenu(user.uidLine, user.idToken);
     } else {
         $(".fa-heart-o").click(() => {
             liff.login();
@@ -278,7 +314,8 @@ async function adminMenu(userIDLine, idToken) {
         let msg = admin.error.responseJSON.message;
         if (msg == "IdToken expired.") {
             alert("Sesi anda telah habis, silahkan login kembali");
-            liff.login();
+            liff.logout();
+            window.location.reload();
         }
         return;
     }
@@ -289,7 +326,7 @@ async function adminMenu(userIDLine, idToken) {
                     <a  
                         id="loginLine" 
                         style="color:black;cursor:pointer"
-                        href="mitra.html">Add New Mitra</a>
+                        href="addnewmitra.html">Add New Mitra</a>
                 </div>
                 
             `

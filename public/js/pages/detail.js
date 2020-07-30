@@ -38,19 +38,16 @@ app.controller("appCtrl", [
             url: `/api/mitra/${id}`,
         }).then(
             async (result) => {
-                $scope.data = result.data.mitra[0];
-                if (!result.data.status) {
-                    $window.location = "/pagenotfound.html";
-                } else {
-                    if (liff.isLoggedIn()) {
-                        await adminMenu($scope, uidLine[0], idToken[0]);
-                    }
+                $scope.data = result.data.data[0];
 
-                    let user_rating = $scope.data.rating.user_rating;
-                    userRated(uidLine[0], user_rating);
-
-                    removeLoader();
+                if (liff.isLoggedIn()) {
+                    await adminMenu($scope, user.uidLine, user.idToken);
                 }
+
+                let user_rating = $scope.data.rating.user_rating;
+                userRated(user.uidLine, user_rating);
+
+                removeLoader();
             },
             (err) => {
                 $window.location = "/pagenotfound.html";
@@ -65,7 +62,7 @@ app.controller("appCtrl", [
             var point = parseInt($scope.data.value_rating, 10);
             var user_rating = $scope.data.rating.user_rating;
             var total_point = $scope.data.rating.total_point;
-            if (uidlineSama(uidLine[0], user_rating)) {
+            if (uidlineSama(user.uidLine, user_rating)) {
                 total_point = total_point - user_rating[i].rating_user;
 
                 user_rating[i].rating_user = point;
@@ -91,18 +88,18 @@ app.controller("appCtrl", [
                     1
                 );
                 user_rating.push({
-                    userid_line: uidLine[0],
+                    userid_line: user.uidLine,
                     rating_user: point,
                 });
             }
 
-            $scope.data.userid_line = uidLine[0];
+            $scope.data.userid_line = user.uidLine;
 
             $http({
                 method: "PUT",
                 url: "/api/mitra/" + id,
                 headers: {
-                    Authorization: `Bearer ${idToken[0]}`,
+                    Authorization: `Bearer ${user.idToken}`,
                 },
                 data: $scope.data,
             }).then(function successCallback(response) {
@@ -112,36 +109,19 @@ app.controller("appCtrl", [
         };
 
         $scope.deleteFunc = async () => {
-            await $http
+            $http
                 .delete(
-                    `/api/uploadfotomitra/${$scope.data.fotomitra[0]._id}`,
+                    `/api/mitra/${id}?idFoto=${$scope.data.fotomitra[0]._id}&deleteHash=${$scope.data.fotomitra[0].deleteHash_foto}`,
                     {
                         data: {
-                            userid_line: uidLine[0],
+                            userid_line: user.uidLine,
                         },
                         headers: {
                             "Content-Type": "application/json;charset=utf-8",
-                            Authorization: `Bearer ${idToken[0]}`,
+                            Authorization: `Bearer ${user.idToken}`,
                         },
                     }
                 )
-                .then(
-                    (result) => {},
-                    (err) => {
-                        alert(err);
-                    }
-                );
-
-            $http
-                .delete(`/api/mitra/${id}`, {
-                    data: {
-                        userid_line: uidLine[0],
-                    },
-                    headers: {
-                        "Content-Type": "application/json;charset=utf-8",
-                        Authorization: `Bearer ${idToken[0]}`,
-                    },
-                })
                 .then(function successCallback(response) {
                     $("#exampleModalLongTitle").text(
                         "Mitra berhasil terhapus !"
@@ -153,13 +133,15 @@ app.controller("appCtrl", [
                     $("#batalBtn").removeAttr("data-dismiss");
                     $("#batalBtn").attr("href", "/");
                     $(".close").css("display", "none");
+                })
+                .catch((err) => {
+                    alert(err.data.error);
                 });
         };
     },
 ]);
 
-const uidLine = [];
-const idToken = [];
+const user = {};
 
 const liffApp = () => {
     if (!liff.isLoggedIn()) {
@@ -173,8 +155,10 @@ const liffApp = () => {
     }
 
     let profile = liff.getDecodedIDToken();
-    uidLine[0] = profile.sub;
-    idToken[0] = liff.getIDToken();
+    user["uidLine"] = profile.sub;
+    user["idToken"] = liff.getIDToken();
+    user.uidLine = profile.sub;
+    user.idToken = liff.getIDToken();
 
     $("#rating-open").attr("data-toggle", "modal");
     $("#rating-open").attr("data-target", "#exampleModalCenterRating");
@@ -227,12 +211,13 @@ const adminMenu = async ($scope, uidline, idToken) => {
         let msg = admin.error.responseJSON.message;
         if (msg == "IdToken expired.") {
             alert("Sesi anda telah habis, silahkan login kembali");
-            liff.login();
+            liff.logout();
+            window.location.reload();
         }
         return;
     }
 
-    if (admin.admin) {
+    if (admin.admin || user.uidLine == $scope.data.userid_line_pemilik) {
         $(".getprint-round-navbar").append(
             `
             <h4 class="detail-admin-menu" style="display: inline;margin-left: 5%;">

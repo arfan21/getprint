@@ -86,7 +86,7 @@
                 <div class="form-group">
                     <!-- <label>Email</label> -->
                     <input
-                        type="text"
+                        type="email"
                         class="form-control getprint-form-gray"
                         ng-model="data.email"
                         name="email"
@@ -100,6 +100,7 @@
                         <span ng-show="formMitra.email.$error.required"
                             >Email harus diisi</span
                         >
+                        <span ng-show="formMitra.email.$error.email">Invalid email</span>
                     </span>
                     <span class="fa fa-envelope fa-form-position"></span>
                 </div>

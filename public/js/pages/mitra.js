@@ -91,7 +91,7 @@ app.controller("menjadimitraCtrl", [
 
             $http({
                 method: "POST",
-                url: "/api/uploadfotomitra",
+                url: "/api/fotomitra",
                 uploadEventHandlers: {
                     progress: (e) => {
                         const percent = e.lengthComputable
@@ -131,6 +131,7 @@ app.controller("menjadimitraCtrl", [
                         }).then(
                             function successCallback(response) {
                                 $window.alert(response.data.message);
+                                sendToWa(response.data.data);
                                 $window.location.href = "/";
                             },
                             (err) => {
@@ -152,12 +153,21 @@ app.controller("menjadimitraCtrl", [
     },
 ]);
 
+const sendToWa = (data) => {
+    let nohpID = "6289635639022";
+
+    liff.openWindow({
+        url: `https://api.whatsapp.com/send?phone=${nohpID}&text=*GETPRINT*%0A%0AHI%20admin%20saya%20sudah%20mendaftar%20menjadi%20mitra.%20tolong%20di%20verifikasi.%0A%0A*Detail%20Toko*%0AUser%20ID%20%3A%20${data.userid_line_pemilik}%0AID%20Toko%20%3A%20${data._id}%2C%0ANama%20Toko%20%3A%20${data.nama_toko}%2C`,
+        external: true,
+    });
+};
+
 const uidLine = [];
 const idToken = [];
 
 const liffApp = async () => {
     if (!liff.isLoggedIn()) {
-        window.location = "/pagenotfound.html";
+        liff.login();
         return;
     }
 
@@ -179,13 +189,10 @@ const liffApp = async () => {
         let msg = admin.error.responseJSON.message;
         if (msg == "IdToken expired.") {
             alert("Sesi anda telah habis, silahkan login kembali");
-            liff.login();
+            liff.logout();
+            window.location.reload();
         }
         return;
-    }
-
-    if (!admin.admin) {
-        window.location = "/pagenotfound.html";
     }
 
     $("body").css("display", "block");

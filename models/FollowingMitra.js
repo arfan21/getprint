@@ -10,7 +10,11 @@ const FollowingMitraSchema = new schema({
         type: mongoose.Schema.ObjectId,
         required: true,
     },
-    added: {
+    created_at: {
+        type: Date,
+        default: Date.now,
+    },
+    updated_at: {
         type: Date,
         default: Date.now,
     },

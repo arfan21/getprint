@@ -6,6 +6,10 @@ const MitraSchema = new schema({
         type: mongoose.Schema.ObjectId,
         required: true,
     },
+    userid_line_pemilik: {
+        type: String,
+        required: true,
+    },
     nama_toko: {
         type: String,
         required: true,
@@ -65,7 +69,15 @@ const MitraSchema = new schema({
             },
         ],
     },
-    added: {
+    status: {
+        type: String,
+        default: "inactive",
+    },
+    created_at: {
+        type: Date,
+        default: Date.now,
+    },
+    updated_at: {
         type: Date,
         default: Date.now,
     },

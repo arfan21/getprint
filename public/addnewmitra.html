@@ -62,34 +62,31 @@
                                         <p class="card-text text-muted">
                                             {{d.alamat_toko}}
                                         </p>
-                                        <div class="getprint-indicator">
-                                            <span
-                                                class="fa fa-star"
-                                                style="display: inline;"
-                                            ></span>
-                                            <span
-                                                style="
-                                                    font-weight: 700;
-                                                    display: inline;
-                                                "
-                                                >{{d.rating.avg_point}}</span
-                                            >
-                                        </div>
                                     </div>
                                 </a>
                             </div>
-                            <div class="col-2 heart-body">
+                            <div class="col-2 heart-body text-center">
                                 <div>
                                     <p
-                                        ng-click="unfollow(data, $index)"
-                                        class="fa fa-heart-o {{d._id}}"
+                                        ng-click="declineBtn(d, data, $index)"
+                                        class="fa fa-times {{d._id}}"
                                         style="
                                             font-size: 25px;
                                             color: red;
                                             cursor: pointer;
+                                            padding: 10px;
                                         "
                                     ></p>
-                                    <p class="{{d.id_foto}}"></p>
+                                    <p
+                                        ng-click="acceptBtn(d, data, $index)"
+                                        class="fa fa-check {{d._id}}"
+                                        style="
+                                            font-size: 25px;
+                                            color: green;
+                                            cursor: pointer;
+                                            padding: 10px;
+                                        "
+                                    ></p>
                                 </div>
                             </div>
                         </div>
@@ -101,6 +98,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaoyXcCmwrNUTX3OUj4bcAerDP93sHeR4&libraries=geometry"></script>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="js/LIFF/liffInit.js"></script>
+    <script src="js/helper/isAdmin.js"></script>
     <script src="js/getLocation.js"></script>
-    <script src="js/pages/followingmitra.js"></script>
+    <script src="js/pages/addnewmitra.js"></script>
 </html>
