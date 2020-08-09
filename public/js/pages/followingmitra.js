@@ -48,65 +48,62 @@ app.controller("appCtrl", [
             },
         }).then(
             async (response) => {
-                $scope.followed = response.data.data;
-                let dataToko = [];
-                if (response.status) {
-                    for (i = 0; i < $scope.followed.length; i++) {
-                        let idToko = response.data.data[i].id_toko;
-                        let toko = await getToko($http, idToko).then(
-                            (result) => {
-                                return result;
-                            },
-                            (err) => {
-                                $http.delete(
-                                    `/api/followmitra/${response.data.data[i]._id}`,
-                                    {
-                                        data: {
-                                            userid_line: user.uidLine,
-                                        },
-                                        headers: {
-                                            "Content-Type":
-                                                "application/json;charset=utf-8",
-                                            Authorization: `Bearer ${user.idToken}`,
-                                        },
-                                    }
-                                );
+                    $scope.followed = response.data.data;
+                    let dataToko = [];
+                    if (response.status) {
+                        for (i = 0; i < $scope.followed.length; i++) {
+                            let idToko = response.data.data[i].id_toko;
+                            let toko = await getToko($http, idToko).then(
+                                (result) => {
+                                    return result;
+                                },
+                                (err) => {
+                                    $http.delete(
+                                        `/api/followmitra/${response.data.data[i]._id}`, {
+                                            data: {
+                                                userid_line: user.uidLine,
+                                            },
+                                            headers: {
+                                                "Content-Type": "application/json;charset=utf-8",
+                                                Authorization: `Bearer ${user.idToken}`,
+                                            },
+                                        }
+                                    );
 
-                                return null;
+                                    return null;
+                                }
+                            );
+
+                            if (toko != null) {
+                                dataToko.push(toko);
                             }
-                        );
-
-                        if (toko != null) {
-                            dataToko.push(toko);
                         }
-                    }
-                    $scope.data = dataToko;
 
+                        if (dataToko.length == 0) {
+                            $("#container-following").html(`
+                                <div id="not-found" class="text-center container">
+                                    <img src="./assets/banner-404.png" alt="...">
+                                    <br>
+                                    <p>Maaf, kami tidak bisa menemukan mitra yang anda ikuti.</p>
+                                    <a href="/" class="btn btn-primary">BACK</a>
+                                </div>
+                            `);
+                        }
+                        $scope.data = dataToko;
+                        removeLoaderList(0)
+                    }
+                },
+                (err) => {
                     $("body").css("display", "block");
-
-                    if ($scope.data.length == 0) {
-                        $("container-following").html(`
-                            <div id="not-found" class="text-center container">
-                                <img src="./assets/banner-404.png" alt="...">
-                                <br>
-                                <p>Maaf, kami tidak bisa menemukan mitra yang anda ikuti.</p>
-                                <a href="/" class="btn btn-primary">BACK</a>
-                            </div>
-                        `);
-                    }
+                    $("#container-following").html(`
+                        <div id="not-found" class="text-center container">
+                            <img src="./assets/banner-404.png" alt="...">
+                            <br>
+                            <p>Maaf, kami tidak bisa menemukan mitra yang anda ikuti.</p>
+                            <a href="/" class="btn btn-primary">BACK</a>
+                        </div>
+                    `);
                 }
-            },
-            (err) => {
-                $("body").css("display", "block");
-                $("#container-following").html(`
-                    <div id="not-found" class="text-center container">
-                        <img src="./assets/banner-404.png" alt="...">
-                        <br>
-                        <p>Maaf, kami tidak bisa menemukan mitra yang anda ikuti.</p>
-                        <a href="/" class="btn btn-primary">BACK</a>
-                    </div>
-                `);
-            }
         );
 
         if ($scope.data != undefined) {
@@ -213,3 +210,14 @@ const getDistance = (google, from, to) => {
         ) / 1000
     ).toFixed(2);
 };
+
+function removeLoaderList(i) {
+    if ($(".loadingList").length == 1) {
+        i = 0
+    }
+
+    $($(".loadingList")[i]).fadeOut(500, function () {
+        // fadeOut complete. Remove the loading div
+        $($(".loadingList")[i]).remove(); //makes page more lightweight
+    });
+}

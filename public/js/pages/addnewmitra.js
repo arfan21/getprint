@@ -22,6 +22,7 @@ app.controller("appCtrl", [
 
         const myLatLng = [];
 
+        //mengecek user apakah mengaktifkan gps atau tidak
         if (!myLocation.status) {
             alert(myLocation.error.message);
             myLatLng[0] = new google.maps.LatLng(-0.789275, 113.921327);
@@ -42,12 +43,12 @@ app.controller("appCtrl", [
         );
 
         await $http({
-            method: "GET",
-            url: `/api/mitrainactive`,
-            headers: {
-                Authorization: `Bearer ${idToken[0]}`,
-            },
-        })
+                method: "GET",
+                url: `/api/mitrainactive`,
+                headers: {
+                    Authorization: `Bearer ${idToken[0]}`,
+                },
+            })
             .then((data) => {
                 $scope.data = data.data.data;
             })
@@ -68,7 +69,7 @@ app.controller("appCtrl", [
 
         $scope.acceptBtn = acceptBtn;
         $scope.declineBtn = declineBtn;
-        $("body").css("display", "block");
+        removeLoaderList(0);
     },
 ]);
 
@@ -105,8 +106,7 @@ const declineBtn = (data, array, index) => {
 
     $http
         .delete(
-            `/api/mitra/${dataMitra._id}?idFoto=${dataMitra.fotomitra[0]._id}&deleteHash=${dataMitra.fotomitra[0].deleteHash_foto}`,
-            {
+            `/api/mitra/${dataMitra._id}?idFoto=${dataMitra.fotomitra[0]._id}&deleteHash=${dataMitra.fotomitra[0].deleteHash_foto}`, {
                 data: {
                     userid_line: uidLine[0],
                 },
@@ -187,3 +187,14 @@ const getDistance = (google, from, to) => {
         ) / 1000
     ).toFixed(2);
 };
+
+function removeLoaderList(i) {
+    if ($(".loadingList").length == 1) {
+        i = 0
+    }
+
+    $($(".loadingList")[i]).fadeOut(500, function () {
+        // fadeOut complete. Remove the loading div
+        $($(".loadingList")[i]).remove(); //makes page more lightweight
+    });
+}

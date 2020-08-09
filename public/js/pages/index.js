@@ -30,6 +30,7 @@ app.controller("appCtrl", [
 
         const myLatLng = [];
 
+        //mengecek user apakah mengaktifkan gps atau tidak
         if (!myLocation.status) {
             alert(myLocation.error.message);
             myLatLng[0] = new google.maps.LatLng(-0.789275, 113.921327);
@@ -39,6 +40,8 @@ app.controller("appCtrl", [
                 myLocation.coords.longitude
             );
         }
+
+        //data mitra berdasarkan rating terbaik
         await $http
             .get("/api/mitra?sort=rating")
             .then((response) => {
@@ -55,6 +58,7 @@ app.controller("appCtrl", [
             await printFollowingMitra($http, user.uidLine, user.idToken);
         }
 
+        //data mitra terbaru
         $scope.getDataByDate = async () => {
             if ($scope.databydate != undefined) {
                 return;
@@ -73,8 +77,10 @@ app.controller("appCtrl", [
                 await printFollowingMitra($http, user.uidLine, user.idToken);
             }
             printDistance($scope.databydate, myLatLng[0], google);
+            removeLoaderList(0);
         };
 
+        //data mitra berdasarkan jarak terdekat
         $scope.getDataByDistance = async () => {
             if ($scope.data != undefined) {
                 return;
@@ -106,15 +112,16 @@ app.controller("appCtrl", [
                         return a.distance - b.distance;
                     });
                     $scope.data = data;
-                    setTimeout(() => {
+                    setTimeout(async () => {
                         if (user.uidLine != undefined) {
-                            printFollowingMitra(
+                            await printFollowingMitra(
                                 $http,
                                 user.uidLine,
                                 user.idToken
                             );
                         }
                         printDistance($scope.data, myLatLng[0], google);
+                        removeLoaderList(1);
                     }, 1);
                 })
                 .catch((err) => {
@@ -126,6 +133,7 @@ app.controller("appCtrl", [
     },
 ]);
 
+//untuk menampilkan jarak, jika user tidak mengaktifkan gps maka tidak akan ditampilkan jarak
 const printDistance = (data, myLatLng, google) => {
     for (i = 0; i < data.length; i++) {
         let mitraLatLng = new google.maps.LatLng(
@@ -165,10 +173,7 @@ const printFollowingMitra = async ($http, uidLine, idToken) => {
     );
 };
 
-const showList = (className) => {
-    $(`.${className}`).css("display", "block");
-};
-
+//fungsi untuk memfollow mitra
 async function follow(obj) {
     let classObj = $(obj).attr("class");
     let className = classObj.split(" ");
@@ -183,6 +188,7 @@ async function follow(obj) {
         return;
     }
 
+    //jika sudah memfollow mitra akan mengunfollow
     if ($("." + id).hasClass("fa-heart")) {
         if (id != "fa-heart") {
             $("." + id).toggleClass("fa-heart fa-heart-o");
@@ -236,9 +242,12 @@ async function liffApp() {
     App();
 }
 
+//mengecek user apakah menggunakan line browser atau external browser
 function checkIsInClient() {
     if (!liff.isInClient()) {
         alert("You are opening the app in an external browser.");
+
+        //jika menggunakan line browser akan muncul tombol login dan logout
         if (!liff.isLoggedIn()) {
             $("#welcome-message").append(`
                 <div style="width: 90%;text-align: right;">
@@ -280,11 +289,11 @@ const App = async () => {
         $("#welcome-message #profileName").html(
             `
             <img src="` +
-                linkProfilePicture +
-                `" alt="Profile-Picture" style="width: 40px;height: 40px;border-radius: 50%;">
+            linkProfilePicture +
+            `" alt="Profile-Picture" style="width: 40px;height: 40px;border-radius: 50%;">
             <h2 style="margin: 0px 0px 0px 10px;">` +
-                profileName +
-                `</h2>
+            profileName +
+            `</h2>
         `
         );
 
@@ -301,6 +310,7 @@ const App = async () => {
     }
 };
 
+//admin menu untuk menambah mitra baru
 async function adminMenu(userIDLine, idToken) {
     const admin = await isAdmin(userIDLine, idToken).then(
         (result) => {
@@ -334,6 +344,7 @@ async function adminMenu(userIDLine, idToken) {
     }
 }
 
+
 const getDistance = (google, from, to) => {
     const myLatLng = [];
     myLatLng[0] = new google.maps.LatLng(-0.789275, 113.921327);
@@ -353,5 +364,16 @@ function removeLoader() {
     $("#loadingDiv").fadeOut(500, function () {
         // fadeOut complete. Remove the loading div
         $("#loadingDiv").remove(); //makes page more lightweight
+    });
+}
+
+function removeLoaderList(i) {
+    if ($(".loadingList").length == 1) {
+        i = 0
+    }
+
+    $($(".loadingList")[i]).fadeOut(500, function () {
+        // fadeOut complete. Remove the loading div
+        $($(".loadingList")[i]).remove(); //makes page more lightweight
     });
 }

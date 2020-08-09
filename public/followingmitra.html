@@ -1,106 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="shortcut icon" href="assets/Logo.png" />
-        <link
-            rel="stylesheet"
-            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-        />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap"
-            rel="stylesheet"
-        />
-        <link rel="stylesheet" href="style.css" />
 
-        <title>GetPrint || Following</title>
-    </head>
-    <body
-        ng-app="myApp"
-        ng-controller="appCtrl"
-        class="getprint-gray-bg"
-        style="display: none;"
-    >
-        <div class="container-fluid getprint-round-navbar">
-            <h4 style="display: inline;">
-                <a href="/"><i class="fa fa-angle-left"></i></a>GetPrint
-            </h4>
-        </div>
-        <div id="container-following">
-            <div class="carousel-item active" style="margin-top: 50px;">
-                <div ng-repeat="d in data" style="margin-top: 10px;">
-                    <div class="card container" style="padding: 10px;">
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="card-image">
-                                    <img
-                                        class="card-image-content"
-                                        ng-src="{{d.fotomitra[0].link_foto}}"
-                                        alt="foto toko"
-                                    />
-                                </div>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="assets/Logo.png" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap" rel="stylesheet" />
+    <link href="https://unpkg.com/placeholder-loading/dist/css/placeholder-loading.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+
+    <title>GetPrint || Following</title>
+</head>
+
+<body ng-app="myApp" ng-controller="appCtrl" class="getprint-gray-bg">
+    <div class="container-fluid getprint-round-navbar">
+        <h4 style="display: inline;">
+            <a href="/"><i class="fa fa-angle-left"></i></a>GetPrint
+        </h4>
+    </div>
+    <div id="container-following">
+        <div class="carousel-item active" style="margin-top: 50px;">
+            <div class="loadingList">
+                <div class="card container" style="border: none;">
+                    <div class="ph-item" style="border: none;">
+                        <div class="ph-col-4">
+                            <div class="ph-picture">
                             </div>
-                            <div class="col-6">
-                                <a
-                                    class="link"
-                                    href="/detail.html?id={{d._id}}"
-                                >
-                                    <div class="card-text" class="col-8">
-                                        <h5 class="font-weight-bold">
-                                            {{d.nama_toko}}
-                                        </h5>
-                                        <p class="card-text text-muted">
-                                            {{d.alamat_toko}}
-                                        </p>
-                                        <div class="getprint-indicator">
-                                            <span
-                                                class="fa fa-star"
-                                                style="display: inline;"
-                                            ></span>
-                                            <span
-                                                style="
+
+                        </div>
+                        <div class="ph-col-6">
+                            <div class="ph-row">
+                                <div class="ph-col-6 big"></div>
+                                <div class="ph-col-6 big"></div>
+                                <div class="ph-col-6 big"></div>
+                                <div class="ph-col-6 big"></div>
+                                <div class="ph-col-6 big"></div>
+                                <div class="ph-col-6 big"></div>
+
+                            </div>
+                        </div>
+                        <div class="ph-col-2">
+                            <div class="ph-row">
+                                <div class="ph-col-4"></div>
+                                <div class="ph-col-4"></div>
+                                <div class="ph-col-4"></div>
+                                <div class="ph-col-4"></div>
+                                <div class="ph-col-4"></div>
+                                <div class="ph-col-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-repeat="d in data" style="margin-top: 10px;">
+                <div class="card container" style="padding: 10px;">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="card-image">
+                                <img class="card-image-content" ng-src="{{d.fotomitra[0].link_foto}}" alt="foto toko" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <a class="link" href="/detail.html?id={{d._id}}">
+                                <div class="card-text" class="col-8">
+                                    <h5 class="font-weight-bold">
+                                        {{d.nama_toko}}
+                                    </h5>
+                                    <p class="card-text text-muted">
+                                        {{d.alamat_toko}}
+                                    </p>
+                                    <div class="getprint-indicator">
+                                        <span class="fa fa-star" style="display: inline;"></span>
+                                        <span style="
                                                     font-weight: 700;
                                                     display: inline;
-                                                "
-                                                >{{d.rating.avg_point}}</span
-                                            >
-                                        </div>
+                                                ">{{d.rating.avg_point}}</span>
                                     </div>
-                                </a>
-                            </div>
-                            <div class="col-2 heart-body">
-                                <div>
-                                    <p
-                                        ng-click="unfollow(data, $index)"
-                                        class="fa fa-heart-o {{d._id}}"
-                                        style="
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-2 heart-body">
+                            <div>
+                                <p ng-click="unfollow(data, $index)" class="fa fa-heart-o {{d._id}}" style="
                                             font-size: 25px;
                                             color: red;
                                             cursor: pointer;
-                                        "
-                                    ></p>
-                                    <p class="{{d.id_foto}}"></p>
-                                </div>
+                                        "></p>
+                                <p class="{{d.id_foto}}"></p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </body>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaoyXcCmwrNUTX3OUj4bcAerDP93sHeR4&libraries=geometry"></script>
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-    <script src="js/LIFF/liffInit.js"></script>
-    <script src="js/getLocation.js"></script>
-    <script src="js/pages/followingmitra.js"></script>
+    </div>
+</body>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaoyXcCmwrNUTX3OUj4bcAerDP93sHeR4&libraries=geometry">
+</script>
+<script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+<script src="js/LIFF/liffInit.js"></script>
+<script src="js/getLocation.js"></script>
+<script src="js/pages/followingmitra.js"></script>
+
 </html>

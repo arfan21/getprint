@@ -13,6 +13,7 @@ function uidlineSama(uid, any) {
     return false;
 }
 
+
 if (id.length == 0) {
     window.location = "/pagenotfound.html";
 }
@@ -38,20 +39,22 @@ app.controller("appCtrl", [
             url: `/api/mitra/${id}`,
         }).then(
             async (result) => {
-                $scope.data = result.data.data[0];
+                    $scope.data = result.data.data[0];
 
-                if (liff.isLoggedIn()) {
-                    await adminMenu($scope, user.uidLine, user.idToken);
+                    //jika user sedang login akan di cek apakah dia admin atau tidak
+                    if (liff.isLoggedIn()) {
+                        await adminMenu($scope, user.uidLine, user.idToken);
+                    }
+
+                    let user_rating = $scope.data.rating.user_rating;
+                    userRated(user.uidLine, user_rating);
+
+                    //menghapus loader
+                    removeLoaderList(0)
+                },
+                (err) => {
+                    $window.location = "/pagenotfound.html";
                 }
-
-                let user_rating = $scope.data.rating.user_rating;
-                userRated(user.uidLine, user_rating);
-
-                removeLoader();
-            },
-            (err) => {
-                $window.location = "/pagenotfound.html";
-            }
         );
 
         $scope.resetRating = () => {
@@ -62,6 +65,8 @@ app.controller("appCtrl", [
             var point = parseInt($scope.data.value_rating, 10);
             var user_rating = $scope.data.rating.user_rating;
             var total_point = $scope.data.rating.total_point;
+
+            //mengecek jika id line sama, jika sama maka akan mengubah nilai rating yang di berikan oleh pemilik id line
             if (uidlineSama(user.uidLine, user_rating)) {
                 total_point = total_point - user_rating[i].rating_user;
 
@@ -111,8 +116,7 @@ app.controller("appCtrl", [
         $scope.deleteFunc = async () => {
             $http
                 .delete(
-                    `/api/mitra/${id}?idFoto=${$scope.data.fotomitra[0]._id}&deleteHash=${$scope.data.fotomitra[0].deleteHash_foto}`,
-                    {
+                    `/api/mitra/${id}?idFoto=${$scope.data.fotomitra[0]._id}&deleteHash=${$scope.data.fotomitra[0].deleteHash_foto}`, {
                         data: {
                             userid_line: user.uidLine,
                         },
@@ -160,6 +164,7 @@ const liffApp = () => {
     user.uidLine = profile.sub;
     user.idToken = liff.getIDToken();
 
+    //membuka modal rating
     $("#rating-open").attr("data-toggle", "modal");
     $("#rating-open").attr("data-target", "#exampleModalCenterRating");
 
@@ -197,6 +202,7 @@ const userRated = (uidline, user_rating) => {
     }
 };
 
+//admin menu untuk mengubah dan menghapus toko
 const adminMenu = async ($scope, uidline, idToken) => {
     const admin = await isAdmin(uidline, idToken).then(
         (result) => {
@@ -217,6 +223,7 @@ const adminMenu = async ($scope, uidline, idToken) => {
         return;
     }
 
+    //jika dia admin atau pemilik toko maka dia bisa mengubah toko
     if (admin.admin || user.uidLine == $scope.data.userid_line_pemilik) {
         $(".getprint-round-navbar").append(
             `
@@ -229,9 +236,14 @@ const adminMenu = async ($scope, uidline, idToken) => {
     }
 };
 
-function removeLoader() {
-    $("#loadingDiv").fadeOut(500, function () {
+function removeLoaderList(i) {
+    if ($(".loadingList").length == 1) {
+        i = 0
+    }
+
+    $($(".loadingList")[i]).fadeOut(500, function () {
         // fadeOut complete. Remove the loading div
-        $("#loadingDiv").remove(); //makes page more lightweight
+        $($(".loadingList")[i]).remove(); //makes page more lightweight
     });
+    $(".getprint-white-container").css("display", "block")
 }
