@@ -20,7 +20,12 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
         <title>GetPrint || Menjadi Mitra</title>
     </head>
-    <body class="getprint-gray-bg stretch-bottom-body" ng-app="menjadimitra" ng-controller="menjadimitraCtrl" style="display: none;">
+    <body
+        class="getprint-gray-bg stretch-bottom-body"
+        ng-app="menjadimitra"
+        ng-controller="menjadimitraCtrl"
+        style="display: none"
+    >
         <div class="container-fluid getprint-round-navbar">
             <h4>Form Mitra Baru</h4>
         </div>
@@ -31,7 +36,7 @@
             class="container getprint-white-container stretch-bottom-content pt-2"
         >
             <form name="formMitra">
-                <div class="form-group" style="display: none;">
+                <div class="form-group" style="display: none">
                     <input
                         type="text"
                         class="form-control getprint-form-gray"
@@ -52,7 +57,7 @@
                         required
                     />
                     <span
-                        style="color: red;"
+                        style="color: red"
                         ng-show="formMitra.nama_toko.$dirty && formMitra.nama_toko.$invalid || formMitra.nama_toko.$touched"
                     >
                         <span ng-show="formMitra.nama_toko.$error.required"
@@ -73,7 +78,7 @@
                         required
                     />
                     <span
-                        style="color: red;"
+                        style="color: red"
                         ng-show="formMitra.nama_pemilik.$dirty && formMitra.nama_pemilik.$invalid || formMitra.nama_pemilik.$touched"
                     >
                         <span ng-show="formMitra.nama_pemilik.$error.required"
@@ -94,13 +99,18 @@
                         required
                     />
                     <span
-                        style="color: red;"
-                        ng-show="formMitra.email.$dirty && formMitra.email.$invalid || formMitra.email.$touched"
+                        style="color: red"
+                        ng-show="formMitra.email.$dirty && formMitra.email.$invalid || formMitra.email.$touched || isExistEmail"
                     >
                         <span ng-show="formMitra.email.$error.required"
                             >Email harus diisi</span
                         >
-                        <span ng-show="formMitra.email.$error.email">Invalid email</span>
+                        <span ng-show="formMitra.email.$error.email"
+                            >Invalid email</span
+                        >
+                        <span ng-show="isExistEmail"
+                            >email has been registered</span
+                        >
                     </span>
                     <span class="fa fa-envelope fa-form-position"></span>
                 </div>
@@ -116,11 +126,14 @@
                         required
                     />
                     <span
-                        style="color: red;"
-                        ng-show="formMitra.no_hp.$dirty && formMitra.no_hp.$invalid || formMitra.no_hp.$touched"
+                        style="color: red"
+                        ng-show="formMitra.no_hp.$dirty && formMitra.no_hp.$invalid || formMitra.no_hp.$touched || isExistNoHP"
                     >
                         <span ng-show="formMitra.no_hp.$error.required"
-                            >No. Hp harus diisi</span
+                            >No Hp harus diisi</span
+                        >
+                        <span ng-show="isExistNoHP"
+                            >No Hp has been registered</span
                         >
                     </span>
                     <span class="fa fa-phone fa-form-position"></span>
@@ -142,22 +155,33 @@
                                 required
                                 disabled
                             ></textarea>
-                            <span class="fa fa-map-marker fa-form-position"></span>
+                            <span
+                                class="fa fa-map-marker fa-form-position"
+                            ></span>
                         </div>
                         <div class="col d-flex justify-content-center">
-                            <a id="mapBtn" class="btn btn-primary" style="color: white;height:40px;margin-top: 3%;" data-toggle="modal" data-target="#exampleModalCenter">Pilih Lewat Peta</a>
+                            <a
+                                id="mapBtn"
+                                class="btn btn-primary"
+                                style="
+                                    color: white;
+                                    height: 40px;
+                                    margin-top: 3%;
+                                "
+                                data-toggle="modal"
+                                data-target="#exampleModalCenter"
+                                >Pilih Lewat Peta</a
+                            >
                         </div>
-                        
                     </div>
                     <span
-                        style="color: red;"
+                        style="color: red"
                         ng-show="formMitra.alamat_toko.$dirty && formMitra.alamat_toko.$invalid || formMitra.alamat_toko.$touched"
                     >
                         <span ng-show="formMitra.alamat_toko.$error.required"
                             >Alamat harus diisi</span
                         >
                     </span>
-                    
                 </div>
 
                 <p class="getprint-blue-title">Data Harga</p>
@@ -175,7 +199,7 @@
                         required
                     />
                     <span
-                        style="color: red;"
+                        style="color: red"
                         ng-show="formMitra.print.$dirty && formMitra.print.$invalid || formMitra.print.$touched"
                     >
                         <span ng-show="formMitra.print.$error.required"
@@ -194,7 +218,7 @@
                         required
                     />
                     <span
-                        style="color: red;"
+                        style="color: red"
                         ng-show="formMitra.scan.$dirty && formMitra.scan.$invalid || formMitra.scan.$touched"
                     >
                         <span ng-show="formMitra.scan.$error.required"
@@ -213,7 +237,7 @@
                         required
                     />
                     <span
-                        style="color: red;"
+                        style="color: red"
                         ng-show="formMitra.fotocopy.$dirty && formMitra.fotocopy.$invalid || formMitra.fotocopy.$touched"
                     >
                         <span ng-show="formMitra.fotocopy.$error.required"
@@ -227,18 +251,18 @@
                         name="lat"
                         id="default_latitude"
                         ng-model="data.coords.lat"
-                        style="display: none;"
+                        style="display: none"
                     />
                     <input
                         type="text"
                         name="lng"
                         id="default_longitude"
                         ng-model="data.coords.lng"
-                        style="display: none;"
+                        style="display: none"
                     />
                 </div>
             </form>
-            <form  id="uploadForm" name="formupload" >
+            <form id="uploadForm" name="formupload">
                 <!-- 
                     intinya: #upload-container-parent > #uplaod container-child > .myLabel > input + span
                     #upload-container-child yang diulang sampai 5x, typenya ingin dibuat inline biar kotak upload file sebaris
@@ -246,18 +270,37 @@
                     seisinya dibuat untuk styling file input
                 -->
                 <div id="upload-container-parent">
-                    <div id="upload-container-child" class="form-group form-upload">
+                    <div
+                        id="upload-container-child"
+                        class="form-group form-upload"
+                    >
                         <div class="custom-file">
-                            <label for="file1" class="btn btn-light custom-file-style"><i class="fa fa-plus" ></i><br><p id="filename1" style="margin-bottom: 0">ADD FOTO</p></label>
-                            <input onchange="angular.element(this).scope().listFile(this, this.files)" id="file1" type="file" class="custom-file-input" id="customFile" value="choose" name="mitraFoto" custom-file-input required>
+                            <label
+                                for="file1"
+                                class="btn btn-light custom-file-style"
+                                ><i class="fa fa-plus"></i><br />
+                                <p id="filename1" style="margin-bottom: 0">
+                                    ADD FOTO
+                                </p></label
+                            >
+                            <input
+                                onchange="angular.element(this).scope().listFile(this, this.files)"
+                                id="file1"
+                                type="file"
+                                class="custom-file-input"
+                                id="customFile"
+                                value="choose"
+                                name="mitraFoto"
+                                custom-file-input
+                                required
+                            />
                         </div>
                     </div>
                 </div>
-                <div class="center-align form-group">
+                <!-- <div class="center-align form-group">
                     <input ng-click="uploadFIle()" id="uploadBtn" type="submit" class="btn btn-primary" value="Upload"></button>
-                </div>
+                </div> -->
                 <div id="progress-layout"></div>
-                
             </form>
             <div class="text-center">
                 <button
@@ -265,7 +308,7 @@
                     type="submit"
                     class="btn btn-primary"
                     ng-disabled="formMitra.$invalid"
-                    ng-click="submitform()"
+                    ng-click="submitForm()"
                 >
                     Submit
                 </button>
@@ -273,39 +316,73 @@
         </div>
 
         <!-- Modal Map -->
-        <div class="modal fade " id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="width: 100%; height: 100%; padding: 0;">
-            <div class="modal-content" style="height: auto;
-            min-height: 100%;
-            border-radius: 0;">
-                <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Maps</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        <div
+            class="modal fade"
+            id="exampleModalCenter"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true"
+        >
+            <div
+                class="modal-dialog modal-dialog-centered modal-lg"
+                role="document"
+                style="width: 100%; height: 100%; padding: 0"
+            >
+                <div
+                    class="modal-content"
+                    style="height: auto; min-height: 100%; border-radius: 0"
+                >
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">
+                            Maps
+                        </h5>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div
+                        class="modal-body"
+                        id="map"
+                        style="width: 100%; height: 100%; padding: 33%"
+                    ></div>
+                    <div class="modal-footer">
+                        <textarea
+                            type="text"
+                            class="form-control getprint-form-gray"
+                            name="alamat_toko"
+                            placeholder="Alamat Toko"
+                            id="address"
+                            cols="20"
+                            rows="2"
+                            required
+                        ></textarea>
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            data-dismiss="modal"
+                            id="saveLocation"
+                        >
+                            Save Location
+                        </button>
+                    </div>
                 </div>
-                <div class="modal-body" id="map" style="width: 100%; height: 100%;padding: 33%;">
-                    
-                </div>
-                <div class="modal-footer">
-                    <textarea
-                        type="text"
-                        class="form-control getprint-form-gray"
-                        name="alamat_toko"
-                        placeholder="Alamat Toko"
-                        id="address"
-                        cols="20"
-                        rows="2"
-                        required
-                    ></textarea>
-                    
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveLocation">Save Location</button>
-                </div>
-            </div>
             </div>
         </div>
-    </body>  
+    </body>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="js/LIFF/liffInit.js"></script>
     <script src="js/helper/isAdmin.js"></script>

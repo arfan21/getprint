@@ -5,67 +5,39 @@ app.controller("appCtrl", [
     "$http",
     "$window",
     async function ($scope, $http, $window) {
-        const myLocation = await getLocation().then(
-            (result) => {
-                return {
-                    status: true,
-                    coords: result,
-                };
-            },
-            (err) => {
-                return {
-                    status: false,
-                    error: err,
-                };
-            }
-        );
-
-        const myLatLng = [];
-
-        //mengecek user apakah mengaktifkan gps atau tidak
-        if (!myLocation.status) {
-            alert(myLocation.error.message);
-            myLatLng[0] = new google.maps.LatLng(-0.789275, 113.921327);
-        } else {
-            myLatLng[0] = new google.maps.LatLng(
-                myLocation.coords.latitude,
-                myLocation.coords.longitude
-            );
+        try {
+            await liffInit(liff);
+            await liffApp();
+        } catch (error) {
+            alert(error.error);
         }
 
-        const callLiffInit = await liffInit(liff).then(
-            (result) => {
-                liffApp();
-            },
-            (err) => {
-                alert(err.error);
-            }
-        );
-
-        await $http({
+        try {
+            const res = await $http({
                 method: "GET",
                 url: `/api/mitrainactive`,
                 headers: {
-                    Authorization: `Bearer ${idToken[0]}`,
+                    Authorization: `Bearer ${user.idToken}`,
                 },
-            })
-            .then((data) => {
-                $scope.data = data.data.data;
-            })
-            .catch((err) => {
-                if (err.data.error == "Mitra not found") {
-                    $("#container-following").html(`
-                        <div id="not-found" class="text-center container">
-                            <img src="./assets/banner-404.png" alt="...">
-                            <br>
-                            <p>Maaf, belum ada mitra yang mendaftar.</p>
-                            <a href="/" class="btn btn-primary">BACK</a>
-                        </div>
-                    `);
-                } else {
-                    alert(err.data.error);
-                }
             });
+
+            $scope.$apply(() => {
+                $scope.data = res.data.data;
+            });
+        } catch (error) {
+            if (error.data.error == "Mitra not found") {
+                $("#container-following").html(`
+                    <div id="not-found" class="text-center container">
+                        <img src="./assets/banner-404.png" alt="...">
+                        <br>
+                        <p>Maaf, belum ada mitra yang mendaftar.</p>
+                        <a href="/" class="btn btn-primary">BACK</a>
+                    </div>
+                `);
+            } else {
+                alert(err.data.error);
+            }
+        }
 
         $scope.acceptBtn = acceptBtn;
         $scope.declineBtn = declineBtn;
@@ -73,21 +45,13 @@ app.controller("appCtrl", [
     },
 ]);
 
-const acceptBtn = (data, array, index) => {
+const acceptBtn = async (data, array, index) => {
     let dataMitra = data;
-    dataMitra["userid_line"] = uidLine[0];
     dataMitra["status"] = "active";
 
-    $http({
-        method: "PUT",
-        url: `/api/mitra/${dataMitra._id}`,
-        headers: {
-            Authorization: `Bearer ${idToken[0]}`,
-        },
-        data: dataMitra,
-    }).then(function successCallback(response) {
-        alert(response.data.message);
+    try {
         array.splice(index, 1);
+
         if (array.length == 0) {
             $("#container-following").html(`
                 <div id="not-found" class="text-center container">
@@ -98,29 +62,25 @@ const acceptBtn = (data, array, index) => {
                 </div>
             `);
         }
-    });
+        const res = await $http({
+            method: "PUT",
+            url: `/api/mitra/${dataMitra._id}`,
+            headers: {
+                Authorization: `Bearer ${user.idToken}`,
+            },
+            data: dataMitra,
+        });
+    } catch (error) {}
 };
 
-const declineBtn = (data, array, index) => {
+const declineBtn = async (data, array, index) => {
     let dataMitra = data;
 
-    $http
-        .delete(
-            `/api/mitra/${dataMitra._id}?idFoto=${dataMitra.fotomitra[0]._id}&deleteHash=${dataMitra.fotomitra[0].deleteHash_foto}`, {
-                data: {
-                    userid_line: uidLine[0],
-                },
-                headers: {
-                    "Content-Type": "application/json;charset=utf-8",
-                    Authorization: `Bearer ${idToken[0]}`,
-                },
-            }
-        )
-        .then((result) => {
-            alert(result.data.message);
-            array.splice(index, 1);
-            if (array.length == 0) {
-                $("#container-following").html(`
+    try {
+        array.splice(index, 1);
+
+        if (array.length == 0) {
+            $("#container-following").html(`
                 <div id="not-found" class="text-center container">
                     <img src="./assets/banner-404.png" alt="...">
                     <br>
@@ -128,35 +88,38 @@ const declineBtn = (data, array, index) => {
                     <a href="/" class="btn btn-primary">BACK</a>
                 </div>
             `);
-            }
+        }
+        const res = await $http.delete(`/api/mitra/${dataMitra._id}`, {
+            headers: {
+                "Content-Type": "application/json;charset=utf-8",
+                Authorization: `Bearer ${user.idToken}`,
+            },
         });
+    } catch (error) {}
 };
 
 async function liffApp() {
     App();
 }
 
+const user = {};
 const uidLine = [];
 const idToken = [];
 
 const App = async () => {
     if (liff.isLoggedIn()) {
         let profile = liff.getDecodedIDToken();
+        user["user_id"] = profile.sub;
+        user["idToken"] = liff.getIDToken();
 
-        uidLine[0] = profile.sub;
-        idToken[0] = liff.getIDToken();
+        try {
+            const admin = await isAdmin(user.idToken);
 
-        const admin = await isAdmin(uidLine[0], idToken[0]).then(
-            (result) => {
-                return result;
-            },
-            (err) => {
-                return err;
+            if (!admin.admin) {
+                window.location = "/pagenotfound.html";
             }
-        );
-
-        if (!admin.success) {
-            let msg = admin.error.responseJSON.message;
+        } catch (error) {
+            let msg = error.error.responseJSON.error_description;
             if (msg == "IdToken expired.") {
                 alert("Sesi anda telah habis, silahkan login kembali");
                 liff.logout();
@@ -164,33 +127,14 @@ const App = async () => {
             }
             return;
         }
-
-        if (!admin.admin) {
-            window.location = "/pagenotfound.html";
-        }
     } else {
         window.location = "/pagenotfound.html";
     }
 };
 
-const getDistance = (google, from, to) => {
-    const myLatLng = [];
-    myLatLng[0] = new google.maps.LatLng(-0.789275, 113.921327);
-    if (from.lat() == myLatLng[0].lat() && from.lng() == myLatLng[0].lng()) {
-        return -1;
-    }
-    return (
-        google.maps.geometry.spherical.computeDistanceBetween(
-            from,
-
-            to
-        ) / 1000
-    ).toFixed(2);
-};
-
 function removeLoaderList(i) {
     if ($(".loadingList").length == 1) {
-        i = 0
+        i = 0;
     }
 
     $($(".loadingList")[i]).fadeOut(500, function () {

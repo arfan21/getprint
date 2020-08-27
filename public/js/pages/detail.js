@@ -6,13 +6,20 @@ var id = getUrlParameter("id");
 
 function uidlineSama(uid, any) {
     for (i = 0; i < any.length; i++) {
-        if (uid == any[i].userid_line) {
+        if (uid == any[i].user_id) {
             return true;
         }
     }
     return false;
 }
 
+function getReviewId(uid, any) {
+    return any.map((data) => {
+        if (uid === data.user_id) {
+            return data._id;
+        }
+    });
+}
 
 if (id.length == 0) {
     window.location = "/pagenotfound.html";
@@ -24,130 +31,99 @@ app.controller("appCtrl", [
     "$http",
     "$window",
     async function ($scope, $http, $window) {
-        $scope.data = {};
-        const callLiffInit = await liffInit(liff).then(
-            (result) => {
-                liffApp();
-            },
-            (err) => {
-                alert(err.error);
+        let user_rating;
+
+        try {
+            await liffInit(liff);
+            await liffApp();
+        } catch (error) {
+            alert(error.error);
+        }
+
+        try {
+            const res = await $http.get(`/api/mitra/${id}`);
+
+            $scope.$apply(() => {
+                $scope.data = res.data.data[0];
+            });
+
+            if (liff.isLoggedIn()) {
+                await adminMenu($scope, user.idToken);
             }
-        );
 
-        $http({
-            method: "GET",
-            url: `/api/mitra/${id}`,
-        }).then(
-            async (result) => {
-                    $scope.data = result.data.data[0];
+            user_rating = $scope.data.rating.user_rating;
 
-                    //jika user sedang login akan di cek apakah dia admin atau tidak
-                    if (liff.isLoggedIn()) {
-                        await adminMenu($scope, user.uidLine, user.idToken);
-                    }
+            userRated(user.uidLine, user_rating);
 
-                    let user_rating = $scope.data.rating.user_rating;
-                    userRated(user.uidLine, user_rating);
-
-                    //menghapus loader
-                    removeLoaderList(0)
-                },
-                (err) => {
-                    $window.location = "/pagenotfound.html";
-                }
-        );
+            //menghapus loader
+            removeLoaderList(0);
+        } catch (error) {
+            $window.location = "/pagenotfound.html";
+        }
 
         $scope.resetRating = () => {
             $scope.data.value_rating = null;
         };
 
-        $scope.updateRating = () => {
-            var point = parseInt($scope.data.value_rating, 10);
-            var user_rating = $scope.data.rating.user_rating;
-            var total_point = $scope.data.rating.total_point;
-
-            //mengecek jika id line sama, jika sama maka akan mengubah nilai rating yang di berikan oleh pemilik id line
+        $scope.updateRating = async () => {
             if (uidlineSama(user.uidLine, user_rating)) {
-                total_point = total_point - user_rating[i].rating_user;
-
-                user_rating[i].rating_user = point;
-
-                $scope.data.rating.total_point = total_point + point;
-
-                $scope.data.rating.avg_point =
-                    $scope.data.rating.total_point /
-                    $scope.data.rating.total_rating;
-
-                $scope.data.rating.avg_point = $scope.data.rating.avg_point.toFixed(
-                    1
-                );
+                const reviewId = getReviewId(user.uidLine, user_rating);
+                try {
+                    const dataUpdate = {
+                        rating_user: $scope.data.value_rating,
+                    };
+                    await $http.put(`/api/reviews/${reviewId}`, dataUpdate, {
+                        headers: {
+                            Authorization: `Bearer ${user.idToken}`,
+                        },
+                    });
+                    $scope.$apply(() => {
+                        $scope.data.value_rating = null;
+                    });
+                    location.reload();
+                } catch (error) {}
             } else {
-                $scope.data.rating.total_point =
-                    $scope.data.rating.total_point + point;
-                $scope.data.rating.total_rating =
-                    $scope.data.rating.total_rating + 1;
-                $scope.data.rating.avg_point =
-                    $scope.data.rating.total_point /
-                    $scope.data.rating.total_rating;
-                $scope.data.rating.avg_point = $scope.data.rating.avg_point.toFixed(
-                    1
-                );
-                user_rating.push({
-                    userid_line: user.uidLine,
-                    rating_user: point,
+                const dataNew = {
+                    mitra_id: $scope.data._id,
+                    rating_user: $scope.data.value_rating,
+                };
+                await $http.post(`/api/reviews`, dataNew, {
+                    headers: {
+                        Authorization: `Bearer ${user.idToken}`,
+                    },
                 });
-            }
-
-            $scope.data.userid_line = user.uidLine;
-
-            $http({
-                method: "PUT",
-                url: "/api/mitra/" + id,
-                headers: {
-                    Authorization: `Bearer ${user.idToken}`,
-                },
-                data: $scope.data,
-            }).then(function successCallback(response) {
                 $scope.data.value_rating = null;
                 location.reload();
-            });
+            }
         };
 
         $scope.deleteFunc = async () => {
-            $http
-                .delete(
-                    `/api/mitra/${id}?idFoto=${$scope.data.fotomitra[0]._id}&deleteHash=${$scope.data.fotomitra[0].deleteHash_foto}`, {
-                        data: {
-                            userid_line: user.uidLine,
-                        },
-                        headers: {
-                            "Content-Type": "application/json;charset=utf-8",
-                            Authorization: `Bearer ${user.idToken}`,
-                        },
-                    }
-                )
-                .then(function successCallback(response) {
-                    $("#exampleModalLongTitle").text(
-                        "Mitra berhasil terhapus !"
-                    );
-                    $("#deleteBtn").css("display", "none");
-                    $("#batalBtn").removeClass("btn-secondary");
-                    $("#batalBtn").addClass("btn-primary");
-                    $("#batalBtn").text("Ok");
-                    $("#batalBtn").removeAttr("data-dismiss");
-                    $("#batalBtn").attr("href", "/");
-                    $(".close").css("display", "none");
-                })
-                .catch((err) => {
-                    alert(err.data.error);
+            try {
+                await $http.delete(`/api/mitra/${id}`, {
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                        Authorization: `Bearer ${user.idToken}`,
+                    },
                 });
+
+                $("#exampleModalLongTitle").text("Mitra berhasil terhapus !");
+                $("#deleteBtn").css("display", "none");
+                $("#batalBtn").removeClass("btn-secondary");
+                $("#batalBtn").addClass("btn-primary");
+                $("#batalBtn").text("Ok");
+                $("#batalBtn").removeAttr("data-dismiss");
+                $("#batalBtn").attr("href", "/");
+                $(".close").css("display", "none");
+            } catch (error) {
+                alert(error.data.error);
+            }
         };
     },
 ]);
 
 const user = {};
 
-const liffApp = () => {
+const liffApp = async () => {
     if (!liff.isLoggedIn()) {
         $(".pesan").on("click", () => {
             liff.login();
@@ -161,8 +137,6 @@ const liffApp = () => {
     let profile = liff.getDecodedIDToken();
     user["uidLine"] = profile.sub;
     user["idToken"] = liff.getIDToken();
-    user.uidLine = profile.sub;
-    user.idToken = liff.getIDToken();
 
     //membuka modal rating
     $("#rating-open").attr("data-toggle", "modal");
@@ -175,7 +149,7 @@ const liffApp = () => {
 
 const userRated = (uidline, user_rating) => {
     for (i = 0; i < user_rating.length; i++) {
-        if (uidline == user_rating[i].userid_line) {
+        if (uidline == user_rating[i].user_id) {
             $(".rating-title").text("Mau mengubah rating anda ?");
 
             $(".modal-rating-content").append(
@@ -203,18 +177,22 @@ const userRated = (uidline, user_rating) => {
 };
 
 //admin menu untuk mengubah dan menghapus toko
-const adminMenu = async ($scope, uidline, idToken) => {
-    const admin = await isAdmin(uidline, idToken).then(
-        (result) => {
-            return result;
-        },
-        (err) => {
-            return err;
-        }
-    );
+async function adminMenu($scope, idToken) {
+    try {
+        const admin = await isAdmin(idToken);
 
-    if (!admin.success) {
-        let msg = admin.error.responseJSON.message;
+        if (admin.admin || user.uidLine == $scope.data.user_id) {
+            $(".getprint-round-navbar").append(
+                `
+                <h4 class="detail-admin-menu" style="display: inline;margin-left: 5%;">
+                    <a class="fa fa-pencil" href="/editmitra.html?id=${$scope.data._id}"></a>
+                    <a class="fa fa-trash" data-toggle="modal" data-target="#exampleModalCenter" ></a>
+                </h4>
+            `
+            );
+        }
+    } catch (error) {
+        let msg = error.error.responseJSON.error_description;
         if (msg == "IdToken expired.") {
             alert("Sesi anda telah habis, silahkan login kembali");
             liff.logout();
@@ -222,28 +200,16 @@ const adminMenu = async ($scope, uidline, idToken) => {
         }
         return;
     }
-
-    //jika dia admin atau pemilik toko maka dia bisa mengubah toko
-    if (admin.admin || user.uidLine == $scope.data.userid_line_pemilik) {
-        $(".getprint-round-navbar").append(
-            `
-            <h4 class="detail-admin-menu" style="display: inline;margin-left: 5%;">
-                <a class="fa fa-pencil" href="/editmitra.html?id=${$scope.data._id}"></a>
-                <a class="fa fa-trash" data-toggle="modal" data-target="#exampleModalCenter" ></a>
-            </h4>
-        `
-        );
-    }
-};
+}
 
 function removeLoaderList(i) {
     if ($(".loadingList").length == 1) {
-        i = 0
+        i = 0;
     }
 
     $($(".loadingList")[i]).fadeOut(500, function () {
         // fadeOut complete. Remove the loading div
         $($(".loadingList")[i]).remove(); //makes page more lightweight
     });
-    $(".getprint-white-container").css("display", "block")
+    $(".getprint-white-container").css("display", "block");
 }

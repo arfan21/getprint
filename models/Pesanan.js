@@ -2,15 +2,11 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
 const PesananSchema = new schema({
-    userid_line: {
+    user_id: {
         type: String,
         required: true,
     },
-    id_toko: {
-        type: mongoose.Schema.ObjectId,
-        required: true,
-    },
-    id_file: {
+    mitra_id: {
         type: mongoose.Schema.ObjectId,
         required: true,
     },

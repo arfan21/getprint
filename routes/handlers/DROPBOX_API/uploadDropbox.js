@@ -1,7 +1,6 @@
 const { default: Axios } = require("axios");
 
 const path = require("path");
-const ProgressBar = require("progress-stream");
 
 const { DROPBOX_TOKEN } = process.env;
 

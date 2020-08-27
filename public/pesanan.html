@@ -1,184 +1,358 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="shortcut icon" href="assets/Logo.png">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="shortcut icon" href="assets/Logo.png" />
+        <link rel="stylesheet" href="style.css" />
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular.min.js"></script>
 
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+        <link
+            href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+            rel="stylesheet"
+        />
+        <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap" rel="stylesheet"> 
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700&display=swap"
+            rel="stylesheet"
+        />
 
-    <title>GetPrint || Pesanan </title>
-</head>
-<body class="getprint-gray-bg stretch-bottom-body" ng-app="pesanan" ng-controller="myapp" style="display: none;">
-    <div class="container-fluid getprint-round-navbar">
-        <h4><a id="arrowBack" href="/"><i class="fa fa-angle-left"></i></a>Keranjang</h4>
-    </div>
+        <title>GetPrint || Pesanan</title>
+    </head>
+    <body
+        class="getprint-gray-bg stretch-bottom-body"
+        ng-app="pesanan"
+        ng-controller="myapp"
+        style="display: none"
+    >
+        <div class="container-fluid getprint-round-navbar">
+            <h4>
+                <a id="arrowBack" href="/"><i class="fa fa-angle-left"></i></a
+                >Keranjang
+            </h4>
+        </div>
 
-    <div id="order-details" class="container">
-        <h4><strong>{{mitra.nama_toko}}</strong></h4>
-        <i class="fa fa-map-marker"></i><p> {{mitra.alamat_toko}}</p>
-        <hr>
-        <h4><strong>Order Details</strong></h4>
-        <p>Delivery?</p>
-        <!-- https://gitbrent.github.io/bootstrap4-toggle/ -->
-        <input type="checkbox" data-toggle="toggle" data-size="xs" data-on="yes" data-off="no" name="customPermissions[]" ng-model="data.delivery"  value="delivery" ng-init="form.customPermissions.delivery=true" >
-    </div>
+        <div id="order-details" class="container">
+            <h4><strong>{{mitra.nama_toko}}</strong></h4>
+            <i class="fa fa-map-marker"></i>
+            <p>{{mitra.alamat_toko}}</p>
+            <hr />
+            <h4><strong>Order Details</strong></h4>
+            <p>Delivery?</p>
+            <!-- https://gitbrent.github.io/bootstrap4-toggle/ -->
+            <input
+                type="checkbox"
+                data-toggle="toggle"
+                data-size="xs"
+                data-on="yes"
+                data-off="no"
+                name="customPermissions[]"
+                ng-model="data.delivery"
+                value="delivery"
+                ng-init="form.customPermissions.delivery=true"
+            />
+        </div>
 
-    <div class="container-fluid getprint-white-container stretch-bottom-content pt-2">
-        <div class="container">
-            <form name="formPesanan">
-                <div class="form-group">
-                    <div class="form-row">
-                        <div class="col-12">
-                            <textarea
-                                type="text"
-                                class="form-control getprint-form-gray"
-                                ng-model="data.lokasi.alamat_pemesan"
-                                name="alamat_pemesan"
-                                placeholder="Location details (e.g landmark)"
-                                id="fixAddress"
-                                cols="20"
-                                rows="2"
-                                required
-                                disabled
-                            ></textarea>
-                            <span class="fa fa-map-marker fa-form-position"></span>
+        <div
+            class="container-fluid getprint-white-container stretch-bottom-content pt-2"
+        >
+            <div class="container">
+                <form name="formPesanan">
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-12">
+                                <textarea
+                                    type="text"
+                                    class="form-control getprint-form-gray"
+                                    ng-model="data.lokasi.alamat_pemesan"
+                                    name="alamat_pemesan"
+                                    placeholder="Location details (e.g landmark)"
+                                    id="fixAddress"
+                                    cols="20"
+                                    rows="2"
+                                    required
+                                    disabled
+                                ></textarea>
+                                <span
+                                    class="fa fa-map-marker fa-form-position"
+                                ></span>
+                            </div>
+                            <div class="col d-flex justify-content-center">
+                                <a
+                                    id="mapBtn"
+                                    class="btn btn-primary"
+                                    style="
+                                        color: white;
+                                        height: 40px;
+                                        margin-top: 3%;
+                                    "
+                                    data-toggle="modal"
+                                    data-target="#exampleModalCenter"
+                                    >Pilih Lewat Peta</a
+                                >
+                            </div>
                         </div>
-                        <div class="col d-flex justify-content-center">
-                            <a id="mapBtn" class="btn btn-primary" style="color: white;height:40px;margin-top: 3%;" data-toggle="modal" data-target="#exampleModalCenter">Pilih Lewat Peta</a>
-                        </div>
-                        
-                    </div>
-                    <span
-                        style="color: red;"
-                        ng-show="formPesanan.alamat_pemesan.$dirty && formPesanan.alamat_pemesan.$invalid || formPesanan.alamat_pemesan.$touched"
-                    >
-                        <span ng-show="formPesanan.alamat_pemesan.$error.required"
-                            >Alamat harus diisi</span
+                        <span
+                            style="color: red"
+                            ng-show="formPesanan.alamat_pemesan.$dirty && formPesanan.alamat_pemesan.$invalid || formPesanan.alamat_pemesan.$touched"
                         >
-                    </span>
-                    
-                </div>
-                <div class="form-group" >
-                    <!-- <label>Nama Pemesan</label> -->
-                    <input type="text" class="form-control getprint-form-gray" ng-model="data.nama" name="nama" placeholder="Enter Recipient’s name..." required>
-                    <span style="color: red;"  ng-show="formPesanan.nama.$dirty && formPesanan.nama.$invalid || formPesanan.nama.$touched">
-                        <span ng-show="formPesanan.nama.$error.required" >Nama Pemesan harus diisi</span>
-                    </span>
-                </div>
-                <div class="form-group" >
-                    <!-- <label>No HP pemesan</label> -->
-                    <input type="text" class="form-control getprint-form-gray" ng-model="data.nohp_pemesan" name="nohp_pemesan" placeholder="Enter phone number..." required>
-                    <span style="color: red;"  ng-show="formPesanan.nohp_pemesan.$dirty && formPesanan.nohp_pemesan.$invalid || formPesanan.nohp_pemesan.$touched">
-                        <span ng-show="formPesanan.nohp_pemesan.$error.required" >No HP pemesan harus diisi</span>
-                    </span>
-                </div>
-                <div class="input-group">
-                    <select class="custom-select getprint-form-gray">
-                        <option selected>Choose Service (Print, Scan, Photocopy)</option>
-                        <option class="jenispesanan" id="print" name="print" value="print" ng-model="data.print">Print</option>
-                        <option class="jenispesanan" id="fotocopy" name="fotocopy" value="fotocopy" ng-model="data.fotocopy">Fotocopy</option>
-                        <option class="jenispesanan" id="scan" name="scan" value="scan" ng-model="data.scan">Scan</option>
-                    </select>
-                </div>
-                <input
+                            <span
+                                ng-show="formPesanan.alamat_pemesan.$error.required"
+                                >Alamat harus diisi</span
+                            >
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <!-- <label>Nama Pemesan</label> -->
+                        <input
+                            type="text"
+                            class="form-control getprint-form-gray"
+                            ng-model="data.nama_pemesan"
+                            name="nama"
+                            placeholder="Enter Recipient’s name..."
+                            required
+                        />
+                        <span
+                            style="color: red"
+                            ng-show="formPesanan.nama.$dirty && formPesanan.nama.$invalid || formPesanan.nama.$touched"
+                        >
+                            <span ng-show="formPesanan.nama.$error.required"
+                                >Nama Pemesan harus diisi</span
+                            >
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <!-- <label>No HP pemesan</label> -->
+                        <input
+                            type="text"
+                            class="form-control getprint-form-gray"
+                            ng-model="data.nohp_pemesan"
+                            name="nohp_pemesan"
+                            placeholder="Enter phone number..."
+                            required
+                        />
+                        <span
+                            style="color: red"
+                            ng-show="formPesanan.nohp_pemesan.$dirty && formPesanan.nohp_pemesan.$invalid || formPesanan.nohp_pemesan.$touched"
+                        >
+                            <span
+                                ng-show="formPesanan.nohp_pemesan.$error.required"
+                                >No HP pemesan harus diisi</span
+                            >
+                        </span>
+                    </div>
+                    <div class="input-group">
+                        <select class="custom-select getprint-form-gray">
+                            <option selected>
+                                Choose Service (Print, Scan, Photocopy)
+                            </option>
+                            <option
+                                class="jenispesanan"
+                                id="print"
+                                name="print"
+                                value="print"
+                                ng-model="data.print"
+                            >
+                                Print
+                            </option>
+                            <option
+                                class="jenispesanan"
+                                id="fotocopy"
+                                name="fotocopy"
+                                value="fotocopy"
+                                ng-model="data.fotocopy"
+                            >
+                                Fotocopy
+                            </option>
+                            <option
+                                class="jenispesanan"
+                                id="scan"
+                                name="scan"
+                                value="scan"
+                                ng-model="data.scan"
+                            >
+                                Scan
+                            </option>
+                        </select>
+                    </div>
+                    <input
                         type="text"
                         name="lat"
                         id="default_latitude"
                         ng-model="data.lokasi.lat"
-                        style="display: none;"
+                        style="display: none"
                     />
-                <input
-                    type="text"
-                    name="lng"
-                    id="default_longitude"
-                    ng-model="data.lokasi.lng"                        
-                    style="display: none;"
-                />
-            </form>
-            <form  id="uploadForm" name="formupload" >
-                <!-- 
+                    <input
+                        type="text"
+                        name="lng"
+                        id="default_longitude"
+                        ng-model="data.lokasi.lng"
+                        style="display: none"
+                    />
+                </form>
+                <form id="uploadForm" name="formupload">
+                    <!-- 
                     intinya: #upload-container-parent > #uplaod container-child > .myLabel > input + span
                     #upload-container-child yang diulang sampai 5x, typenya ingin dibuat inline biar kotak upload file sebaris
                     #upload-container-parent yang membuat childnya center, sehingga parent dibuat flex, dan child dibuat inline
                     seisinya dibuat untuk styling file input
                 -->
-                <div id="upload-container-parent">
-                    <div id="upload-container-child" class="form-group form-upload" ng-repeat="form in forms" >
-                        <div class="custom-file">
-                            <label for="{{form.name}}" class="btn btn-light custom-file-style"><i class="fa fa-plus" ></i><br><p id="{{form.filename}}" style="margin-bottom: 0">ADD FILE</p></label>
-                            <input onchange="angular.element(this).scope().listFile(this, this.files)" id="{{form.name}}" type="file" class="custom-file-input" id="customFile" value="choose" name="myfile" custom-file-input required>
+                    <div id="upload-container-parent">
+                        <div
+                            id="upload-container-child"
+                            class="form-group form-upload"
+                            ng-repeat="form in forms"
+                        >
+                            <div class="custom-file">
+                                <label
+                                    for="{{form.name}}"
+                                    class="btn btn-light custom-file-style"
+                                    ><i class="fa fa-plus"></i><br />
+                                    <p
+                                        id="{{form.filename}}"
+                                        style="margin-bottom: 0"
+                                    >
+                                        ADD FILE
+                                    </p></label
+                                >
+                                <input
+                                    onchange="angular.element(this).scope().listFile(this, this.files)"
+                                    id="{{form.name}}"
+                                    type="file"
+                                    class="custom-file-input"
+                                    id="customFile"
+                                    value="choose"
+                                    name="myfile"
+                                    custom-file-input
+                                    required
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="center-align form-group">
-                    <input id="addForm" type="button" value="Add more files" ng-click="addform()" class="btn btn-primary" style="text-decoration: none; color: white;">
-                    <input ng-click="uploadFiles()" id="uploadBtn" type="submit" class="btn btn-primary" value="Upload"></button>
-                </div>
-                <div id="progress-layout"></div>
-                
-            </form>
-            
-            <div class="center-align">
-                    <a id="cancelBtn" href="/" class="btn btn-light btn-lg getprint-shadow" style="background-color: white;">Cancel</a>
-                    <button ng-click="submitMyform()" id="submitData" type="submit" class="btn btn-primary btn-lg getprint-shadow" ng-disabled="formPesanan.$invalid">Order</button>
-            </div>
-        
-        </div>
-    </div>
+                    <div class="center-align form-group">
+                        <input
+                            id="addForm"
+                            type="button"
+                            value="Add more files"
+                            ng-click="addform()"
+                            class="btn btn-primary"
+                            style="text-decoration: none; color: white"
+                        />
+                        <!-- <input ng-click="uploadFiles()" id="uploadBtn" type="submit" class="btn btn-primary" value="Upload"></button> -->
+                    </div>
+                    <div id="progress-layout"></div>
+                </form>
 
-    <!-- Modal Map -->
-    <div class="modal fade " id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="width: 100%; height: 100%; padding: 0;">
-        <div class="modal-content" style="height: auto;
-        min-height: 100%;
-        border-radius: 0;">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Maps</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body" id="map" style="width: 100%; height: 100%;padding: 33%;">
-                
-            </div>
-            <div class="modal-footer">
-                <textarea
-                    type="text"
-                    class="form-control getprint-form-gray"
-                    name="alamat_toko"
-                    placeholder="Alamat Toko"
-                    id="address"
-                    cols="20"
-                    rows="2"
-                    required
-                ></textarea>
-                
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveLocation">Save Location</button>
+                <div class="center-align">
+                    <a
+                        id="cancelBtn"
+                        href="/"
+                        class="btn btn-light btn-lg getprint-shadow"
+                        style="background-color: white"
+                        >Cancel</a
+                    >
+                    <button
+                        ng-click="submitForm()"
+                        id="submitData"
+                        type="submit"
+                        class="btn btn-primary btn-lg getprint-shadow"
+                        ng-disabled="formPesanan.$invalid"
+                    >
+                        Order
+                    </button>
+                </div>
             </div>
         </div>
+
+        <!-- Modal Map -->
+        <div
+            class="modal fade"
+            id="exampleModalCenter"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true"
+        >
+            <div
+                class="modal-dialog modal-dialog-centered modal-lg"
+                role="document"
+                style="width: 100%; height: 100%; padding: 0"
+            >
+                <div
+                    class="modal-content"
+                    style="height: auto; min-height: 100%; border-radius: 0"
+                >
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">
+                            Maps
+                        </h5>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div
+                        class="modal-body"
+                        id="map"
+                        style="width: 100%; height: 100%; padding: 33%"
+                    ></div>
+                    <div class="modal-footer">
+                        <textarea
+                            type="text"
+                            class="form-control getprint-form-gray"
+                            name="alamat_toko"
+                            placeholder="Alamat Toko"
+                            id="address"
+                            cols="20"
+                            rows="2"
+                            required
+                        ></textarea>
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            data-dismiss="modal"
+                            id="saveLocation"
+                        >
+                            Save Location
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</body>
-<script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-<script src="js/LIFF/liffInit.js"></script>
-<script src="js/helper/getUrlParameter.js"></script>
-<script
+    </body>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script src="js/LIFF/liffInit.js"></script>
+    <script src="js/helper/getUrlParameter.js"></script>
+    <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaoyXcCmwrNUTX3OUj4bcAerDP93sHeR4&callback=initMap&libraries=geometry&v=weekly"
         defer
     ></script>
-<script src="js/getLocation.js"></script>
-<script src="js/pages/pesanan.js"></script>
+    <script src="js/getLocation.js"></script>
+    <script src="js/helper/isAdmin.js"></script>
+    <script src="js/pages/pesanan.js"></script>
 </html>

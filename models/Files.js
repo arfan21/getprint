@@ -1,11 +1,22 @@
 const mongoose = require("mongoose");
+const { type } = require("../routes/handlers/LINE/templatePesanan");
 const schema = mongoose.Schema;
 
 const UploadSchema = new schema({
-    link_file: {
-        type: [String],
+    pesanan_id: {
+        type: mongoose.Schema.ObjectId,
         required: true,
     },
+
+    link_file: {
+        type: String,
+        required: true,
+    },
+    path: {
+        type: String,
+        required: true,
+    },
+
     created_at: {
         type: Date,
         default: Date.now,

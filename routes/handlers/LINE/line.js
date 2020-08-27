@@ -1,7 +1,9 @@
-const Pesanan = require("../../../models/Pesanan");
+const pesanan = require("../pesanan/");
 const { LineClient } = require("messaging-api-line");
+const mongoose = require("mongoose");
 const { LINE_ACCESS_TOKEN } = process.env;
 const { LINE_CHANNEL_SECRET } = process.env;
+const template = require("./templatePesanan");
 
 // get accessToken and channelSecret from LINE developers website
 const client = new LineClient({
@@ -25,109 +27,37 @@ arrbulan = [
 ];
 arrhari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"];
 
-module.exports = function sendPesananToLine(idpesanan) {
-    Pesanan.aggregate([
-        { $sort: { added: -1 } },
-        { $match: { _id: idpesanan } },
-        {
-            $lookup: {
-                from: "mitras",
-                localField: "id_toko",
-                foreignField: "_id",
-                as: "toko",
-            },
-        },
-        {
-            $lookup: {
-                from: "uploads",
-                localField: "id_file",
-                foreignField: "_id",
-                as: "file",
-            },
-        },
-    ]).exec((err, data) => {
-        var waktu = new Date(data[0].created_at);
-        var tanggal =
-            arrhari[waktu.getDay()] +
-            ", " +
-            waktu.getDate() +
-            " " +
-            arrbulan[waktu.getMonth()] +
-            " " +
-            waktu.getFullYear() +
-            " " +
-            waktu.getHours() +
-            ":" +
-            waktu.getMinutes() +
-            ":" +
-            waktu.getSeconds();
-        client.pushFlex(data[0].userid_line, "pesanan", {
-            type: "bubble",
-            header: {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                    {
-                        type: "text",
-                        text: "INVOICE",
-                        color: "#0029FF",
-                        size: "lg",
-                        weight: "bold",
-                        margin: "none",
-                    },
-                ],
-            },
-            body: {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                    {
-                        type: "text",
-                        text: data[0].toko[0].nama_toko,
-                        size: "lg",
-                        color: "#0029FF",
-                        weight: "bold",
-                    },
-                    {
-                        type: "text",
-                        text: data[0].toko[0].alamat_toko,
-                        color: "#0029FF",
-                    },
-                ],
-            },
-            footer: {
-                type: "box",
-                layout: "vertical",
-                contents: [
-                    {
-                        type: "text",
-                        text: "Penerima",
-                        color: "#979797",
-                    },
-                    {
-                        type: "text",
-                        text: data[0].nama_pemesan,
-                    },
-                    {
-                        type: "text",
-                        text: "Alamat Penerima",
-                        color: "#979797",
-                    },
-                    {
-                        type: "text",
-                        text: data[0].lokasi.alamat_pemesan,
-                    },
-                    {
-                        type: "text",
-                        text: "Tanggal",
-                        color: "#979797",
-                    },
-                    {
-                        type: "text",
-                        text: tanggal,
-                    },
-                ],
-            },
-        });
-    });
+module.exports = async function sendPesananToLine(idpesanan) {
+    const match = {
+        _id: mongoose.Types.ObjectId(idpesanan),
+    };
+    const data = await pesanan.get(match);
+
+    const waktu = new Date(data[0].created_at);
+    const tanggal =
+        arrhari[waktu.getDay()] +
+        ", " +
+        waktu.getDate() +
+        " " +
+        arrbulan[waktu.getMonth()] +
+        " " +
+        waktu.getFullYear() +
+        " " +
+        waktu.getHours() +
+        ":" +
+        waktu.getMinutes() +
+        ":" +
+        waktu.getSeconds();
+
+    const nohp = data[0].mitra.no_hp.replace("0", "62");
+
+    template.body.contents[0].text = data[0].mitra.nama_toko;
+    template.body.contents[1].text = data[0].mitra.alamat_toko;
+    template.footer.contents[0].contents[1].text = data[0].nama_pemesan;
+    template.footer.contents[1].contents[1].text =
+        data[0].lokasi.alamat_pemesan;
+    template.footer.contents[2].contents[1].text = tanggal;
+    template.footer.contents[3].contents[0].action.uri = `https://api.whatsapp.com/send?phone=${nohp}`;
+
+    await client.pushFlex(data[0].user_id, "pesanan", template);
 };

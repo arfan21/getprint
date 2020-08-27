@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
+const uniqueValidator = require("mongoose-unique-validator");
 
 const FollowingMitraSchema = new schema({
-    userid_line: {
+    user_id: {
         type: String,
         required: true,
     },
-    id_toko: {
+    mitra_id: {
         type: mongoose.Schema.ObjectId,
         required: true,
     },
@@ -19,6 +20,9 @@ const FollowingMitraSchema = new schema({
         default: Date.now,
     },
 });
+
+FollowingMitraSchema.index({ user_id: 1, mitra_id: 1 }, { unique: true });
+FollowingMitraSchema.plugin(uniqueValidator);
 
 module.exports = FollowingMitra = mongoose.model(
     "followingmitra",

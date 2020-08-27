@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
 const FotoMitraSchema = new schema({
+    mitra_id: {
+        type: mongoose.Schema.ObjectId,
+        required: true,
+    },
     link_foto: {
         type: String,
         required: true,

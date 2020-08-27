@@ -55,26 +55,17 @@ app.controller("menjadimitraCtrl", [
     "$http",
     "$window",
     async function ($scope, $http, $window) {
-        const callLiffInit = await liffInit(liff).then(
-            (result) => {
-                liffApp();
-            },
-            (err) => {
-                alert(err);
-            }
-        );
-
-        const admin = await isAdmin(user.uidLine, user.idToken).then(
-            (result) => {
-                return result;
-            },
-            (err) => {
-                return err;
-            }
-        );
-
-        if (!admin.success) {
-            let msg = admin.error.responseJSON.message;
+        try {
+            await liffInit(liff);
+            await liffApp();
+        } catch (error) {
+            alert(error.error);
+        }
+        let admin;
+        try {
+            admin = await isAdmin(user.idToken);
+        } catch (error) {
+            let msg = error.error.responseJSON.error_description;
             if (msg == "IdToken expired.") {
                 alert("Sesi anda telah habis, silahkan login kembali");
                 liff.logout();
@@ -83,33 +74,44 @@ app.controller("menjadimitraCtrl", [
             return;
         }
 
-        $scope.data = {};
-        $scope.data.coords = {};
-
-        await $http({
-            method: "GET",
-            url: "/api/mitra/" + id,
-        }).then(function successCallback(response) {
-            $scope.data = response.data.data[0];
+        //validation no hp is exist
+        $scope.isExistNoHP = false;
+        $scope.$watch("data.no_hp", () => {
+            $scope.isExistNoHP = false;
         });
 
-        if (!admin.admin || user.uidLine != $scope.data.userid_line_pemilik) {
-            window.location = "/pagenotfound.html";
-        }
+        //validation email is exist
+        $scope.isExistEmail = false;
+        $scope.$watch("data.email", () => {
+            $scope.isExistEmail = false;
+        });
 
+        try {
+            const res = await $http.get(`/api/mitra/${id}`);
+            $scope.$apply(() => {
+                $scope.data = res.data.data[0];
+            });
+
+            if (!admin.admin || user.uidLine != $scope.data.user_id) {
+                window.location = "/pagenotfound.html";
+            }
+        } catch (error) {}
+
+        //list file yang akan di upload
         const file = [];
         $scope.listFile = (e, files) => {
             var id = e.id.charAt(e.id.length - 1);
             file[id - 1] = files[0];
         };
 
-        $scope.uploadFIle = () => {
+        //fungsi untuk upload, menghapus file foto terdahulu lalu upload file foto yang terbaru
+        $scope.uploadFIle = async () => {
             var fd = new FormData();
             for (i = 0; i < file.length; i++) {
                 fd.append("mitraFoto", file[i]);
             }
 
-            fd.append("userid_line", user.uidLine);
+            fd.append("mitra_id", $scope.data._id);
 
             $("#progress-layout").html(`   
                 <div class="progress" style="margin-top: 20px; margin-bottom:20px" id="progress">
@@ -123,57 +125,90 @@ app.controller("menjadimitraCtrl", [
                 "progress-bar"
             )[0];
 
-            $http({
-                method: "PUT",
-                url: `/api/fotomitra/${$scope.data.fotomitra[0]._id}`,
-                data: fd,
-                transformRequest: angular.identity,
-                headers: {
-                    "Content-Type": undefined,
-                    Authorization: `Bearer ${user.idToken}`,
-                },
-                uploadEventHandlers: {
-                    progress: (e) => {
-                        const percent = e.lengthComputable
-                            ? (e.loaded / e.total) * 100
-                            : 0;
-
-                        if (percent < 98) {
-                            progress_bar.style.width = percent.toFixed(2) + "%";
-                            progress_bar.textContent = percent.toFixed(2) + "%";
-                        }
+            try {
+                $("#fotoMitra").css("display", "none");
+                await $http.delete(
+                    `/api/fotomitra/${$scope.data.fotomitra[0]._id}`,
+                    {
+                        headers: {
+                            "Content-Type": "application/json;charset=utf-8",
+                            Authorization: `Bearer ${user.idToken}`,
+                        },
+                    }
+                );
+                const updatedFoto = await $http({
+                    method: "POST",
+                    url: `/api/fotomitra`,
+                    data: fd,
+                    transformRequest: angular.identity,
+                    headers: {
+                        "Content-Type": undefined,
+                        Authorization: `Bearer ${user.idToken}`,
                     },
-                },
-            }).then(
-                (result) => {
-                    result = result.data;
-                    $("#progress-layout").html(`
-                        <p style="color:#00FF00;text-align: center;">FILE terupload!</p>
+                    uploadEventHandlers: {
+                        progress: (e) => {
+                            const percent = e.lengthComputable
+                                ? (e.loaded / e.total) * 100
+                                : 0;
+
+                            if (percent < 98) {
+                                progress_bar.style.width =
+                                    percent.toFixed(2) + "%";
+                                progress_bar.textContent =
+                                    percent.toFixed(2) + "%";
+                            }
+                        },
+                    },
+                });
+
+                $scope.$apply(() => {
+                    $scope.data.fotomitra[0] = updatedFoto.data.data;
+                });
+
+                $("#progress-layout").html(`
+                    <p style="color:#00FF00;text-align: center;">FILE terupload!</p>
+                `);
+                $("#fotoMitra").css("display", "block");
+            } catch (error) {
+                $("#progress-layout").html(`
+                        <p style="color:#FF0000;text-align: center;">FILE GAGAL terupload!</p>
                     `);
-                    $("#fotoMitra").attr("src", result.data.link_foto);
-                },
-                (err) => {
-                    $("#progress-layout").html(``);
-                    $("#uploadBtn").prop("disabled", false);
-                    $("#addForm").prop("disabled", false);
-                    alert("Try again to upload file");
-                }
-            );
+                $("#uploadBtn").prop("disabled", false);
+                $("#addForm").prop("disabled", false);
+                alert("Try again to upload file");
+            }
         };
 
-        $scope.submitform = function () {
-            $scope.data.userid_line = user.uidLine;
-            $http({
-                method: "PUT",
-                url: `/api/mitra/${id}`,
-                headers: {
-                    Authorization: `Bearer ${user.idToken}`,
-                },
-                data: $scope.data,
-            }).then(function successCallback(response) {
-                $window.alert(response.data.message);
+        $scope.submitform = async () => {
+            try {
+                const updatedMitra = await $http({
+                    method: "PUT",
+                    url: `/api/mitra/${id}`,
+                    headers: {
+                        Authorization: `Bearer ${user.idToken}`,
+                    },
+                    data: $scope.data,
+                });
+
+                $window.alert(updatedMitra.data.message);
                 $window.location.href = `/detail.html?id=${id}`;
-            });
+            } catch (error) {
+                const keysErrors = Object.keys(error.data.error.errors);
+
+                keysErrors.forEach((data) => {
+                    if (data === "no_hp") {
+                        $scope.$apply(() => {
+                            $scope.isExistNoHP = true;
+                        });
+                    }
+
+                    if (data === "email") {
+                        $scope.$apply(() => {
+                            $scope.isExistEmail = true;
+                        });
+                    }
+                });
+            }
         };
         $("body").css("display", "block");
     },
@@ -193,33 +228,19 @@ const liffApp = async () => {
 };
 
 async function initMap() {
-    const myLocation = await getLocation().then(
-        (result) => {
-            return {
-                status: true,
-                coords: result,
-            };
-        },
-        (err) => {
-            return {
-                status: false,
-                error: err,
-            };
-        }
-    );
-
-    if (!myLocation.status) {
-        return alert(myLocation.error);
+    let myLocation;
+    let coords;
+    try {
+        myLocation = await getLocation();
+        coords = new google.maps.LatLng(
+            myLocation.latitude,
+            myLocation.longitude
+        );
+    } catch (error) {
+        return alert(error.error);
     }
 
-    const latlng = [
-        new google.maps.LatLng(
-            myLocation.coords.latitude,
-            myLocation.coords.longitude
-        ),
-    ];
-
-    mapRender(google, latlng[0]);
+    mapRender(google, coords);
 }
 
 const mapRender = (google, latlng) => {

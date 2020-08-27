@@ -1,12 +1,9 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
+const uniqueValidator = require("mongoose-unique-validator");
 
 const MitraSchema = new schema({
-    id_foto: {
-        type: mongoose.Schema.ObjectId,
-        required: true,
-    },
-    userid_line_pemilik: {
+    user_id: {
         type: String,
         required: true,
     },
@@ -21,10 +18,12 @@ const MitraSchema = new schema({
     email: {
         type: String,
         required: true,
+        unique: true,
     },
     no_hp: {
         type: String,
         required: true,
+        unique: true,
     },
     harga: {
         print: { type: String },
@@ -45,30 +44,6 @@ const MitraSchema = new schema({
             required: true,
         },
     },
-    rating: {
-        total_point: {
-            type: Number,
-            default: 0,
-        },
-        avg_point: {
-            type: Number,
-            default: 0,
-        },
-        total_rating: {
-            type: Number,
-            default: 0,
-        },
-        user_rating: [
-            {
-                userid_line: {
-                    type: String,
-                },
-                rating_user: {
-                    type: Number,
-                },
-            },
-        ],
-    },
     status: {
         type: String,
         default: "inactive",
@@ -83,4 +58,5 @@ const MitraSchema = new schema({
     },
 });
 
+MitraSchema.plugin(uniqueValidator, { message: "{PATH} has been registered" });
 module.exports = Mitra = mongoose.model("mitra", MitraSchema);
