@@ -106,6 +106,10 @@ app.controller("menjadimitraCtrl", [
 
         //fungsi untuk upload, menghapus file foto terdahulu lalu upload file foto yang terbaru
         $scope.uploadFIle = async () => {
+            if (file.length == 0) {
+                alert("belum ada file yang dipilih");
+                return;
+            }
             var fd = new FormData();
             for (i = 0; i < file.length; i++) {
                 fd.append("mitraFoto", file[i]);

@@ -46,7 +46,6 @@ module.exports = (sort, match) => {
                     total_point === 0 ? 0 : total_point / userRating.length;
             }
 
-            //sort untuk rekomendasi
             if (Object.keys(sort)[0] === "rating.avg_point") {
                 data.sort((a, b) => {
                     return b.rating.avg_point - a.rating.avg_point;

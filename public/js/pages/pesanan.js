@@ -87,6 +87,10 @@ app.controller("myapp", [
         };
 
         $scope.submitForm = async () => {
+            if (file.length == 0) {
+                alert("belum ada file yang dipilih");
+                return;
+            }
             $("#progress-layout").html(`   
                 <div class="progress" style="margin-top: 20px; margin-bottom:20px" id="progress">
                     <div class="progress-bar" role="progressbar" " aria-valuemin="0" aria-valuemax="100">0%</div>
@@ -176,17 +180,10 @@ app.controller("myapp", [
                 alert("Try again to upload file");
             }
 
-            //mendapatkan data pesanan lengkap
-            try {
-                const res = await $http.get(
-                    `/api/pesanan?match=_id&_id=${dataPesanan.data.data._id}`
-                );
-
-                $window.alert(dataPesanan.data.message);
-                //menghubungi mitra lewat wa
-                sendToWa(res.data.data[0]);
-                $window.location = "/";
-            } catch (error) {}
+            $window.alert(dataPesanan.data.message);
+            //menghubungi mitra lewat wa
+            sendToWa(dataFiles.data.data[0]);
+            $window.location = "/";
         };
 
         $("body").css("display", "block");

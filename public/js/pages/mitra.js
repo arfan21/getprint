@@ -77,6 +77,10 @@ app.controller("menjadimitraCtrl", [
         };
 
         $scope.submitForm = async () => {
+            if (file.length == 0) {
+                alert("belum ada file yang dipilih");
+                return;
+            }
             $("#progress-layout").html(`   
                 <div class="progress" style="margin-top: 20px; margin-bottom:20px" id="progress">
                     <div class="progress-bar" role="progressbar" " aria-valuemin="0" aria-valuemax="100">0%</div>

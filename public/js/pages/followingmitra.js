@@ -30,7 +30,7 @@ app.controller("appCtrl", [
         try {
             const res = await $http({
                 method: "GET",
-                url: `/api/followmitra?match=user_id`,
+                url: `/api/followmitra?user_id=${user.user_id}`,
                 headers: {
                     Authorization: `Bearer ${user.idToken}`,
                 },

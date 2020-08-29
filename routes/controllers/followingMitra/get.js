@@ -3,27 +3,27 @@ const mongoose = require("mongoose");
 
 module.exports = async (req, res) => {
     const match = {};
+    const queryId = req.query.id;
+    const queryUserId = req.query.user_id;
+    const userId = req.user.sub;
 
-    if (req.query.match == "_id") {
-        if (req.query._id) {
-            if (!mongoose.Types.ObjectId.isValid(req.query._id)) {
-                return res.status(400).json({
-                    status: false,
-                    message: "Invalid request",
-                    error: "invalid ID",
-                });
-            }
-            match[req.query.match] = mongoose.Types.ObjectId(req.query._id);
-        } else {
+    if (queryId) {
+        if (!mongoose.Types.ObjectId.isValid(queryId)) {
             return res.status(400).json({
                 status: false,
                 message: "Invalid request",
-                error: "not match query",
+                error: "invalid ID",
             });
         }
-    } else if (req.query.match == "user_id") {
-        match[req.query.match] = req.user.sub;
-    } else {
+
+        match["_id"] = mongoose.Types.ObjectId(queryId);
+    }
+
+    if (queryUserId && queryUserId === userId) {
+        match["user_id"] = userId;
+    }
+
+    if (!req.query) {
         return res.status(400).json({
             status: false,
             message: "Invalid request",

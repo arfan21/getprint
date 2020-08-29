@@ -1,5 +1,3 @@
-const user = {};
-
 var app = angular.module("myApp", []);
 
 const $http = angular.injector(["ng"]).get("$http");
@@ -43,7 +41,7 @@ app.controller("appCtrl", [
                 printDistance($scope.databyrating, coords, google);
             }, 1);
             if (user.uidLine) {
-                await printFollowingMitra(user.idToken);
+                await printFollowingMitra(user.idToken, user.uidLine);
             }
             $(".btn-link").trigger("button");
         } catch (error) {
@@ -64,7 +62,7 @@ app.controller("appCtrl", [
                 });
 
                 if (user.uidLine) {
-                    await printFollowingMitra(user.idToken);
+                    await printFollowingMitra(user.idToken, user.uidLine);
                 }
                 printDistance($scope.databydate, coords, google);
                 removeLoaderList(0);
@@ -107,7 +105,7 @@ app.controller("appCtrl", [
 
                 setTimeout(async () => {
                     if (user.uidLine != undefined) {
-                        await printFollowingMitra(user.idToken);
+                        await printFollowingMitra(user.idToken, user.uidLine);
                     }
                     printDistance($scope.data, coords, google);
                     removeLoaderList(1);
@@ -138,11 +136,11 @@ const printDistance = (data, myLatLng, google) => {
     }
 };
 
-const printFollowingMitra = async (idToken) => {
+const printFollowingMitra = async (idToken, userId) => {
     try {
         const res = await $http({
             method: "GET",
-            url: `/api/followmitra?match=user_id`,
+            url: `/api/followmitra?user_id=${userId}`,
             headers: {
                 Authorization: `Bearer ${idToken}`,
             },
@@ -252,6 +250,8 @@ async function checkIsInClient() {
         alert("Untuk melanjutkan, harap aktifkan device lokasi");
     }
 }
+
+const user = {};
 
 const App = async () => {
     if (liff.isLoggedIn()) {
