@@ -8,7 +8,7 @@
 
 > GETPRINT is a website project to fulfill the tasks of the telkom university's RPL LAB
 
-### 🏠 [Homepage](https://github.com/arfan21/getprint-v2)
+### 🏠 [Homepage](https://github.com/arfan21/getprint)
 
 ### ✨ [Demo](https://getprint.arfantest-server.site/)
 
