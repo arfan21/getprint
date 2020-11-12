@@ -24,10 +24,6 @@ npm install
 npm start
 ```
 
-## Author
-
-👤 **Arfan Jadulhaq(BE), M. Affan Hafizan(FE), Raihan Romzi(UI/UX), Muh Yahya(Mentors)**
-
 ---
 
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
