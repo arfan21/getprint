@@ -6,7 +6,7 @@
   </a>
 </p>
 
-> GETPRINT is a website project to fulfill the tasks of the telkom university's RPL LAB
+> Getprint is a web-based mini project in Telkom University RPLGDC lab
 
 ### 🏠 [Homepage](https://github.com/arfan21/getprint)
 
