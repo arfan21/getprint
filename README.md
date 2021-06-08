@@ -10,7 +10,7 @@
 
 ### 🏠 [Homepage](https://github.com/arfan21/getprint)
 
-### ✨ [Demo](https://getprint.arfantest-server.site/)
+### ✨ [Demo](https://getprint.herokuapp.com/)
 
 ## Install
 
